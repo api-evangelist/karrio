@@ -7,10 +7,10 @@ description: >-
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Shipping
-  - Logistics
   - Label Generation
+  - Logistics
   - Package Tracking
+  - Shipping
 url: https://raw.githubusercontent.com/api-evangelist/karrio/refs/heads/main/apis.yml
 created: '2024-03-30'
 modified: '2026-03-16'
@@ -23,9 +23,9 @@ apis:
       package tracking, and carrier integrations.
     humanURL: https://www.karrio.io/
     tags:
-      - Shipping
       - Label Generation
       - Package Tracking
+      - Shipping
     properties:
       - type: Documentation
         url: https://docs.karrio.io/
