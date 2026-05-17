@@ -29,14 +29,14 @@ apis:
     properties:
       - type: Documentation
         url: https://docs.karrio.io/
-      - type: Getting Started
+      - type: GettingStarted
         url: https://docs.karrio.io/guides/getting-started
 common:
   - type: Website
     url: https://www.karrio.io/
   - type: Documentation
     url: https://docs.karrio.io/
-  - type: GitHub Organization
+  - type: GitHubOrganization
     url: https://github.com/karrioapi/karrio
 maintainers:
   - FN: Kin Lane
