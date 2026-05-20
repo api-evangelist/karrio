@@ -32,6 +32,8 @@ apis:
       - type: GettingStarted
         url: https://docs.karrio.io/guides/getting-started
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/karrioapi
   - type: Website
     url: https://www.karrio.io/
   - type: Documentation
