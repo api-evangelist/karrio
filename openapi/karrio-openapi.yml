@@ -1,0 +1,186 @@
+openapi: 3.1.0
+info:
+  title: Karrio Shipments API
+  description: >-
+    REST API for managing shipments in Karrio, the open-source multi-carrier
+    shipping platform. The Shipments resource lets developers create
+    shipments, fetch rates, purchase labels, and void shipments through a
+    unified API across supported carriers.
+  version: 1.0.0
+  termsOfService: https://karrio.io/terms
+  contact:
+    name: Karrio Support
+    url: https://docs.karrio.io/
+  license:
+    name: Apache-2.0
+    url: https://github.com/karrioapi/karrio/blob/main/LICENSE
+
+servers:
+  - url: https://api.karrio.io
+    description: Karrio managed API
+  - url: http://localhost:5002
+    description: Self-hosted Karrio API (default development port)
+
+security:
+  - tokenAuth: []
+
+tags:
+  - name: Shipments
+    description: Create, manage, rate, purchase, and void shipments.
+
+paths:
+  /v1/shipments:
+    get:
+      operationId: listShipments
+      summary: Retrieve all shipments
+      description: Return the authenticated account's shipments.
+      tags:
+        - Shipments
+      responses:
+        '200':
+          description: A list of shipments.
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: createShipment
+      summary: Create a shipment
+      description: Create a new shipment instance with shipper, recipient, and parcel details.
+      tags:
+        - Shipments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created shipment.
+          content:
+            application/json:
+              schema:
+                type: object
+  /v1/shipments/{id}:
+    get:
+      operationId: getShipment
+      summary: Retrieve a shipment
+      description: Return a single shipment by identifier.
+      tags:
+        - Shipments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Shipment payload.
+          content:
+            application/json:
+              schema:
+                type: object
+    patch:
+      operationId: updateShipment
+      summary: Update a shipment
+      description: Update shipment properties such as label type, reference, or payment.
+      tags:
+        - Shipments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated shipment.
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      operationId: voidShipment
+      summary: Void a shipment
+      description: Void a shipment and its associated label, where supported by the carrier.
+      tags:
+        - Shipments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Void result.
+          content:
+            application/json:
+              schema:
+                type: object
+  /v1/shipments/{id}/purchase:
+    post:
+      operationId: purchaseShipment
+      summary: Purchase a shipping label
+      description: Select a preferred rate to purchase a shipping label for the shipment.
+      tags:
+        - Shipments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                selected_rate_id:
+                  type: string
+              required:
+                - selected_rate_id
+      responses:
+        '200':
+          description: Purchased shipment with label.
+          content:
+            application/json:
+              schema:
+                type: object
+  /v1/shipments/{id}/rates:
+    post:
+      operationId: fetchShipmentRates
+      summary: Refresh shipment rates
+      description: Refresh the list of available carrier rates for the shipment.
+      tags:
+        - Shipments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Refreshed shipment rates.
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  securitySchemes:
+    tokenAuth:
+      type: http
+      scheme: bearer
+      description: Karrio API token sent as a Bearer credential in the Authorization header.
