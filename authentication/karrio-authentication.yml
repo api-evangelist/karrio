@@ -1,0 +1,13 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/karrio-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: tokenAuth
+  type: http
+  scheme: bearer
+  description: Karrio API token sent as a Bearer credential in the Authorization header.
+  sources:
+  - openapi/karrio-openapi.yml

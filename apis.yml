@@ -32,6 +32,10 @@ apis:
       - type: GettingStarted
         url: https://docs.karrio.io/guides/getting-started
 common:
+  - type: DomainSecurity
+    url: security/karrio-domain-security.yml
+  - type: Authentication
+    url: authentication/karrio-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/karrioapi
   - type: Website
@@ -40,6 +44,8 @@ common:
     url: https://docs.karrio.io/
   - type: GitHubOrganization
     url: https://github.com/karrioapi/karrio
+  - url: https://www.karrio.io/blog
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
