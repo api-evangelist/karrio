@@ -1,0 +1,14 @@
+{
+  "repo": "karrio",
+  "feeds": [
+    {
+      "source": "https://www.karrio.io/blog",
+      "feed_url": "https://www.karrio.io/blog/feed.xml",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    }
+  ],
+  "fetched": "2026-07-11T11:50:51Z",
+  "post_count": 12
+}
