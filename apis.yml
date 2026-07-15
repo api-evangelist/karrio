@@ -32,6 +32,8 @@ apis:
       - type: GettingStarted
         url: https://docs.karrio.io/guides/getting-started
 common:
+  - type: AgenticAccess
+    url: agentic-access/karrio-agentic-access.yml
   - type: DomainSecurity
     url: security/karrio-domain-security.yml
   - type: Authentication
