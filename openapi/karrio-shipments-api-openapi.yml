@@ -1,11 +1,7 @@
 openapi: 3.1.0
 info:
   title: Karrio Shipments API
-  description: >-
-    REST API for managing shipments in Karrio, the open-source multi-carrier
-    shipping platform. The Shipments resource lets developers create
-    shipments, fetch rates, purchase labels, and void shipments through a
-    unified API across supported carriers.
+  description: REST API for managing shipments in Karrio, the open-source multi-carrier shipping platform. The Shipments resource lets developers create shipments, fetch rates, purchase labels, and void shipments through a unified API across supported carriers.
   version: 1.0.0
   termsOfService: https://karrio.io/terms
   contact:
@@ -14,20 +10,16 @@ info:
   license:
     name: Apache-2.0
     url: https://github.com/karrioapi/karrio/blob/main/LICENSE
-
 servers:
-  - url: https://api.karrio.io
-    description: Karrio managed API
-  - url: http://localhost:5002
-    description: Self-hosted Karrio API (default development port)
-
+- url: https://api.karrio.io
+  description: Karrio managed API
+- url: http://localhost:5002
+  description: Self-hosted Karrio API (default development port)
 security:
-  - tokenAuth: []
-
+- tokenAuth: []
 tags:
-  - name: Shipments
-    description: Create, manage, rate, purchase, and void shipments.
-
+- name: Shipments
+  description: Create, manage, rate, purchase, and void shipments.
 paths:
   /v1/shipments:
     get:
@@ -35,7 +27,7 @@ paths:
       summary: Retrieve all shipments
       description: Return the authenticated account's shipments.
       tags:
-        - Shipments
+      - Shipments
       responses:
         '200':
           description: A list of shipments.
@@ -48,7 +40,7 @@ paths:
       summary: Create a shipment
       description: Create a new shipment instance with shipper, recipient, and parcel details.
       tags:
-        - Shipments
+      - Shipments
       requestBody:
         required: true
         content:
@@ -68,13 +60,13 @@ paths:
       summary: Retrieve a shipment
       description: Return a single shipment by identifier.
       tags:
-        - Shipments
+      - Shipments
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Shipment payload.
@@ -87,13 +79,13 @@ paths:
       summary: Update a shipment
       description: Update shipment properties such as label type, reference, or payment.
       tags:
-        - Shipments
+      - Shipments
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -112,13 +104,13 @@ paths:
       summary: Void a shipment
       description: Void a shipment and its associated label, where supported by the carrier.
       tags:
-        - Shipments
+      - Shipments
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Void result.
@@ -132,13 +124,13 @@ paths:
       summary: Purchase a shipping label
       description: Select a preferred rate to purchase a shipping label for the shipment.
       tags:
-        - Shipments
+      - Shipments
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -149,7 +141,7 @@ paths:
                 selected_rate_id:
                   type: string
               required:
-                - selected_rate_id
+              - selected_rate_id
       responses:
         '200':
           description: Purchased shipment with label.
@@ -163,13 +155,13 @@ paths:
       summary: Refresh shipment rates
       description: Refresh the list of available carrier rates for the shipment.
       tags:
-        - Shipments
+      - Shipments
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Refreshed shipment rates.
@@ -177,7 +169,6 @@ paths:
             application/json:
               schema:
                 type: object
-
 components:
   securitySchemes:
     tokenAuth:
