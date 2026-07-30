@@ -5,7 +5,20 @@ description: >-
   The headless shipping platform enables you to build shipping experiences from
   live rating, label generation, package tracking, and more.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/karrio.png
 tags:
   - Label Generation
   - Logistics
@@ -16,21 +29,29 @@ created: '2024-03-30'
 modified: '2026-03-16'
 specificationVersion: '0.19'
 apis:
-  - aid: karrio:shipping-api
-    name: Karrio Shipping API
-    description: >-
-      Karrio's headless shipping API for live rating, label generation,
-      package tracking, and carrier integrations.
-    humanURL: https://www.karrio.io/
-    tags:
-      - Label Generation
-      - Package Tracking
-      - Shipping
-    properties:
-      - type: Documentation
-        url: https://docs.karrio.io/
-      - type: GettingStarted
-        url: https://docs.karrio.io/guides/getting-started
+- aid: karrio:shipping-api
+  name: Karrio Shipping API
+  description: >-
+    Karrio's headless shipping API for live rating, label generation, package tracking, and carrier integrations.
+  humanURL: https://www.karrio.io/
+  tags:
+  - Label Generation
+  - Package Tracking
+  - Shipping
+  properties:
+  - type: Documentation
+    url: https://docs.karrio.io/
+  - type: GettingStarted
+    url: https://docs.karrio.io/guides/getting-started
+- aid: karrio:karrio-shipments-api
+  name: Karrio Shipments API
+  description: Create, manage, rate, purchase, and void shipments.
+  humanURL: https://www.karrio.io/
+  tags:
+  - Shipments
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-shipments-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/karrio-agentic-access.yml
