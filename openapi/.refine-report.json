@@ -1,0 +1,14 @@
+{
+  "provider": "karrio",
+  "sources": [
+    "karrio-shipments-api-openapi.yml"
+  ],
+  "outputs": [
+    "karrio-shipments-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
