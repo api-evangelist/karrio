@@ -1,0 +1,148 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Karrio Shipments API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shipments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve all shipments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.karrio.io/v1/shipments"
+          },
+          "docs": "Return the authenticated account's shipments."
+        },
+        {
+          "info": {
+            "name": "Create a shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.karrio.io/v1/shipments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new shipment instance with shipper, recipient, and parcel details."
+        },
+        {
+          "info": {
+            "name": "Retrieve a shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.karrio.io/v1/shipments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Return a single shipment by identifier."
+        },
+        {
+          "info": {
+            "name": "Update a shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.karrio.io/v1/shipments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update shipment properties such as label type, reference, or payment."
+        },
+        {
+          "info": {
+            "name": "Void a shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.karrio.io/v1/shipments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Void a shipment and its associated label, where supported by the carrier."
+        },
+        {
+          "info": {
+            "name": "Purchase a shipping label",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.karrio.io/v1/shipments/:id/purchase",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Select a preferred rate to purchase a shipping label for the shipment."
+        },
+        {
+          "info": {
+            "name": "Refresh shipment rates",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.karrio.io/v1/shipments/:id/rates",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Refresh the list of available carrier rates for the shipment."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
