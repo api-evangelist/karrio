@@ -27,7 +27,7 @@ tags:
 url: https://raw.githubusercontent.com/api-evangelist/karrio/refs/heads/main/apis.yml
 created: '2024-03-30'
 modified: '2026-03-16'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: karrio:shipping-api
   name: Karrio Shipping API
