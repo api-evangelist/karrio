@@ -1,0 +1,64 @@
+generated: '2026-08-27'
+method: searched
+source: https://karrio.io/docs/platform/app-store/embeddable-elements
+provider: Karrio
+providerId: karrio
+name: Karrio Elements
+description: >-
+  Karrio publishes a set of drop-in, iframe-isolated UI components — Karrio Elements —
+  that embed shipping surfaces into a host application. They are deliberately not a React
+  component library: a ~3 KB loader script (elements.js) mounts an iframe containing the
+  pre-built React app and communicates over postMessage, so the host page needs no React
+  and inherits no CSS. Distinct from the SDKs in packages/. Gated to the Insiders /
+  Enterprise tier.
+availability:
+  tier: Insiders / Enterprise
+  open_source: false
+loader:
+  script: elements.js
+  global: window.KarrioElements
+  size: ~3KB
+  mount_api: KarrioElements.mount(selector, options)
+  framework_required: none
+  isolation: iframe
+  transport: postMessage
+  options:
+  - host — base URL of the Karrio instance
+  - token — Karrio API token (key_...)
+  - iframeSrc — {instance}/static/karrio/elements/<element>.html
+  - admin — route to the admin GraphQL endpoint
+  lifecycle_messages:
+  - READY
+  - INIT
+  - RESIZE
+  - EVENT (save, close, error)
+elements:
+- name: Rate Sheet Editor
+  id: ratesheet
+  description: Full-featured rate sheet creation and editing interface.
+  use_case: Custom rate management in partner portals.
+- name: Developer Tools
+  id: devtools
+  description: >-
+    Interactive developer drawer with API logs, events, webhooks, GraphiQL and a Swagger
+    playground.
+  use_case: Debugging and API exploration inside an admin panel.
+- name: Template Editor
+  id: template
+  description: HTML document template editor with live preview and PDF generation.
+  use_case: Custom packing slips, invoices and shipping documents.
+- name: Carrier Connections
+  id: connections
+  description: Carrier account management — connection list, creation, editing and OAuth support.
+  use_case: Carrier onboarding in partner portals.
+distribution:
+  registry: none
+  note: >-
+    The elements are served from the operator's own Karrio instance under
+    /static/karrio/elements/, not from a CDN or an npm package. No @karrio-scoped npm
+    package resolves (all 404 as of 2026-08-27), so there is nothing to version-pin —
+    the elements track whatever version the instance is running.
+  version: null
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

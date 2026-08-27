@@ -3,89 +3,53 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Karrio
 providerId: karrio
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://karrio.io/docs/api-reference, https://karrio.io/docs, https://karrio.io/platform
+  and openapi/karrio-api-openapi.yml (Karrio API 2026.1.32).
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-08-27'
 tags:
-  - Label Generation
-  - Logistics
-  - Package Tracking
   - Shipping
   - Rate Limiting
   - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Karrio API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
+description: >-
+  Karrio publishes NO rate limits. This is an honest zero, and for this provider it is
+  also a defensible one: Karrio is deployed per instance — self-hosted or managed — so
+  throughput is a property of the operator's own deployment, not of a shared multi-tenant
+  gateway. What is missing regardless of deployment model is the runtime signal: the
+  contract declares no 429 response and no rate-limit response header on any of its 95
+  operations, so a client has no in-band way to learn it is being throttled by whatever
+  sits in front of an instance.
+limit_count: 0
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  limit: null
+  remaining: null
+  reset: null
+  retryAfter: null
+  policy: null
+  published: false
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Karrio Shipping API
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Karrio Shipping API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Karrio Shipping API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Karrio Shipping API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Karrio Shipping API
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  throttled: null
+  note: >-
+    No 429 response is declared on any operation in the OpenAPI. The declared error codes
+    are 400, 401, 404, 409, 424 and 500.
+limits: []
+evidence:
+  - check: X-RateLimit-* / RateLimit-* / Retry-After headers in the OpenAPI
+    result: zero occurrences across 496 KB of contract
+  - check: 429 response declared on any of 95 operations
+    result: none
+  - check: rate limits or quotas on the pricing FAQ at https://karrio.io/platform
+    result: 'HTTP 200; no limit stated for any of the three tiers'
+  - check: https://karrio.io/pricing
+    result: HTTP 404
+downstream_note: >-
+  The binding constraint on a Karrio integration is usually not Karrio but the carrier
+  behind it. Carrier rate limits surface as HTTP 424 with the carrier's own message and
+  carrier_name attribution — see errors/karrio-problem-types.yml. An agent should treat
+  424 rather than 429 as the throttling signal on this API.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

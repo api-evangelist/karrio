@@ -1,0 +1,195 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  The OpenAPI info description at https://karrio.io/docs/api-reference (which states the
+  pagination, metadata, environment and authentication conventions verbatim), the
+  operation set in openapi/karrio-api-openapi.yml, and
+  https://karrio.io/docs/developing/api-development.
+provider: Karrio
+providerId: karrio
+description: >-
+  Cross-cutting runtime semantics for the Karrio REST API. Karrio documents its
+  pagination, metadata and environment model plainly and consistently. It publishes no
+  idempotency mechanism and no rate-limit signalling at all, which are the two gaps an
+  agent integrator will hit first.
+authentication:
+  styles:
+  - HTTP Basic with the API token as the username and an empty password (`-u key_xxx:`)
+  - '`Authorization: Token key_xxxxxxxx`'
+  - '`Authorization: Bearer <JWT>` from POST /api/token'
+  - OAuth2 authorization_code (/oauth/authorize/, /oauth/token/, scopes read/write/openid)
+  token_prefix: key_
+  see: authentication/karrio-authentication.yml
+  transport: HTTPS required. "All API requests must be made over HTTPS. API requests without authentication will also fail."
+idempotency:
+  supported: false
+  header: null
+  evidence: >-
+    Zero occurrences of the string "idempoten" anywhere in the 496 KB OpenAPI document,
+    and no Idempotency-Key parameter on any of the 95 operations. Not documented on any
+    docs page found.
+  agent_impact: >-
+    HIGH. POST /v1/shipments/{id}/purchase buys a real label and incurs a real charge. An
+    agent that retries a timed-out purchase has no safe way to determine whether the first
+    call landed, other than re-reading the shipment and branching on its status. The
+    MCP server's `create_shipment` tool is a composite create-then-purchase, so a retry
+    at the tool level can create a second shipment.
+  workaround: >-
+    Read back GET /v1/shipments/{id} and branch on `status` before re-issuing a purchase.
+pagination:
+  style: offset
+  params:
+  - limit
+  - offset
+  limit_range: 1 to 100
+  ordering: reverse chronological
+  response_fields:
+  - count
+  - next
+  - previous
+  - results
+  quoted: >-
+    "Karrio utilizes offset-based pagination via the offset and limit parameters. Both
+    parameters take a number as value and return objects in reverse chronological order.
+    The limit parameter take a limit on the number of objects to be returned from 1 to
+    100."
+  cursor: false
+filtering:
+  common_params:
+  - created_after
+  - created_before
+  - status
+  - carrier_name
+  - keyword
+  - metadata_key
+  - metadata_value
+  - is_archived
+  note: >-
+    Metadata is queryable: metadata_key + metadata_value let a caller find objects by the
+    key/value pairs they attached.
+metadata:
+  supported: true
+  field: metadata
+  applies_to:
+  - Shipment
+  - Order
+  - Tracker
+  - and other updateable top-level objects
+  quoted: >-
+    "Updateable Karrio objects—including Shipment and Order have a metadata parameter.
+    You can use this parameter to attach key-value data to these Karrio objects. Do not
+    store any sensitive information as metadata."
+field_expansion:
+  supported: false
+  note: No expand/fields/sparse-fieldset parameter appears in the contract. Related objects are returned inline by default.
+request_tracing:
+  request_id: >-
+    A `request_id` query parameter exists on three operations, and API log entries carry
+    a request_id that the GraphQL api_logs query filters on. There is no documented
+    request-id RESPONSE header.
+  observability: >-
+    Every request is recorded in the instance's own API logs, readable via the GraphQL
+    management API (api_logs, api_log, tracing_records) and surfaced as three MCP tools.
+    tracing_records carry the raw carrier request/response, which is the only way to see
+    what Karrio actually sent to FedEx or UPS.
+versioning:
+  see: lifecycle/karrio-lifecycle.yml
+  summary: Dated calendar version (2026.1.32) on the platform; static /v1 path prefix.
+error_envelope:
+  shape: '{"errors": [{message, code, level, details}]} or {"messages": [{message, code, level, details, carrier_name, carrier_id}]}'
+  rfc9457: false
+  see: errors/karrio-problem-types.yml
+rate_limit_signaling:
+  headers_published: false
+  status_on_exhaustion: null
+  evidence: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header appears anywhere in the OpenAPI,
+    and no 429 response is declared on any of the 95 operations.
+  see: rate-limits/karrio-rate-limits.yml
+dry_run_mode:
+  supported: true
+  mechanism: test_mode
+  detail: >-
+    Karrio's test mode is a full parallel environment, not a request-level dry run:
+    objects are created for real but against carrier sandbox APIs, so no charge is
+    incurred. Selected by the credential (each API key is test or live) and by the
+    `x-test-mode` request header on GraphQL calls. There is no per-request dry_run flag
+    on the REST write operations.
+  see: sandbox/karrio-sandbox.yml
+reversibility:
+  grade: verified
+  applicable: true
+  note: >-
+    Karrio's write surface is unusually reversible for a logistics API — nearly every
+    money-moving or physical action has a first-class reversal operation, and the
+    windows are stated by the CARRIER rather than by Karrio. That distinction matters:
+    Karrio publishes the reversal path, but the window that decides whether it will work
+    belongs to the downstream carrier and is not stated in Karrio's own documentation.
+  operations:
+  - action: Purchase a shipping label
+    operationId: $$$$$purchase
+    path: POST /v1/shipments/{id}/purchase
+    reversal: Cancel a shipment
+    reversal_operationId: $$$$$cancel
+    reversal_path: POST /v1/shipments/{id}/cancel
+    window: >-
+      Until the carrier has collected the parcel. The API returns HTTP 409 once the
+      shipment is no longer in a cancellable state; the MCP tool description states "the
+      shipment must be in a cancellable state (not yet picked up by carrier)".
+    window_stated_by: provider
+    window_source: https://karrio.io/docs/developing/mcp-server
+    grade: verified
+  - action: Buy a label through the carrier passthrough
+    operationId: '@@@buy_label'
+    path: POST /v1/proxy/shipping
+    reversal: Void a shipment label
+    reversal_operationId: '@@@void_label'
+    reversal_path: POST /v1/proxy/shipping/{carrier_name}/cancel
+    window: >-
+      Carrier-defined. Karrio passes the void straight through to the carrier and returns
+      the carrier's answer as a 424 with carrier attribution if the carrier refuses. No
+      numeric window is published by Karrio.
+    window_stated_by: carrier
+    grade: documented
+  - action: Schedule a pickup
+    operationId: $$$$create
+    path: POST /v1/pickups
+    reversal: Cancel a pickup
+    reversal_operationId: $$$$cancel
+    reversal_path: POST /v1/pickups/{id}/cancel
+    window: >-
+      Before the pickup window opens; the carrier decides. Also amendable rather than
+      reversible via POST /v1/pickups/{id} (update).
+    window_stated_by: carrier
+    grade: documented
+  - action: Create an order
+    operationId: '&&&&create'
+    path: POST /v1/orders
+    reversal: Cancel an order
+    reversal_operationId: '&&&&cancel'
+    reversal_path: POST /v1/orders/{id}/cancel
+    window: >-
+      While the order is unfulfilled. Once shipments have been purchased against it, the
+      labels must be cancelled first.
+    window_stated_by: provider
+    grade: documented
+  - action: Create an address / parcel / product / document template
+    reversal: discard
+    reversal_path: DELETE /v1/addresses/{id}, /v1/parcels/{id}, /v1/products/{id}, /v1/documents/templates/{id}
+    window: Immediate and unconditional; these are reference objects with no carrier side effect.
+    grade: verified
+  no_reversal:
+  - action: Create a manifest (end-of-day SCAN form)
+    path: POST /v1/manifests
+    note: >-
+      No cancel or void operation exists for a manifest. Once created it can only be
+      retrieved and its document regenerated. Treat manifest creation as one-way.
+  - action: Generate a document
+    path: POST /v1/documents/generate
+    note: Stateless render; nothing to reverse, but nothing to un-issue either.
+  - action: Inject tracking events
+    path: POST /v1/trackers/{tracker_id}/inject-events
+    note: No operation removes an injected event.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

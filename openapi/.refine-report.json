@@ -1,14 +1,12 @@
 {
   "provider": "karrio",
-  "sources": [
-    "karrio-shipments-api-openapi.yml"
-  ],
-  "outputs": [
-    "karrio-shipments-api-openapi.yml"
-  ],
+  "sources": [],
+  "outputs": [],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
+  "notes": [
+    "Reset 2026-08-27 by the enrichment pipeline. The prior report described karrio-shipments-api-openapi.yml, a scaffolded 7-operation spec that has been removed. The real first-party contract (Karrio API 2026.1.32, 65 paths / 95 operations / 159 schemas) was harvested to karrio-api-openapi.yml and has NOT yet been refined or split by tag."
+  ],
   "skipped": []
 }

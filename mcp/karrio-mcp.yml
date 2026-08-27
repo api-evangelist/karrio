@@ -1,0 +1,132 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://karrio.io/docs/developing/mcp-server (HTTP 200, 2026-08-27) and the first-party
+  source at github.com/karrioapi/karrio/tree/HEAD/packages/mcp — package.json, README.md
+  and every src/tools/*.ts registration read directly.
+provider: Karrio
+providerId: karrio
+name: Karrio MCP Server
+description: >-
+  Karrio ships a first-party MCP server, @karrio/mcp, that exposes its multi-carrier
+  shipping surface to MCP clients. It is a local server: it runs on the operator's
+  machine (stdio) or as a self-run Streamable HTTP process, and it talks to whatever
+  Karrio instance the operator points it at. Karrio does not host an MCP endpoint an
+  agent can call.
+deployment:
+  mode: local-stdio
+  install: npx -y @karrio/mcp
+  package: https://github.com/karrioapi/karrio/tree/HEAD/packages/mcp
+  auth: api-key
+  verified: searched
+  note: >-
+    The documented install command is verbatim from karrio.io/docs/developing/mcp-server
+    and packages/mcp/README.md. IT DOES NOT WORK TODAY: registry.npmjs.org/@karrio%2fmcp
+    returned HTTP 404 on 2026-08-27, so `npx -y @karrio/mcp` cannot resolve the package
+    and it must be built from the monorepo instead. The package carries a publish
+    workflow (.github/workflows/mcp-publish.yml) but no release has landed.
+    mode is local-stdio and not `both`: the README documents a Streamable HTTP transport
+    (`karrio-mcp --http --port 3100`, exposing POST/GET/DELETE /mcp and
+    GET /.well-known/mcp), but that process is started by the operator on their own
+    infrastructure. There is no vendor-hosted URL an MCP client can POST to.
+transports:
+- kind: stdio
+  default: true
+- kind: streamable-http
+  default: false
+  self_run: true
+  endpoint_paths:
+  - POST /mcp
+  - GET /mcp
+  - DELETE /mcp
+  - GET /.well-known/mcp
+  note: Started by the operator with --http; port defaults to 3100.
+configuration:
+- variable: KARRIO_API_URL
+  flag: --api-url
+  required: true
+  default: http://localhost:5002
+  description: Base URL of the operator's own Karrio instance.
+- variable: KARRIO_API_KEY
+  flag: --api-key
+  required: true
+  description: Karrio API key from Settings -> API Keys in the dashboard.
+- variable: PORT
+  flag: --port
+  required: false
+  default: 3100
+clients_documented:
+- Claude Desktop
+- Claude Code
+- Cursor
+- VS Code / GitHub Copilot
+tools:
+- name: get_shipping_rates
+  category: rating
+  mutating: false
+  description: Get shipping rate quotes from multiple carriers for a package; returns ranked rates with carrier, service, price and estimated delivery.
+- name: create_shipment
+  category: shipments
+  mutating: true
+  description: Create a shipment and purchase a shipping label. Marked destructive in the source because it incurs a charge.
+- name: get_shipment
+  category: shipments
+  mutating: false
+  description: Get details of an existing shipment by ID.
+- name: list_shipments
+  category: shipments
+  mutating: false
+  description: List shipments with status, carrier and date filters; paginated.
+- name: cancel_shipment
+  category: shipments
+  mutating: true
+  description: Cancel a shipment and void its label. Reverses a label purchase.
+- name: track_package
+  category: tracking
+  mutating: false
+  description: Track a package by tracking number; returns status, location, ETA and full event history.
+- name: list_carriers
+  category: carriers
+  mutating: false
+  description: List all supported carrier integrations in the Karrio catalog with their capabilities.
+- name: list_carrier_connections
+  category: carriers
+  mutating: false
+  description: List carrier accounts connected to the instance, with carrier_id, display_name, capabilities and connection status.
+- name: schedule_pickup
+  category: pickups
+  mutating: true
+  description: Schedule a carrier pickup for one or more shipments at a specified address and time window.
+- name: create_manifest
+  category: manifests
+  mutating: true
+  description: Create an end-of-day manifest (SCAN form) consolidating shipments into a single carrier document.
+- name: list_api_logs
+  category: observability
+  mutating: false
+  description: List API request logs with filters; returns path, method, status code, response time and timestamps.
+- name: get_api_log
+  category: observability
+  mutating: false
+  description: Get full details of one API log entry including request data, response body and carrier tracing records.
+- name: list_tracing_records
+  category: observability
+  mutating: false
+  description: List raw carrier API request/response tracing records for carrier-level debugging.
+resources:
+- uri: karrio://carriers
+  description: Complete multi-carrier capability catalog for all connected carriers.
+- uri: karrio://carriers/{carrier_id}
+  description: Detailed info for one carrier connection.
+discrepancies:
+- claim: packages/mcp/README.md lists a `list_orders` tool and an orders.ts source file.
+  observed: >-
+    No packages/mcp/src/tools/orders.ts exists at HEAD (raw.githubusercontent 404) and no
+    orders tool is registered. The karrio.io docs page does not list list_orders either;
+    it lists the three observability tools instead. The package README is behind the
+    docs page and behind the source.
+- claim: README and docs both say "10 shipping tools".
+  observed: 13 tools are registered across src/tools/*.ts at HEAD.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

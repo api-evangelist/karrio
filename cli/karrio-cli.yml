@@ -1,0 +1,58 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://karrio.io/docs/developing/cli-guide, the PyPI metadata for karrio-cli, and
+  modules/cli/pyproject.toml in github.com/karrioapi/karrio.
+provider: Karrio
+providerId: karrio
+name: Karrio CLI
+binary: kcli
+description: >-
+  Karrio ships a first-party Python CLI, published as karrio-cli on PyPI and released on
+  the same calendar version as the platform. Its centre of gravity is not API access — it
+  is carrier-extension development: scaffolding a new connector, generating Python models
+  from a carrier's schema, and testing the mapping. That makes it a contributor tool as
+  much as an operator tool, which fits Karrio's open-source model.
+install:
+- method: pip
+  command: pip install karrio-cli
+  registry: https://pypi.org/project/karrio-cli/
+  version: 2026.1.32
+  published: '2026-06-23'
+- method: source
+  command: pip install -e modules/cli
+  note: From a monorepo checkout.
+entrypoint:
+  command: kcli
+  declared_in: 'modules/cli/pyproject.toml -> [project.scripts] kcli = "karrio_cli.__main__:app"'
+framework: typer
+python_requires: '>=3.11'
+license: MIT
+docs: https://karrio.io/docs/developing/cli-guide
+capability_groups:
+- name: Carrier extension scaffolding
+  detail: Generate a new carrier connector project from a template.
+- name: Schema and model generation
+  detail: >-
+    Generate Python data models from a carrier's schema (generateDS for XSD/SOAP,
+    quicktype-style generation for JSON). This is what the generateDS and jstruct
+    dependencies are for.
+- name: Carrier mapping and testing
+  detail: Exercise a connector's request/response mapping against carrier fixtures.
+- name: Studio UI
+  detail: >-
+    The package ships a studio_ui asset bundle and depends on fastapi + uvicorn, so the
+    CLI can serve a local UI as well as run in the terminal.
+dependencies_of_note:
+- typer
+- rich
+- generateDS
+- jstruct
+- fastapi
+- uvicorn
+- pdfplumber (dev)
+- beautifulsoup4 (dev)
+see_also: packages/karrio-packages.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

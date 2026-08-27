@@ -1,0 +1,131 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  The `enabled_events` enum on the Webhook / WebhookData / PatchedWebhookData schemas in
+  openapi/karrio-api-openapi.yml (Karrio API 2026.1.32) — the authoritative catalog —
+  cross-read against https://karrio.io/docs/products/webhooks and
+  https://karrio.io/docs/products/events.
+provider: Karrio
+providerId: karrio
+type: Webhooks
+asyncapi_published: false
+description: >-
+  Karrio has a real event surface and manages it through the REST API — webhooks are
+  first-class objects with full CRUD plus a test-fire operation. It publishes NO AsyncAPI
+  document, so the event catalog has to be read out of an enum inside the OpenAPI. Doing
+  that turns up a discrepancy worth knowing about before you build against the docs.
+event_catalog:
+  authoritative_source: 'Webhook.enabled_events enum in the OpenAPI (x-spec-enum-id 7310794d8b16bdaf)'
+  naming: snake_case, no dots
+  count: 20
+  wildcard: all
+  events:
+  - shipment_purchased
+  - shipment_cancelled
+  - shipment_fulfilled
+  - shipment_out_for_delivery
+  - shipment_needs_attention
+  - shipment_delivery_failed
+  - tracker_created
+  - tracker_updated
+  - pickup_scheduled
+  - pickup_cancelled
+  - pickup_closed
+  - order_created
+  - order_updated
+  - order_fulfilled
+  - order_cancelled
+  - order_delivered
+  - batch_queued
+  - batch_failed
+  - batch_running
+  - batch_completed
+documentation_discrepancy:
+  severity: high
+  detail: >-
+    https://karrio.io/docs/products/webhooks shows a create-webhook payload subscribing to
+    "shipment.created", "shipment.purchased", "tracking.status_updated",
+    "tracking.delivered" and "order.fulfilled". Only ONE of those five ("order.fulfilled"
+    -> order_fulfilled) has a counterpart in the contract's enum, and even that one is
+    spelled differently. The contract uses snake_case with no dots; there is no
+    shipment_created, no tracking_* namespace and no tracking_delivered event at all
+    (delivery is tracker_updated, or shipment_out_for_delivery /
+    shipment_delivery_failed). An integrator who copies the documented payload will be
+    rejected by the enum.
+  affected_page: https://karrio.io/docs/products/webhooks
+  contract_wins: true
+management:
+  api: rest
+  operations:
+  - operationId: '$$$$$$$list'
+    method: GET
+    path: /v1/webhooks
+  - operationId: '$$$$$$$create'
+    method: POST
+    path: /v1/webhooks
+  - operationId: '$$$$$$$retrieve'
+    method: GET
+    path: '/v1/webhooks/{id}'
+  - operationId: '$$$$$$$update'
+    method: PATCH
+    path: '/v1/webhooks/{id}'
+  - operationId: '$$$$$$$remove'
+    method: DELETE
+    path: '/v1/webhooks/{id}'
+  - operationId: '$$$$$$$test'
+    method: POST
+    path: '/v1/webhooks/{id}/test'
+  - operationId: '$$$$$$$$resend_webhooks'
+    method: POST
+    path: /v1/batches/webhooks
+  subscription_object:
+    url: HTTPS endpoint to deliver to
+    enabled_events: array from the enum above
+    secret: header signature secret
+    disabled: boolean
+    last_event_at: datetime of last delivery
+    test_mode: boolean
+delivery:
+  retries: true
+  strategy: exponential backoff
+  dead_letter: true
+  replay: POST /v1/batches/webhooks (resend_webhooks)
+  signature_verification: true
+  signature_mechanism: >-
+    Shared secret stored on the webhook object and used to sign a request header. Karrio
+    does not publish the header name or the signature algorithm on any page found, which
+    is a gap — a consumer cannot implement verification from the published docs alone.
+  monitoring: >-
+    Delivery counts and last response status are exposed on the webhook object; full
+    delivery history is in the GraphQL events/api_logs surface.
+event_object:
+  source: GraphQL Event type (management API)
+  fields:
+  - id
+  - type
+  - data
+  - test_mode
+  - pending_webhooks
+  - created_at
+streaming:
+  available: true
+  tier: Insiders
+  note: >-
+    Continuous event streams, event history and custom handlers are documented at
+    https://karrio.io/docs/products/events and marked Insiders. Queried through the
+    GraphQL `events` connection with page_info cursor pagination — note that this is
+    cursor-based, unlike the REST API's offset pagination.
+asyncapi:
+  published: false
+  probed:
+  - url: https://karrio.io/asyncapi.yml
+    status: 404
+  - url: https://karrio.io/asyncapi.json
+    status: 404
+  note: >-
+    No asyncapi document exists anywhere in github.com/karrioapi/karrio (6,469 paths
+    searched) and none is served. The enum above is the closest thing to a machine-
+    readable event catalog Karrio publishes.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

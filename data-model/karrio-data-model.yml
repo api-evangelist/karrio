@@ -1,0 +1,148 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived from the $ref graph and *_id reference fields across the 159 component schemas
+  in openapi/karrio-api-openapi.yml (Karrio API 2026.1.32).
+provider: Karrio
+providerId: karrio
+description: >-
+  Karrio's object graph is the reason the API is worth using: it defines ONE shipment
+  shape, one address shape and one parcel shape, and every one of the 30+ carrier
+  extensions maps into it. The graph has a distinctive doubling — most entities exist as
+  a pair, a `*Data` input model and a persisted model of the same name — so the write
+  shape and the read shape are separately specified rather than conflated.
+conventions:
+  input_output_pairing: >-
+    Write operations take a `<Entity>Data` schema; reads return `<Entity>`. AddressData vs
+    Address, ParcelData vs Parcel, ShipmentData vs Shipment, CustomsData vs Customs,
+    CommodityData vs Commodity, OrderData vs Order, PickupData vs Pickup, WebhookData vs
+    Webhook. The Data variant omits server-assigned fields (id, status, timestamps,
+    rates, tracking).
+  id_prefixes:
+    observed:
+    - shp_ (shipment)
+    - wh_ (webhook)
+    - rsh_ (rate sheet)
+    - conn_ (carrier connection)
+    source: documentation examples on karrio.io/docs
+    note: >-
+      Prefixes appear in documentation payload examples rather than being declared as
+      patterns in the schemas, so treat them as conventional rather than contractual.
+  metadata: Most top-level objects carry a free-form `metadata` map, queryable via metadata_key / metadata_value.
+  test_mode: Objects carry test_mode and are partitioned by it — a test-mode object is invisible to a live key.
+core_entities:
+- name: Shipment
+  fields: 38
+  role: The central object. Binds addresses, parcels, customs, payment and the selected rate.
+  relationships:
+  - {kind: has_one, to: Address, via: shipper}
+  - {kind: has_one, to: Address, via: recipient}
+  - {kind: has_one, to: Address, via: return_address}
+  - {kind: has_one, to: Address, via: billing_address}
+  - {kind: has_many, to: Parcel, via: parcels}
+  - {kind: has_one, to: Payment, via: payment}
+  - {kind: has_one, to: Customs, via: customs}
+  - {kind: has_many, to: Rate, via: rates}
+  - {kind: has_many, to: Message, via: messages}
+  - {kind: belongs_to, to: Order, via: order_id, by: id-reference}
+- name: Order
+  fields: 18
+  role: Commerce-side object that one or more shipments fulfil.
+  relationships:
+  - {kind: has_one, to: Address, via: shipping_to}
+  - {kind: has_one, to: Address, via: shipping_from}
+  - {kind: has_one, to: Address, via: billing_address}
+  - {kind: has_many, to: LineItem, via: line_items}
+  - {kind: has_many, to: Shipment, via: shipments}
+- name: Tracker
+  fields: 18
+  read_model: TrackingStatus
+  role: A followed package. Created against a tracking number, then updated by carrier polling or injected events.
+  relationships:
+  - {kind: belongs_to, to: CarrierConnection, via: carrier_id, by: id-reference}
+  - {kind: has_one, to: TrackingInfo, via: info}
+  - {kind: has_many, to: TrackingEvent, via: events}
+  - {kind: has_many, to: Message, via: messages}
+- name: Pickup
+  fields: 24
+  role: A scheduled carrier collection covering one or more parcels at an address.
+  relationships:
+  - {kind: belongs_to, to: CarrierConnection, via: carrier_id, by: id-reference}
+  - {kind: has_one, to: Charge, via: pickup_charge}
+  - {kind: has_one, to: Address, via: address}
+  - {kind: has_many, to: Parcel, via: parcels}
+- name: Manifest
+  fields: 13
+  role: End-of-day SCAN form consolidating shipments for one carrier.
+  relationships:
+  - {kind: belongs_to, to: CarrierConnection, via: carrier_id, by: id-reference}
+  - {kind: has_one, to: Address, via: address}
+  - {kind: has_many, to: Message, via: messages}
+- name: Address
+  fields: 19
+  role: Reusable party. Carries a validation sub-object and tax identifiers.
+  relationships:
+  - {kind: has_one, to: AddressValidation, via: validation}
+- name: Parcel
+  fields: 18
+  role: A physical package — dimensions, weight, preset or custom packaging.
+  relationships:
+  - {kind: has_many, to: Commodity, via: items}
+- name: Customs
+  fields: 12
+  role: International declaration attached to a shipment.
+  relationships:
+  - {kind: has_many, to: Commodity, via: commodities}
+  - {kind: has_one, to: Duty, via: duty}
+  - {kind: has_one, to: Address, via: duty_billing_address}
+- name: Commodity
+  fields: 19
+  role: A declared line item, inside a parcel or a customs declaration.
+  relationships:
+  - {kind: belongs_to, to: Product, via: product_id, by: id-reference}
+  - {kind: belongs_to, to: Commodity, via: parent_id, by: id-reference}
+  - {kind: belongs_to, to: ProductVariant, via: variant_id, by: id-reference}
+- name: Rate
+  fields: 12
+  role: A carrier quote for a shipment. Selected by id at purchase time.
+  relationships:
+  - {kind: belongs_to, to: CarrierConnection, via: carrier_id, by: id-reference}
+  - {kind: has_many, to: Charge, via: extra_charges}
+- name: CarrierConnection
+  fields: 11
+  role: A configured carrier account with credentials, capabilities and test/live mode.
+- name: Product
+  role: Catalog item that commodities reference. Added to the API after 2024.12.6.
+- name: Webhook
+  fields: 9
+  role: A subscribed endpoint with enabled_events and a signing secret.
+- name: DocumentTemplate
+  fields: 11
+  role: HTML template rendered to PDF for packing slips, invoices and customs paperwork.
+- name: BatchOperation
+  fields: 7
+  role: Asynchronous bulk create of orders, shipments or trackers.
+  relationships:
+  - {kind: has_many, to: BatchObject, via: resources}
+- name: Message
+  fields: 6
+  role: >-
+    Carrier-attributed error or warning. Appears inside Shipment, Tracker and Manifest
+    responses as well as in the 424 error envelope — Karrio surfaces carrier problems
+    inline on success responses, not only on failures.
+  relationships:
+  - {kind: belongs_to, to: CarrierConnection, via: carrier_id, by: id-reference}
+graph_notes:
+- >-
+  Rates are embedded in the Shipment rather than being a standalone resource with their
+  own retrieve operation — a rate id is only meaningful in the context of its shipment.
+- >-
+  Address, Parcel and Product are the three genuinely reusable objects with their own
+  CRUD; everything else is created in the context of a shipment, order or tracker.
+- >-
+  Messages are the seam between Karrio's unified model and each carrier's vocabulary.
+  Any integrator normalising this API has to decide what to do with carrier_name-scoped
+  messages that arrive attached to otherwise successful responses.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,81 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://karrio.io/docs/developing/dashboard-guide/test-mode,
+  https://karrio.io/docs/developing/api-development and the environments section of the
+  OpenAPI info description at https://karrio.io/docs/api-reference.
+provider: Karrio
+providerId: karrio
+description: >-
+  Karrio ships a real sandbox, and it is a mode rather than a separate host. Test mode
+  routes to the CARRIERS' sandbox APIs using test credentials, so a test-mode label is a
+  genuine round trip through FedEx's or UPS's own test environment rather than a Karrio
+  simulation. The consequence for an integrator is that test-mode fidelity is inherited
+  from each carrier, and it varies by carrier.
+mode:
+  mechanism: test_mode
+  selected_by:
+  - The API key itself. Each key is issued as test or live; the object graph is separated by mode.
+  - The `x-test-mode` request header on GraphQL calls (`x-test-mode: true`).
+  - The mode switcher in the dashboard UI.
+  separate_host: false
+  note: >-
+    There is no sandbox.karrio.io. The same instance and the same /v1 paths serve both
+    modes; the credential decides. Objects created in test mode are not visible to a
+    live-mode key, which is the usual cause of an unexpected 404.
+  quoted: >-
+    "The Karrio API offer the possibility to create and retrieve certain objects in
+    test_mode. In development, it is therefore possible to add carrier connections, get
+    live rates, buy labels, create trackers and schedule pickups in test_mode."
+key_prefixes:
+  live: key_
+  test: key_
+  distinguishable_by_prefix: false
+  note: >-
+    Karrio's published token format is `key_xxxxxxxx` for both modes; the docs do not
+    publish a distinct test prefix. A token's mode is read from the GraphQL
+    `token { key test_mode }` query rather than from the string. (The karrio.io/platform
+    marketing snippet shows a Stripe-style test-key format that does not match the token
+    format the API reference documents and should not be relied on.)
+carrier_sandboxes:
+  approach: passthrough
+  detail: >-
+    "Test mode uses carrier sandbox APIs and test credentials." Karrio connects to each
+    carrier's own testing environment rather than mocking responses, so behaviour,
+    validation strictness and available services in test mode are the carrier's, not
+    Karrio's.
+  implication: >-
+    Test coverage is uneven across the 30+ carrier extensions, because not every carrier
+    publishes a sandbox of equal fidelity. Verify per connection.
+capabilities_in_test_mode:
+- Add carrier connections
+- Fetch live rates
+- Buy labels (no charge; sample tracking numbers issued)
+- Create and follow trackers (simulated deliveries)
+- Schedule pickups
+- Exercise error and edge-case handling
+test_fixtures:
+  published_test_values: false
+  note: >-
+    Karrio publishes no table of test card numbers, test tracking numbers or fixture
+    addresses of its own — there is nothing to publish, because the fixtures belong to
+    each carrier's sandbox. The docs say "use sample tracking numbers and addresses"
+    without listing any.
+time_simulation:
+  supported: false
+  note: No test clock or time-travel facility is documented.
+event_triggers:
+  supported: partial
+  mechanism: POST /v1/trackers/{tracker_id}/inject-events
+  detail: >-
+    Tracking events can be injected onto a tracker, which is the closest thing Karrio
+    offers to a fixture trigger — it lets an integrator drive a tracker through states
+    without waiting on a carrier. Also POST /v1/webhooks/{id}/test fires a test delivery
+    at a webhook endpoint.
+indicators:
+  quoted: >-
+    "Test mode is clearly indicated throughout the dashboard with visual cues including
+    orange badges, test data watermarks, and sandbox API endpoints."
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

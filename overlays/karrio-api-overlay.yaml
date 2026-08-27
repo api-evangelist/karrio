@@ -1,0 +1,97 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Karrio API
+  version: 1.0.0
+extends: ../openapi/karrio-api-openapi.yml
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  source: >-
+    Authored by API Evangelist against Karrio API 2026.1.32. Captures our enhancements
+    only; the underlying OpenAPI is Karrio's and is never mutated.
+  note: >-
+    Every action below adds information Karrio's own contract omits and that an agent
+    needs before it calls: the servers block the spec has no equivalent of, contact and
+    licence metadata, and explicit warnings on the two write operations that spend money
+    or cannot be undone.
+actions:
+  - target: $.info
+    description: >-
+      Add contact, licence and terms metadata. The published spec carries none, so a
+      consumer reading only the contract has no route to support or licence terms.
+    update:
+      contact:
+        name: Karrio
+        url: https://karrio.io/docs
+        email: hello@karrio.io
+      license:
+        name: Apache-2.0
+        url: https://github.com/karrioapi/karrio/blob/HEAD/LICENSE
+      termsOfService: https://karrio.io/terms-of-service
+  - target: $
+    description: >-
+      Add a templated servers block. The published spec declares no servers at all, which
+      leaves a generated client with nowhere to point. Karrio is deployed per instance,
+      so the host is a required variable rather than a fixed value. This is NOT a claim
+      that a shared Karrio host exists — api.karrio.io, the host printed throughout
+      Karrio's own documentation, does not resolve (DNS SERVFAIL, 2026-08-27).
+    update:
+      servers:
+        - url: https://{karrio_instance_host}
+          description: >-
+            Your own Karrio instance — self-hosted or managed. There is no shared public
+            Karrio API host.
+          variables:
+            karrio_instance_host:
+              default: localhost:5002
+              description: >-
+                Host of the Karrio instance. localhost:5002 is the default self-hosted
+                development port.
+  - target: $.paths['/v1/shipments/{id}/purchase'].post
+    description: >-
+      Flag the money-moving operation. Purchasing a label incurs a real carrier charge and
+      Karrio publishes no idempotency mechanism, so a retry after a timeout can buy twice.
+    update:
+      x-consequence: financial
+      x-idempotent: false
+      x-agent-guidance: >-
+        This purchases a real shipping label and incurs a real charge. There is no
+        Idempotency-Key on this API. If the call times out, do NOT retry it — re-read
+        GET /v1/shipments/{id} and branch on `status` to determine whether the purchase
+        landed. Reversal is POST /v1/shipments/{id}/cancel, which works only until the
+        carrier collects the parcel and returns 409 thereafter.
+      x-reversal:
+        operation: POST /v1/shipments/{id}/cancel
+        window: until carrier collection
+  - target: $.paths['/v1/manifests'].post
+    description: Flag the one write operation with no reversal path at all.
+    update:
+      x-consequence: irreversible
+      x-agent-guidance: >-
+        Manifest creation is ONE-WAY. Karrio publishes no cancel or void operation for a
+        manifest; once created it can only be retrieved and its document regenerated.
+        Confirm with a human before creating an end-of-day manifest.
+  - target: $.components.responses
+    description: >-
+      Document the 424 semantics that make this API different. A 424 is a downstream
+      carrier rejection surfaced verbatim with carrier attribution, not a Karrio failure,
+      and it is the throttling and validation signal on this API in the absence of a 429.
+    update:
+      x-karrio-424-semantics:
+        summary: Failed dependency — the downstream carrier rejected the request.
+        envelope: ErrorMessages
+        attribution: messages[].carrier_name and messages[].carrier_id
+        retry_guidance: >-
+          Do not blind-retry. Retry only after changing the carrier, the service, or the
+          field the carrier named. A 424 on one connection does not imply failure on
+          another carrier.
+  - target: $.components.schemas.Webhook.properties.enabled_events
+    description: >-
+      Warn that the webhooks documentation page contradicts this enum. The enum is
+      authoritative; the documented dotted event names are rejected.
+    update:
+      x-authoritative: true
+      x-doc-conflict: >-
+        https://karrio.io/docs/products/webhooks documents dotted event names
+        ("shipment.created", "tracking.status_updated", "tracking.delivered") that do not
+        exist in this enum and will be rejected. Use the snake_case values declared here.

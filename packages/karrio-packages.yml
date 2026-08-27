@@ -1,0 +1,228 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  PyPI JSON metadata endpoints (pypi.org/pypi/<pkg>/json), registry.npmjs.org, and the
+  first-party monorepo at github.com/karrioapi/karrio (modules/*/pyproject.toml,
+  packages/*/package.json). Versions and dates read from registry metadata on 2026-08-27.
+provider: Karrio
+providerId: karrio
+description: >-
+  First-party Karrio client libraries, server modules and carrier extensions. Karrio
+  distributes the Python surface on PyPI under a single calendar version (2026.1.32) that
+  tracks the platform release. The Node/TypeScript surface is materially weaker: the only
+  published npm package is three and a half years stale, and every @karrio-scoped package
+  the documentation instructs users to install returns 404 on the npm registry.
+summary:
+  registries:
+  - pypi
+  - npm
+  official_count: 17
+  unpublished_documented_count: 2
+  stale_count: 1
+packages:
+- name: karrio
+  registry: pypi
+  url: https://pypi.org/project/karrio/
+  language: python
+  official: true
+  role: sdk
+  version: 2026.1.32
+  published: '2026-06-23'
+  description: Multi-carrier shipping API integration with Python — the unified Karrio SDK.
+- name: karrio-cli
+  registry: pypi
+  url: https://pypi.org/project/karrio-cli/
+  language: python
+  official: true
+  role: cli
+  version: 2026.1.32
+  published: '2026-06-23'
+  entrypoint: kcli
+  description: Command line interface for Karrio. See cli/karrio-cli.yml.
+- name: karrio-server
+  registry: pypi
+  url: https://pypi.org/project/karrio-server/
+  language: python
+  official: true
+  role: server
+  version: 2026.1.32
+  published: '2026-06-23'
+  description: The Karrio multi-carrier shipping API server distribution.
+- name: karrio-server-core
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-core/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-manager
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-manager/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-graph
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-graph/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+  note: Serves the GraphQL management API at POST /graphql.
+- name: karrio-server-events
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-events/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-orders
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-orders/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-documents
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-documents/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-data
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-data/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-pricing
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-pricing/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-server-proxy
+  registry: pypi
+  url: https://pypi.org/project/karrio-server-proxy/
+  language: python
+  official: true
+  role: server-module
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-fedex
+  registry: pypi
+  url: https://pypi.org/project/karrio-fedex/
+  language: python
+  official: true
+  role: carrier-extension
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-ups
+  registry: pypi
+  url: https://pypi.org/project/karrio-ups/
+  language: python
+  official: true
+  role: carrier-extension
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-usps
+  registry: pypi
+  url: https://pypi.org/project/karrio-usps/
+  language: python
+  official: true
+  role: carrier-extension
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-dhl-express
+  registry: pypi
+  url: https://pypi.org/project/karrio-dhl-express/
+  language: python
+  official: true
+  role: carrier-extension
+  version: 2026.1.32
+  published: '2026-06-23'
+- name: karrio-canadapost
+  registry: pypi
+  url: https://pypi.org/project/karrio-canadapost/
+  language: python
+  official: true
+  role: carrier-extension
+  version: 2026.1.32
+  published: '2026-06-23'
+  note: >-
+    One of roughly thirty carrier extensions published from modules/connectors/* in the
+    monorepo, all released together on the same calendar version. Five verified here;
+    the rest follow the karrio-<carrier> naming convention.
+- name: karrio
+  registry: npm
+  url: https://www.npmjs.com/package/karrio
+  language: javascript
+  official: true
+  role: sdk
+  version: 2023.1.0
+  published: '2023-01-29'
+  repository: https://github.com/karrioapi/karrio-node
+  status: stale
+  note: >-
+    ABANDONMENT SIGNAL. The only Karrio package ever published to npm. Three releases
+    total (2022.3.0, 2022.3.1, 2023.1.0), last published 2023-01-29 — three and a half
+    years behind the Python SDK at 2026.1.32 and behind fifteen platform releases. It is
+    published from karrioapi/karrio-node, a repository that is no longer listed on the
+    karrioapi GitHub organisation.
+- name: '@karrio/mcp'
+  registry: npm
+  url: https://www.npmjs.com/package/@karrio/mcp
+  language: typescript
+  official: true
+  role: mcp-server
+  version: null
+  published: null
+  status: documented-but-unpublished
+  source_path: packages/mcp (github.com/karrioapi/karrio)
+  note: >-
+    Checked 2026-08-27: registry.npmjs.org/@karrio%2fmcp returns HTTP 404. The package
+    exists in the monorepo at packages/mcp with a publish workflow
+    (.github/workflows/mcp-publish.yml) and both the package README and
+    karrio.io/docs/developing/mcp-server instruct users to run `npx -y @karrio/mcp`,
+    but nothing has been published to npm. An agent following the published instructions
+    today cannot install the server; it must be built from source.
+- name: '@karrio/sdk'
+  registry: npm
+  url: https://www.npmjs.com/package/@karrio/sdk
+  language: typescript
+  official: false
+  role: sdk
+  version: null
+  published: null
+  status: documented-but-unpublished
+  note: >-
+    Checked 2026-08-27: HTTP 404 on the npm registry. The karrio.io/platform marketing
+    page shows a Node.js code sample importing `{ Karrio } from '@karrio/sdk'`. No
+    package under the @karrio npm scope resolves (@karrio/sdk, /types, /lib, /hooks,
+    /ui, /elements, /core all 404), so the advertised TypeScript SDK is not installable.
+- name: jstruct
+  registry: pypi
+  url: https://pypi.org/project/jstruct/
+  language: python
+  official: true
+  role: dependency
+  version: '2021.11'
+  published: '2021-11-21'
+  note: >-
+    Karrio-authored (github.com/karrioapi/jstruct) modelling dependency of the Python
+    SDK, not a client library. Last released 2021-11-21.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,120 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived from the 4xx/5xx responses in openapi/karrio-api-openapi.yml (Karrio API
+  2026.1.32) and enriched from the error semantics stated in the spec's own info
+  description at https://karrio.io/docs/api-reference.
+provider: Karrio
+providerId: karrio
+format: vendor-json
+rfc9457: false
+description: >-
+  Karrio does not use RFC 9457 problem+json. Every error is returned as
+  application/json carrying a vendor envelope, and the 424 family is the one worth
+  understanding: it is not a Karrio failure but a carrier failure surfaced verbatim, so
+  it carries a different envelope with carrier attribution on each message.
+envelopes:
+- name: ErrorResponse
+  media_type: application/json
+  used_by:
+  - '400'
+  - '404'
+  - '409'
+  - '500'
+  shape:
+    errors:
+    - message: The error or warning message
+      code: The message code
+      level: The message level
+      details: any additional details
+- name: ErrorMessages
+  media_type: application/json
+  used_by:
+  - '404'
+  - '424'
+  shape:
+    messages:
+    - message: The error or warning message
+      code: The message code
+      level: The message level
+      details: any additional details
+      carrier_name: The targeted carrier
+      carrier_id: The targeted carrier name (unique identifier)
+  note: >-
+    Carries carrier attribution. Used wherever the failure originated at a downstream
+    carrier rather than inside Karrio, which is why it is the envelope on every 424.
+problem_types:
+- status: 400
+  occurrences: 47
+  envelope: ErrorResponse
+  title: Bad request
+  meaning: The request payload failed validation before Karrio attempted any carrier call.
+  remediation: >-
+    Read errors[].details — Karrio returns field-level detail keyed by the offending
+    property. Do not retry the identical payload.
+  retryable: false
+- status: 401
+  occurrences: 1
+  envelope: application/json
+  title: Unauthorized
+  meaning: >-
+    Missing or invalid credential. Karrio accepts an API token as HTTP Basic username,
+    as `Authorization: Token key_...`, or a JWT bearer.
+  remediation: Re-issue the token. See authentication/karrio-authentication.yml.
+  retryable: false
+- status: 404
+  occurrences: 55
+  envelope: ErrorResponse | ErrorMessages
+  title: Not found
+  meaning: The addressed object does not exist, or is not visible to the authenticated org.
+  remediation: >-
+    Confirm the object id and the test-vs-live mode of the credential — an object created
+    in test mode is not visible to a live-mode key.
+  retryable: false
+- status: 409
+  occurrences: 18
+  envelope: ErrorResponse
+  title: Conflict
+  meaning: >-
+    The object is not in a state that permits the requested transition — most often
+    purchasing an already-purchased shipment, or cancelling one the carrier has already
+    collected.
+  remediation: Re-read the object and branch on its status before retrying.
+  retryable: false
+- status: 424
+  occurrences: 23
+  envelope: ErrorMessages
+  title: Failed dependency — carrier error
+  meaning: >-
+    THE MOST IMPORTANT CODE IN THIS API. Karrio reached the downstream carrier and the
+    carrier rejected the request. The response carries the carrier's own messages with
+    carrier_name and carrier_id, so the failure is attributable to a specific connection.
+  remediation: >-
+    Inspect messages[].carrier_name and messages[].code. These are carrier vocabulary,
+    not Karrio vocabulary, so remediation is carrier-specific. A 424 on one connection
+    does not mean the same request fails on another carrier.
+  retryable: conditional
+  agent_note: >-
+    An agent must not treat 424 as a transport error and blind-retry it. Retry only after
+    changing the carrier, the service, or the offending field the carrier named.
+- status: 500
+  occurrences: 85
+  envelope: ErrorResponse
+  title: Internal server error
+  meaning: Unhandled failure inside the Karrio instance.
+  remediation: >-
+    Retry with backoff. On a self-hosted instance, correlate with the instance's own API
+    logs (GraphQL api_logs / tracing_records, exposed as MCP tools).
+  retryable: true
+observations:
+- >-
+  Every operation in the spec declares a 500 response (85 of 95), so a 500 is a modelled
+  outcome on this API rather than an unmodelled one.
+- >-
+  No 429 response is declared anywhere in the 95 operations, and no rate-limit response
+  headers appear in the contract. See rate-limits/karrio-rate-limits.yml.
+- >-
+  No RFC 9457 application/problem+json media type appears anywhere in the spec.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

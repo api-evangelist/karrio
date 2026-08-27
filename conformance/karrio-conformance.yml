@@ -1,0 +1,131 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  openapi/karrio-api-openapi.yml (Karrio API 2026.1.32), graphql/karrio-graphql-schema.json,
+  https://karrio.io/docs/api-reference and https://karrio.io/platform.
+provider: Karrio
+providerId: karrio
+description: >-
+  Cross-cutting and domain-standard conformance for Karrio. The honest summary: Karrio is
+  a well-built REST API that conforms to almost none of the named cross-cutting standards,
+  and it operates in a market — parcel logistics — whose interchange standards live at the
+  CARRIER boundary rather than at the platform boundary. Karrio's actual standards work is
+  real but invisible to this rubric: it consumes each carrier's native contract (UPS,
+  FedEx, USPS v3, DHL, Canada Post SOAP/REST) and normalises it. That is the opposite
+  direction of travel from declaring a domain standard on its own surface.
+conformance:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    components.securitySchemes.OAuth2 declares an authorizationCode flow with
+    authorizationUrl /oauth/authorize/, tokenUrl /oauth/token/ and scopes
+    read / write / openid. See scopes/karrio-scopes.yml.
+- id: oidc
+  conforms: partial
+  evidence: >-
+    An `openid` scope is declared on the OAuth2 flow, but no openIdConnect security
+    scheme, no issuer and no /.well-known/openid-configuration is served on any host
+    (probed 2026-08-27, all 404 or 503). The scope is present; the discovery surface an
+    OIDC relying party needs is not.
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    No application/problem+json media type anywhere in the contract. Errors use vendor
+    envelopes ErrorResponse and ErrorMessages. See errors/karrio-problem-types.yml.
+- id: idempotency
+  conforms: false
+  evidence: >-
+    Zero occurrences of "idempoten" in the 496 KB contract; no Idempotency-Key parameter
+    on any of 95 operations, including the label-purchase operation that spends money.
+- id: pagination
+  conforms: true
+  style: offset
+  evidence: >-
+    Documented offset/limit pagination with count/next/previous/results envelope, limit
+    range 1-100, stated in the OpenAPI info description. Consistent across all list
+    operations. The GraphQL surface uses cursor pagination (page_info) instead, so the
+    two surfaces do not agree.
+- id: json-api
+  conforms: false
+  evidence: Plain JSON. No JSON:API media type, no data/attributes/relationships envelope.
+- id: odata
+  conforms: false
+  evidence: No $metadata surface and no OData query options.
+- id: scim
+  conforms: false
+  evidence: >-
+    No SCIM schema URN anywhere. User and organization management is Karrio's own GraphQL
+    mutations, not SCIM — a gap for any enterprise buyer expecting directory-driven
+    provisioning of the multi-org surface Karrio markets.
+- id: fhir
+  conforms: false
+  applicable: false
+- id: fapi
+  conforms: false
+  applicable: false
+- id: psd2
+  conforms: false
+  applicable: false
+- id: rate-limit-headers
+  conforms: false
+  evidence: >-
+    No RateLimit-* / X-RateLimit-* / Retry-After header and no 429 response declared.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: >-
+    Four operations carry OpenAPI `deprecated: true` but no Sunset or Deprecation header
+    is declared and no removal date is published.
+- id: webhook-signing
+  conforms: partial
+  evidence: >-
+    Webhooks carry a signing secret and the docs assert "cryptographic signatures", but
+    neither the header name nor the algorithm is published, so a consumer cannot
+    implement verification from published material.
+domain_standards:
+  market: parcel logistics / multi-carrier shipping
+  standards_probed:
+  - id: edifact-iftmin
+    found: false
+    note: No EDIFACT transport message shape in the contract.
+  - id: x12-214-856
+    found: false
+    note: >-
+      No X12 214 (transportation carrier shipment status) or 856 (ASN) shape. Karrio's
+      tracking model is its own TrackingStatus/TrackingEvent pair, not an X12 mapping.
+  - id: gs1-sscc
+    found: false
+    note: >-
+      No SSCC or GS1 application-identifier field. Label formats supported are PDF, ZPL
+      and PNG — carrier label formats, not GS1 data structures.
+  - id: ucc-128
+    found: false
+  - id: iso-20022
+    found: false
+    applicable: false
+  found_any: false
+  reward_only_note: >-
+    REWARD-ONLY dimension, and correctly scored as no award rather than as a penalty.
+    Multi-carrier shipping has no widely adopted platform-level interchange standard for
+    the rate/label/track surface — every carrier ships its own contract, which is
+    precisely the fragmentation Karrio exists to abstract. Declaring a domain standard
+    here would be inventing one.
+  what_karrio_does_instead:
+    detail: >-
+      Karrio's standards posture is consumption, not declaration. modules/connectors/*
+      in the monorepo vendors carriers' own published contracts — the official USPS
+      Developer Portal v3 OpenAPI specs (vendored in 2026.1.32), DHL Express Swagger,
+      Hermes OpenAPI, DPD Meta OpenAPI, SmartKargo OpenAPI, Teleship OpenAPI — and a
+      pysoap module for the SOAP carriers. Roughly thirty carrier contracts are
+      normalised into one unified model, which is the interoperability work, just
+      pointed downstream.
+compliance_certifications:
+  published: false
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP attestation is published anywhere on
+    karrio.io or in the docs, and there is no trust center. karrio.io/platform markets
+    "enterprise-grade security with advanced compliance controls" and "carrier, data and
+    security compliance" without naming a single framework or audit. NO Compliance
+    pointer is emitted for this provider on that basis.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,44 @@
+generated: '2026-08-27'
+method: generated
+source: >-
+  Authored by API Evangelist against openapi/karrio-api-openapi.yml (Karrio API
+  2026.1.32). Every operationId referenced in every skill is verbatim from that spec;
+  none were invented. Karrio publishes no skills or AGENTS.md of its own
+  (github.com/karrioapi/karrio searched, 6,469 paths, no match).
+provider: Karrio
+providerId: karrio
+api: Karrio Shipping API
+spec: openapi/karrio-api-openapi.yml
+description: >-
+  Packaged Agent Skills for the four marquee flows of the Karrio shipping API. Each one
+  is grounded in real operationIds and carries the two facts that are easy to get wrong
+  on this API: there is no idempotency key on the operation that spends money, and one
+  write operation has no reversal path at all.
+note_on_operation_ids: >-
+  Karrio's generator emits sigil-prefixed operationIds ($$$$$purchase, @@fetch_rates,
+  &&&list). They are unreadable but they are exactly what the published contract
+  declares. Match on method and path if your tooling cannot carry them.
+skills:
+- name: karrio-quote-and-buy-a-label
+  file: karrio-quote-and-buy-a-label.md
+  flow: rate shopping -> shipment -> label purchase
+  operations: 7
+  risk: financial — purchases a real label, and there is no idempotency key
+- name: karrio-track-a-package
+  file: karrio-track-a-package.md
+  flow: register a tracker -> read status and events -> subscribe rather than poll
+  operations: 5
+  risk: low — read-mostly
+- name: karrio-schedule-pickup-and-close-the-day
+  file: karrio-schedule-pickup-and-close-the-day.md
+  flow: select shipments -> book pickup -> end-of-day manifest
+  operations: 8
+  risk: irreversible — manifest creation has no cancel, void or delete operation
+- name: karrio-subscribe-to-shipping-events
+  file: karrio-subscribe-to-shipping-events.md
+  flow: create webhook -> test-fire -> operate -> replay missed deliveries
+  operations: 7
+  risk: low, but signature verification cannot be implemented from published docs
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,127 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://karrio.io/changelog (HTTP 200), CHANGELOG.md and the GitHub Releases API for
+  karrioapi/karrio, plus the versioning policy stated in the OpenAPI info description at
+  https://karrio.io/docs/api-reference. Deprecated operations derived from the
+  `deprecated: true` flags in openapi/karrio-api-openapi.yml.
+provider: Karrio
+providerId: karrio
+description: >-
+  Karrio versions the whole platform on a dated calendar scheme and ships the API, the
+  server, the SDK and every carrier extension together under one version string. The
+  release cadence is genuinely fast. What is NOT healthy is the gap between what runs and
+  what is published: the OpenAPI served at karrio.io/openapi.yml is fifteen releases and
+  roughly eighteen months behind the spec in the repository, and the base URL printed
+  throughout the documentation no longer resolves.
+versioning:
+  scheme: calendar
+  pattern: YYYY.MINOR.PATCH
+  current_version: 2026.1.32
+  current_version_released: '2026-06-23'
+  in_url: false
+  path_prefix: /v1
+  policy_quote: >-
+    "When backwards-incompatible changes are made to the API, a new, dated version is
+    released. The current version is 2026.1.32. As a precaution, use API versioning to
+    check a new API version before committing to an upgrade."
+  policy_source: https://karrio.io/docs/api-reference
+  note: >-
+    The /v1 path prefix has not moved; the dated version tracks the platform release, not
+    the URL. The docs say API docs "differ for every account as we release new versions",
+    which is consistent with a per-instance deployment model.
+release_cadence:
+  observed_window: 2026-03-11 to 2026-06-23
+  releases_in_window: 12
+  recent:
+  - version: 2026.1.32
+    date: '2026-06-23'
+  - version: 2026.1.31
+    date: '2026-04-29'
+  - version: 2026.1.30
+    date: '2026-04-28'
+  - version: 2026.1.29
+    date: '2026-04-19'
+  - version: 2026.1.28
+    date: '2026-04-18'
+  - version: 2026.1.27
+    date: '2026-03-21'
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No Sunset or Deprecation response header appears anywhere in the contract, and no
+    written deprecation policy was found. Deprecation is signalled only by the OpenAPI
+    `deprecated` flag and by a "(deprecated)" suffix in the operation summary. No removal
+    date is stated for any of them.
+  deprecated_operations:
+  - operationId: '&&&&dismiss'
+    method: DELETE
+    path: /v1/orders/{id}
+    summary: Dismiss an order
+    replacement: POST /v1/orders/{id}/cancel
+  - operationId: $$$$schedule
+    method: POST
+    path: /v1/pickups/{carrier_name}/schedule
+    summary: Schedule a pickup (deprecated)
+    replacement: POST /v1/pickups
+  - operationId: '@@@@track_shipment'
+    method: GET
+    path: /v1/proxy/tracking/{carrier_name}/{tracking_number}
+    summary: Track a shipment
+    replacement: POST /v1/proxy/tracking
+  - operationId: $$$$$$create
+    method: GET
+    path: /v1/trackers/{carrier_name}/{tracking_number}
+    summary: Create a package tracker
+    replacement: POST /v1/trackers
+status_page:
+  published: false
+  probed:
+  - url: https://status.karrio.io/
+    status: '<no response>'
+    note: Host does not resolve.
+  note: Karrio publishes no status page. Self-hosted operators monitor their own instance.
+sla:
+  published: false
+  note: >-
+    No SLA document is published. karrio.io/platform states that Scale platform customers
+    get email and Slack support and that enterprise/commercial-license customers get
+    "priority support with SLA", but no SLA terms are published.
+changelog:
+  url: https://karrio.io/changelog
+  status: 200
+  machine_readable: https://raw.githubusercontent.com/karrioapi/karrio/HEAD/CHANGELOG.md
+  see: changelog/karrio-changelog.yml
+decay_signals:
+- signal: published-spec-lag
+  severity: high
+  detail: >-
+    https://karrio.io/openapi.yml (HTTP 200, 422 KB) serves Karrio API 2024.12.6 — 54
+    paths, 80 operations, 144 schemas. The spec in the repository at HEAD is 2026.1.32 —
+    65 paths, 95 operations, 159 schemas. The public, discoverable contract is missing 15
+    operations and a whole resource (Products) that the shipped product has. The Redoc
+    reference at docs.karrio.io/reference/openapi renders the same stale 2024.12.6 copy.
+- signal: base-url-unresolvable
+  severity: high
+  detail: >-
+    api.karrio.io — the host in the curl sample on karrio.io's own homepage, in the
+    webhooks reference, in the Elements quick start and given as the KARRIO_API_URL
+    example in the MCP documentation — returns DNS SERVFAIL from both 8.8.8.8 and
+    1.1.1.1 (probed 2026-08-27). Nothing on the site was updated to reflect it.
+- signal: hosted-app-paused
+  severity: medium
+  detail: >-
+    app.karrio.io resolves to Vercel and answers every path with HTTP 503
+    "DEPLOYMENT_PAUSED" (probed 2026-08-27).
+- signal: node-sdk-abandoned
+  severity: medium
+  detail: >-
+    The npm package `karrio` was last published 2023-01-29 at 2023.1.0. Every
+    @karrio-scoped package the docs tell users to install (@karrio/mcp, @karrio/sdk)
+    returns 404 on the npm registry.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

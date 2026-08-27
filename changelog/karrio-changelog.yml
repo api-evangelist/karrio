@@ -1,0 +1,78 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://karrio.io/changelog (HTTP 200), the verbatim CHANGELOG.md at
+  https://raw.githubusercontent.com/karrioapi/karrio/HEAD/CHANGELOG.md, and release dates
+  from the GitHub Releases API for karrioapi/karrio.
+provider: Karrio
+providerId: karrio
+description: >-
+  Karrio keeps a genuinely good changelog: every release carries a one-paragraph summary
+  of WHY it shipped, then Fix / Feat / Chore sections with GitHub issue numbers. It is
+  written for a self-hosted operator deciding whether to upgrade, which is the right
+  audience for this product. The one weakness is dating — CHANGELOG.md carries no dates,
+  so the dates below come from the Git tags.
+url: https://karrio.io/changelog
+machine_readable: https://raw.githubusercontent.com/karrioapi/karrio/HEAD/CHANGELOG.md
+scheme: calendar
+pattern: YYYY.MINOR.PATCH
+current_version: 2026.1.32
+current_version_date: '2026-06-23'
+dated_in_source: false
+breaking_change_convention: >-
+  Releases state explicitly when there are no breaking changes ("No breaking changes").
+  There is no separate BREAKING section heading; migration-affecting changes are called
+  out in the summary paragraph.
+entries:
+- version: 2026.1.32
+  date: '2026-06-23'
+  breaking: false
+  summary: >-
+    Patch release resolving six operational and security issues reported by self-hosted
+    operators, plus carrier fixes for FedEx and USPS.
+  highlights:
+  - Migration 0093 no longer cascades into tracking/shipment/pickup history (GH #1116).
+  - MD5 PASSWORD_HASHERS override scoped to the test runner so production no longer stores MD5 hashes (GH #1094).
+  - USPS server URLs updated to apis.usps.com / apis-tem.usps.com after USPS retired the legacy Web Tools hosts (GH #1118).
+  - FedEx shipment customerReferences fully populated; fedex_pickup_type shipping option added (GH #1082, #1105).
+  - Official USPS Developer Portal v3 OpenAPI specs vendored for the usps connectors.
+- version: 2026.1.31
+  date: '2026-04-29'
+  breaking: false
+  summary: >-
+    Hotfix. Tracking lookups 500'd whenever any carrier event had a null description.
+  highlights:
+  - TrackingEvent.description made optional end-to-end across SDK, DRF serializer and GraphQL.
+- version: 2026.1.30
+  date: '2026-04-28'
+  breaking: false
+  summary: >-
+    Hotfix. SmartKargo tracking returned 404 on .NET ticks-precision timestamps.
+  highlights:
+  - Event dates truncated to microsecond precision with a try_formats parse list.
+- version: 2026.1.29
+  date: '2026-04-19'
+  breaking: false
+  summary: >-
+    Hotfix. Fixes the DuplicateColumn "archived_at" migration failure on 2026.1.28.
+  highlights:
+  - Archiving field migrations made idempotent; safe upgrade path from 2026.1.26+.
+  - POST /v1/documents/generate responses no longer persisted in api_logs (table bloat).
+- version: 2026.1.28
+  date: '2026-04-18'
+  breaking: false
+- version: 2026.1.27
+  date: '2026-03-21'
+  breaking: false
+- version: 2026.1.26
+  date: '2026-03-21'
+  breaking: false
+- version: 2026.1.25
+  date: '2026-03-18'
+  breaking: false
+cadence_note: >-
+  Twelve releases between 2026-03-11 and 2026-06-23. The 2026.1.x line is patch-only;
+  the minor has not moved in the observed window.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,140 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived by reading github.com/karrioapi/karrio/HEAD/packages/mcp/src/client.ts, which
+  names the exact REST path and verb behind every tool, and binding each to the matching
+  operationId in openapi/karrio-api-openapi.yml (Karrio API 2026.1.32). No mapping is
+  guessed: every high-confidence row was read out of the client source.
+provider: Karrio
+providerId: karrio
+description: >-
+  Binds Karrio's 13 MCP tools to the OpenAPI operations that back them. Confidence is
+  high throughout because the MCP server is a thin typed client over the same public
+  REST API, so each tool inherits its backing operation's parameters and request body as
+  its real input schema. Note the operationIds: Karrio's generator emits sigil-prefixed
+  ids ($, & and @ repeated per tag) rather than readable names, so the ids below are
+  verbatim from the spec and are not human-meaningful.
+surfaces:
+- kind: openapi
+  path: openapi/karrio-api-openapi.yml
+  version: 2026.1.32
+  operations: 95
+  gated: false
+- kind: graphql
+  endpoint: '{karrio-instance-host}/graphql'
+  gated: true
+  note: >-
+    Management GraphQL API. Requires an authenticated Karrio instance, so no live
+    introspection was performed; the shape below is read from the first-party
+    introspection snapshot at schemas/graphql.json in the monorepo (429 types, 69 Query
+    fields, 112 Mutation fields).
+- kind: mcp
+  url: null
+  gated: false
+  note: >-
+    No hosted endpoint. The server runs locally over stdio (or a self-run Streamable HTTP
+    process) against the operator's own instance. See mcp/karrio-mcp.yml.
+coverage:
+  tools_total: 13
+  tools_bound_to_rest: 10
+  tools_mcp_only: 3
+  rest_operations_total: 95
+  rest_operations_covered: 12
+  rest_operations_uncovered: 83
+crosswalk:
+- tool: get_shipping_rates
+  category: rating
+  rest:
+  - '@@fetch_rates'
+  binding: POST /v1/proxy/rates
+  confidence: high
+- tool: create_shipment
+  category: shipments
+  rest:
+  - $$$$$create
+  - $$$$$purchase
+  binding: POST /v1/shipments then POST /v1/shipments/{id}/purchase
+  confidence: high
+  note: Composite. The tool creates the shipment and then purchases the label in one call, which is why it is marked destructive.
+- tool: get_shipment
+  category: shipments
+  rest:
+  - $$$$$retrieve
+  binding: GET /v1/shipments/{id}
+  confidence: high
+- tool: list_shipments
+  category: shipments
+  rest:
+  - $$$$$list
+  binding: GET /v1/shipments
+  confidence: high
+- tool: cancel_shipment
+  category: shipments
+  rest:
+  - $$$$$cancel
+  binding: POST /v1/shipments/{id}/cancel
+  confidence: high
+- tool: track_package
+  category: tracking
+  rest:
+  - $$$$$$add
+  - $$$$$$retrieve
+  binding: POST /v1/trackers then GET /v1/trackers/{identifier}
+  confidence: high
+  note: Composite. Registers a tracker for the tracking number if one does not exist, then reads it back.
+- tool: list_carriers
+  category: carriers
+  rest:
+  - '&&list'
+  binding: GET /v1/carriers
+  confidence: high
+- tool: list_carrier_connections
+  category: carriers
+  rest:
+  - '&&&list'
+  binding: GET /v1/connections
+  confidence: high
+- tool: schedule_pickup
+  category: pickups
+  rest:
+  - $$$$create
+  binding: POST /v1/pickups
+  confidence: high
+- tool: create_manifest
+  category: manifests
+  rest:
+  - $$$$&&create
+  binding: POST /v1/manifests
+  confidence: high
+mcp_only:
+- tool: list_api_logs
+  reason: >-
+    Backed by POST /graphql (api_logs query), not by any REST operation. Karrio publishes
+    no /v1 endpoint for API logs.
+- tool: get_api_log
+  reason: Backed by POST /graphql (api_log query with tracing_records). No REST equivalent.
+- tool: list_tracing_records
+  reason: Backed by POST /graphql (tracing_records query). No REST equivalent.
+rest_only_summary:
+  count: 83
+  note: >-
+    83 of the 95 published REST operations have no MCP tool. The uncovered surface is
+    almost the whole management plane — addresses, parcels, products, orders, batches,
+    document generation and templates, webhooks CRUD, carrier connection writes, auth and
+    token issuance, and the entire proxy passthrough other than rates. An agent using the
+    MCP server can quote, ship, cancel, track, schedule and manifest, but cannot manage
+    the account objects those actions depend on.
+rest_only_tags_uncovered:
+- Addresses
+- Parcels
+- Products
+- Orders
+- Batches
+- Documents
+- Webhooks
+- Auth
+- Connections (writes)
+- Proxy (all but rates)
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,41 @@
+generated: '2026-08-27'
+method: searched
+source: openapi/karrio-api-openapi.yml securitySchemes.OAuth2, cross-read against the Authentication
+  section of https://karrio.io/docs/api-reference.
+schemes:
+- name: OAuth2
+  source: openapi/karrio-api-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /oauth/authorize/
+    tokenUrl: /oauth/token/
+  description: 'Authorization: Bearer xxxxxxxx'
+scopes:
+- scope: openid
+  description: OpenID connect
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/karrio-api-openapi.yml
+- scope: read
+  description: Read access to Karrio data
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/karrio-api-openapi.yml
+- scope: write
+  description: Write access to Karrio data
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/karrio-api-openapi.yml
+docs: https://karrio.io/docs/api-reference
+note: 'Karrio publishes no scopes or permissions reference page. The three scopes below are the complete
+  set declared in the contract and the only ones documented anywhere. They are coarse: read and write
+  are org-wide, with no per-resource scoping, so an OAuth application granted `write` can purchase
+  labels, cancel shipments and create manifests. No incremental or step-up authorization is offered.
+  No /.well-known/oauth-authorization-server is served (probed 2026-08-27, HTTP 404 on karrio.io),
+  so the endpoints below are only discoverable from the OpenAPI itself, and they are relative paths
+  against the caller''s own instance.'
+granularity: coarse
+per_resource_scopes: false

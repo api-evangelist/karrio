@@ -1,9 +1,12 @@
 aid: karrio
 name: Karrio
 description: >-
-  Karrio is the most flexible way to integrate shipping into your platform.
-  The headless shipping platform enables you to build shipping experiences from
-  live rating, label generation, package tracking, and more.
+  Karrio is an open-source, headless multi-carrier shipping platform for developers and
+  logistics teams. Its unified REST API and GraphQL management API abstract more than
+  thirty carrier integrations behind one resource-oriented interface covering live rating,
+  label generation and purchase, package tracking, pickups, manifests, orders, customs
+  documents and webhooks. Karrio can be self-hosted from the Apache-2.0 source, run as the
+  managed Karrio Platform, or embedded and white-labelled under a commercial license.
 type: Index
 accessModel:
   pricing: freemium
@@ -20,55 +23,126 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/karrio.png
 tags:
-  - Label Generation
-  - Logistics
-  - Package Tracking
   - Shipping
+  - Logistics
+  - Label Generation
+  - Package Tracking
+  - Carriers
+  - Fulfillment
+  - Open Source
+  - Multi-Carrier
+  - Rating
+  - Webhooks
 url: https://raw.githubusercontent.com/api-evangelist/karrio/refs/heads/main/apis.yml
 created: '2024-03-30'
-modified: '2026-03-16'
+modified: '2026-08-27'
 specificationVersion: '0.23'
 apis:
 - aid: karrio:shipping-api
   name: Karrio Shipping API
   description: >-
-    Karrio's headless shipping API for live rating, label generation, package tracking, and carrier integrations.
-  humanURL: https://www.karrio.io/
+    Karrio's unified multi-carrier shipping REST API. Ninety-five operations across
+    addresses, parcels, products, shipments, rating, label purchase, trackers, pickups,
+    manifests, customs documents, orders, batches, carrier connections, proxy passthrough
+    and webhooks. Karrio is deployed per instance — self-hosted or managed — so the base
+    URL is the URL of your own Karrio instance rather than a single shared host.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
   tags:
+  - Shipping
   - Label Generation
   - Package Tracking
-  - Shipping
-  properties:
-  - type: Documentation
-    url: https://docs.karrio.io/
-  - type: GettingStarted
-    url: https://docs.karrio.io/guides/getting-started
-- aid: karrio:karrio-shipments-api
-  name: Karrio Shipments API
-  description: Create, manage, rate, purchase, and void shipments.
-  humanURL: https://www.karrio.io/
-  tags:
-  - Shipments
+  - Carriers
+  - Rating
   properties:
   - type: OpenAPI
-    url: openapi/karrio-shipments-api-openapi.yml
+    url: openapi/karrio-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
 common:
+  - type: OAuthScopes
+    url: scopes/karrio-scopes.yml
+  - type: Website
+    url: https://karrio.io/
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+  - type: Blog
+    url: https://karrio.io/blog
+  - type: GitHubOrganization
+    url: https://github.com/karrioapi
+  - type: Support
+    url: https://github.com/orgs/karrioapi/discussions
+  - type: Pricing
+    url: https://karrio.io/platform
+  - type: TermsOfService
+    url: https://karrio.io/terms-of-service
+  - type: PrivacyPolicy
+    url: https://karrio.io/privacy-policy
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/karrioapi
+  - type: OpenAPI
+    url: openapi/karrio-api-openapi.yml
+  - type: GraphQL
+    url: graphql/karrio-graphql-schema.json
+  - type: Overlay
+    url: overlays/karrio-api-overlay.yaml
+  - type: Packages
+    url: packages/karrio-packages.yml
+  - type: SDKs
+    url: packages/karrio-packages.yml
+  - type: CLI
+    url: cli/karrio-cli.yml
+  - type: Components
+    url: components/karrio-components.yml
+  - type: MCPServer
+    url: mcp/karrio-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/karrio-tool-crosswalk.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: LLMsTxt
+    url: llms/karrio-llms.txt
+  - type: Webhooks
+    url: asyncapi/karrio-webhooks.yml
+  - type: Conventions
+    url: conventions/karrio-conventions.yml
+  - type: DataModel
+    url: data-model/karrio-data-model.yml
+  - type: ErrorCatalog
+    url: errors/karrio-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/karrio-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/karrio-changelog.yml
+  - type: Sandbox
+    url: sandbox/karrio-sandbox.yml
+  - type: Conformance
+    url: conformance/karrio-conformance.yml
+  - type: VulnerabilityDisclosure
+    url: security/karrio-vulnerability-disclosure.yml
+  - type: Security
+    url: security/karrio-vulnerability-disclosure.yml
+  - type: Plans
+    url: plans/karrio-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/karrio-rate-limits.yml
+  - type: FinOps
+    url: finops/karrio-finops.yml
   - type: AgenticAccess
     url: agentic-access/karrio-agentic-access.yml
   - type: DomainSecurity
     url: security/karrio-domain-security.yml
   - type: Authentication
     url: authentication/karrio-authentication.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/karrioapi
-  - type: Website
-    url: https://www.karrio.io/
-  - type: Documentation
-    url: https://docs.karrio.io/
-  - type: GitHubOrganization
-    url: https://github.com/karrioapi/karrio
-  - url: https://www.karrio.io/blog
-    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-27'
+  status: enriched
+  artifacts_added: 28
+  pass: local-v1

@@ -1,0 +1,79 @@
+generated: '2026-08-27'
+method: probed
+source: >-
+  Direct HTTP probes of every host named in apis.yml and in the Karrio documentation,
+  run 2026-08-27 with a browser User-Agent and redirects followed.
+provider: Karrio
+providerId: karrio
+description: >-
+  Well-known document probe for the Karrio hosts. NO POINTER IS EMITTED for this file:
+  every path probed returned 404, 503, or failed to resolve, so Karrio serves no
+  /.well-known document on any host we could reach. This artifact records that absence.
+summary:
+  hosts_probed: 4
+  documents_found: 0
+  notes: >-
+    Two of the four hosts are not merely missing well-known documents, they are not
+    serving at all. api.karrio.io — the base URL printed in Karrio's own homepage curl
+    sample, the webhooks reference and the MCP server documentation — returns SERVFAIL
+    from both Google (8.8.8.8) and Cloudflare (1.1.1.1) resolvers and cannot be
+    connected to. app.karrio.io resolves to Vercel and answers every path with HTTP 503
+    "DEPLOYMENT_PAUSED".
+hosts:
+- host: karrio.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /security.txt
+    status: 404
+- host: docs.karrio.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: app.karrio.io
+  note: Vercel deployment paused — every path returns 503 DEPLOYMENT_PAUSED.
+  documents:
+  - path: /.well-known/security.txt
+    status: 503
+  - path: /.well-known/openid-configuration
+    status: 503
+  - path: /.well-known/oauth-authorization-server
+    status: 503
+  - path: /.well-known/api-catalog
+    status: 503
+  - path: /.well-known/agent-card.json
+    status: 503
+  - path: /.well-known/agent.json
+    status: 503
+  - path: /.well-known/mcp
+    status: 503
+- host: api.karrio.io
+  note: >-
+    DNS SERVFAIL on 8.8.8.8 and 1.1.1.1; curl reports "Could not resolve host". No
+    document could be probed.
+  documents:
+  - path: /.well-known/security.txt
+    status: '<no response>'
+  - path: /openapi.json
+    status: '<no response>'
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,13 +1,98 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/karrio-openapi.yml
+generated: '2026-08-27'
+method: searched
+source: >-
+  openapi/karrio-api-openapi.yml (Karrio API 2026.1.32) securitySchemes, upgraded with the
+  Authentication section of the API reference at https://karrio.io/docs/api-reference and
+  the token flow documented at https://karrio.io/docs/developing/api-development.
+docs: https://karrio.io/docs/api-reference
+provider: Karrio
+providerId: karrio
+description: >-
+  Karrio accepts four credential types, and the one most integrators reach for first is
+  the least obvious: the API token is sent as the HTTP Basic USERNAME with an empty
+  password. All four resolve to the same instance-scoped organization context.
 summary:
   types:
+  - apiKey
   - http
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+  primary: Token
+  transport_requirement: HTTPS. "All API requests must be made over HTTPS. API requests without authentication will also fail."
 schemes:
-- name: tokenAuth
-  type: http
-  scheme: bearer
-  description: Karrio API token sent as a Bearer credential in the Authorization header.
+- name: Token
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Authorization: Token key_xxxxxxxx'
+  description: >-
+    The primary credential. A long-lived API key issued per organization from Settings ->
+    API Keys in the dashboard, or read from the GraphQL `token { key }` query. Carries
+    the full privileges of the organization.
+  token_prefix: key_
   sources:
-  - openapi/karrio-openapi.yml
+  - openapi/karrio-api-openapi.yml
+  - https://karrio.io/docs/api-reference
+- name: TokenBasic
+  type: http
+  scheme: basic
+  format: '-u key_xxxxxxxx:'
+  description: >-
+    The SAME API token, supplied as the HTTP Basic username with an empty password. This
+    is the form Karrio's own documentation leads with. The trailing colon is required —
+    it stops curl prompting for a password.
+  quoted: >-
+    "Authentication to the API is performed via HTTP Basic Auth. Provide your API token
+    as the basic auth username value. You do not need to provide a password."
+  sources:
+  - openapi/karrio-api-openapi.yml
+  - https://karrio.io/docs/api-reference
+- name: JWT
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Authorization: Bearer xxx.xxx.xxx'
+  description: >-
+    Short-lived JSON Web Token obtained from POST /api/token with username and password,
+    refreshed at POST /api/token/refresh, verified at POST /api/token/verify. Used by the
+    dashboard and by the GraphQL management API; also the path to issuing an API key
+    programmatically.
+  operations:
+  - '&&authenticate (POST /api/token)'
+  - '&&refresh_token (POST /api/token/refresh)'
+  - '&&verify_token (POST /api/token/verify)'
+  - '&&get_verified_token (POST /api/token/verified)'
+  - '&&generate_resource_token (POST /api/tokens)'
+  - '&&logout (POST /api/logout)'
+  sources:
+  - openapi/karrio-api-openapi.yml
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /oauth/authorize/
+    tokenUrl: /oauth/token/
+    scopes: 3
+  description: >-
+    Authorization-code flow for third-party applications built on a Karrio instance
+    (the app-store / platform surface). Scopes read, write and openid. See
+    scopes/karrio-scopes.yml.
+  sources:
+  - openapi/karrio-api-openapi.yml
+modes:
+  test_and_live: true
+  selected_by: the credential
+  note: >-
+    Each API key is issued as either test or live. Mode is a property of the credential,
+    not of the URL — there is no separate sandbox host. GraphQL calls can also carry
+    `x-test-mode: true`. See sandbox/karrio-sandbox.yml.
+gaps:
+- No /.well-known/openid-configuration or /.well-known/oauth-authorization-server is served on any host (probed 2026-08-27, all 404 or 503), so the OAuth2 and openid surfaces are not discoverable.
+- Key rotation, expiry and revocation policy is not published.
+- No published distinction between the test-key and live-key string format; both are documented as `key_`.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
