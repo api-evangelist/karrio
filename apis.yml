@@ -38,25 +38,273 @@ created: '2024-03-30'
 modified: '2026-08-27'
 specificationVersion: '0.23'
 apis:
-- aid: karrio:shipping-api
-  name: Karrio Shipping API
+- aid: karrio:karrio-addresses-api
+  name: Karrio Addresses API
   description: >-
-    Karrio's unified multi-carrier shipping REST API. Ninety-five operations across
-    addresses, parcels, products, shipments, rating, label purchase, trackers, pickups,
-    manifests, customs documents, orders, batches, carrier connections, proxy passthrough
-    and webhooks. Karrio is deployed per instance — self-hosted or managed — so the base
-    URL is the URL of your own Karrio instance rather than a single shared host.
+    This is an object representing your Karrio shipping address.
+                    You can retrieve all addresses related to your Karrio account.
+                    Address objects are linked to your shipment history, and can be used for recurring
+    shipping
+                    to / from the same locations.
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
-  - Shipping
-  - Label Generation
-  - Package Tracking
-  - Carriers
-  - Rating
+  - Addresses
   properties:
   - type: OpenAPI
-    url: openapi/karrio-api-openapi.yml
+    url: openapi/karrio-addresses-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-api-api
+  name: Karrio API
+  description: API instance metadata resources.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - API
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-api-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-auth-api
+  name: Karrio Auth API
+  description: API authentication resources.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Auth
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-auth-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-batches-api
+  name: Karrio Batches API
+  description: >-
+    This is an object representing your Karrio batch operation.
+                    You can retrieve all batch operations historically for your Karrio account.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Batches
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-batches-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-carriers-api
+  name: Karrio Carriers API
+  description: >-
+    This is an object representing your Karrio carrier extension.
+                    You can retrieve all supported carrier extensions available.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Carriers
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-carriers-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-connections-api
+  name: Karrio Connections API
+  description: >-
+    This is an object representing your Karrio carrier connections.
+                    You can retrieve all carrier connections available to your account.
+                    The `carrier_id` is a friendly name you assign to your connection.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-connections-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-documents-api
+  name: Karrio Documents API
+  description: >-
+    This is an object representing your Karrio document upload record.
+                    A Document upload record keep traces of shipping trade documents uploaded to carriers
+                    to fast track customs and border processing.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-documents-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-manifests-api
+  name: Karrio Manifests API
+  description: >-
+    This is an object representing your Karrio manifest details.
+                    Some carriers require manifests to be created after labels are generated.
+                    A manifest is a summary of all the shipments that are being sent out.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Manifests
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-manifests-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-orders-api
+  name: Karrio Orders API
+  description: >-
+    This is an object representing your Karrio order.
+                    You can create Karrio orders to organize your shipments and ship line items separately.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-orders-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-parcels-api
+  name: Karrio Parcels API
+  description: >-
+    This is an object representing your Karrio shipping parcel.
+                    Parcel objects are linked to your shipment history, and can be used for recurring
+    shipping
+                    using the same packaging.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Parcels
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-parcels-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-pickups-api
+  name: Karrio Pickups API
+  description: >-
+    This is an object representing your Karrio pickup booking.
+                    You can retrieve all pickup booked historically for your Karrio account shipments.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Pickups
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-pickups-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-products-api
+  name: Karrio Products API
+  description: >-
+    This is an object representing your Karrio product template.
+                    Product templates are reusable commodity definitions that can be used in customs declarations
+                    and shipment items for recurring shipments of the same products.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-products-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-proxy-api
+  name: Karrio Proxy API
+  description: >-
+    In some scenarios, all we need is to send request to a carrier using the Karrio unified API.
+                    The Proxy API comes handy for that as it turn Karrio into a simple middleware that
+    converts and
+                    validate your request and simply forward it to the shipping carrier server.<br/>
+                    **Note:**<br/>
+                        When using the proxy API, no objects are created in the Karrio system.
+                        excpet API logs and tracing records for debugging purposes.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Proxy
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-proxy-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-shipments-api
+  name: Karrio Shipments API
+  description: >-
+    This is an object representing your Karrio shipment.
+                    A Shipment guides you through process of preparing and purchasing a label for an order.
+                    A Shipment transitions through multiple statuses throughout its lifetime as the package
+                    shipped makes its journey to it's destination.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Shipments
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-shipments-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-trackers-api
+  name: Karrio Trackers API
+  description: >-
+    This is an object representing your Karrio shipment tracker.
+                    A shipment tracker is an object attached to a shipment by it's tracking number.
+                    The tracker provide the latest tracking status and events associated with a shipment
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Trackers
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-trackers-api-openapi.yml
+  - type: Documentation
+    url: https://karrio.io/docs
+  - type: APIReference
+    url: https://karrio.io/docs/api-reference
+- aid: karrio:karrio-webhooks-api
+  name: Karrio Webhooks API
+  description: >-
+    This is an object representing your Karrio webhook.
+                    You can configure webhook endpoints via the API to be notified about events happen
+    in your
+                    Karrio account.
+  humanURL: https://karrio.io/docs/api-reference
+  baseURL: https://{karrio-instance-host}/
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/karrio-webhooks-api-openapi.yml
   - type: Documentation
     url: https://karrio.io/docs
   - type: APIReference
