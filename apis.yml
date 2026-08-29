@@ -322,6 +322,9 @@ apis:
   - type: APIReference
     url: https://karrio.io/docs/api-reference
 common:
+  - type: CapabilityMap
+    url: capabilities/karrio-capability-edges.yml
+    name: Karrio Business Capability Map
   - type: OAuthScopes
     url: scopes/karrio-scopes.yml
   - type: Website

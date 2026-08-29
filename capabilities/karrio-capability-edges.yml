@@ -1,0 +1,45 @@
+slug: karrio
+provider: Karrio
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Transportation & Logistics
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Trackers
+  spec_file: karrio-trackers-api-openapi.yml
+  capability_id: BC-2510.20
+  capability_id_l1: BC-2510
+  capability_name: Shipment Tracking Management
+  confidence: 0.92
+  evidence: 'GET /v1/trackers List all package trackers; GET /v1/trackers/{carrier_name}/{tracking_number}
+    Create a package tracker; POST /v1/trackers/{tracker_id}/inject-events Inject tracking events; schemas:
+    TrackingStatus, TrackingEvent'
+  reason: Operations create and maintain package trackers and ingest tracking events/status across carriers
+    — shipment tracking and event/status resolution.
+- tag: Manifests
+  spec_file: karrio-manifests-api-openapi.yml
+  capability_id: BC-2500.40
+  capability_id_l1: BC-2500
+  capability_name: Manifest and Cargo Declaration Management
+  confidence: 0.78
+  evidence: POST /v1/manifests  $$$$&&create  Create a manifest
+  reason: Creates and retrieves carrier manifests and the associated manifest document (schemas Manifest,
+    ManifestData, ShippingDocument) — issuance of cargo manifests for tendered shipments.
+- tag: Webhooks
+  spec_file: karrio-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.7
+  evidence: 'POST /v1/webhooks create Create a webhook; POST /v1/webhooks/{id}/test Test a webhook; schemas:
+    WebhookData, WebhookList'
+  reason: Lifecycle management of outbound webhook subscriptions for platform events, which is the named
+    webhook/event-subscription capability; otherwise pure integration plumbing, hence moderate confidence.
