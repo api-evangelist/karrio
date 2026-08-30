@@ -1,0 +1,137 @@
+openapi: 3.2.0
+info:
+  description: "\nKarrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.\n\nThe Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded\nrequest bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.\n\nThe Karrio API differs for every account as we release new versions.\nThese docs are customized to your version of the API.\n\n\n## Versioning\n\nWhen backwards-incompatible changes are made to the API, a new, dated version is released.\nThe current version is `2026.1.32`.\n\nRead our API changelog to learn more about backwards compatibility.\n\nAs a precaution, use API versioning to check a new API version before committing to an upgrade.\n\n\n## Environments\n\nThe Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.\nIn development, it is therefore possible to add carrier connections, get live rates,\nbuy labels, create trackers and schedule pickups in `test_mode`.\n\n\n## Pagination\n\nAll top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses,\nlist shipments, and list trackers. These list API methods share a common structure, taking at least these\ntwo parameters: limit, and offset.\n\nKarrio utilizes offset-based pagination via the offset and limit parameters.\nBoth parameters take a number as value (see below) and return objects in reverse chronological order.\nThe offset parameter returns objects listed after an index.\nThe limit parameter take a limit on the number of objects to be returned from 1 to 100.\n\n\n```json\n{\n    \"count\": 100,\n    \"next\": \"/v1/shipments?limit=25&offset=50\",\n    \"previous\": \"/v1/shipments?limit=25&offset=25\",\n    \"results\": [\n        { ... },\n    ]\n}\n```\n\n## Metadata\n\nUpdateable Karrio objects—including Shipment and Order have a metadata parameter.\nYou can use this parameter to attach key-value data to these Karrio objects.\n\nMetadata is useful for storing additional, structured information on an object.\nAs an example, you could store your user's full name and corresponding unique identifier\nfrom your system on a Karrio Order object.\n\nDo not store any sensitive information as metadata.\n\n## Authentication\n\nAPI keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.\n\nYour API keys carry many privileges, so be sure to keep them secure! Do not share your secret\nAPI keys in publicly accessible areas such as GitHub, client-side code, and so forth.\n\nAuthentication to the API is performed via HTTP Basic Auth. Provide your API token as\nthe basic auth username value. You do not need to provide a password.\n\n```shell\n$ curl https://instance.api.com/v1/shipments \\\n    -u key_xxxxxx:\n# The colon prevents curl from asking for a password.\n```\n\nIf you need to authenticate via bearer auth (e.g., for a cross-origin request),\nuse `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.\n\nAll API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure).\nAPI requests without authentication will also fail.\n"
+  title: Karrio API
+  version: 2026.1.32
+tags:
+- name: API
+  description: "API instance metadata resources.\n                "
+paths:
+  /:
+    get:
+      operationId: '&&ping'
+      summary: Instance Metadata
+      tags:
+      - API
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+              examples:
+                Metadata:
+                  value:
+                    VERSION: ''
+                    APP_NAME: ''
+                    APP_WEBSITE: ''
+                    HOST: ''
+                    ADMIN: ''
+                    OPENAPI: ''
+                    GRAPHQL: ''
+                    AUDIT_LOGGING: true
+                    ALLOW_SIGNUP: true
+                    ALLOW_ADMIN_APPROVED_SIGNUP: true
+                    ALLOW_MULTI_ACCOUNT: true
+                    ADMIN_DASHBOARD: true
+                    MULTI_ORGANIZATIONS: true
+                    ORDERS_MANAGEMENT: true
+                    APPS_MANAGEMENT: true
+                    DOCUMENTS_MANAGEMENT: true
+                    DATA_IMPORT_EXPORT: true
+                    PERSIST_SDK_TRACING: true
+                    WORKFLOW_MANAGEMENT: true
+                    SHIPPING_RULES: true
+                    SHIPPING_METHODS: true
+                    ADVANCED_ANALYTICS: true
+          description: ''
+  /v1/references:
+    get:
+      operationId: '&&data'
+      summary: Data References
+      tags:
+      - API
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+              examples:
+                References:
+                  value:
+                    VERSION: ''
+                    APP_NAME: ''
+                    APP_WEBSITE: ''
+                    HOST: ''
+                    ADMIN: ''
+                    OPENAPI: ''
+                    GRAPHQL: ''
+                    AUDIT_LOGGING: true
+                    ALLOW_SIGNUP: true
+                    ALLOW_ADMIN_APPROVED_SIGNUP: true
+                    ALLOW_MULTI_ACCOUNT: true
+                    ADMIN_DASHBOARD: true
+                    MULTI_ORGANIZATIONS: true
+                    ORDERS_MANAGEMENT: true
+                    APPS_MANAGEMENT: true
+                    DOCUMENTS_MANAGEMENT: true
+                    DATA_IMPORT_EXPORT: true
+                    PERSIST_SDK_TRACING: true
+                    WORKFLOW_MANAGEMENT: true
+                    SHIPPING_RULES: true
+                    SHIPPING_METHODS: true
+                    ADVANCED_ANALYTICS: true
+                    ADDRESS_AUTO_COMPLETE: {}
+                    countries: {}
+                    currencies: {}
+                    carriers: {}
+                    customs_content_type: {}
+                    incoterms: {}
+                    states: {}
+                    services: {}
+                    connection_configs: {}
+                    service_names: {}
+                    options: {}
+                    option_names: {}
+                    package_presets: {}
+                    packaging_types: {}
+                    payment_types: {}
+                    carrier_capabilities: {}
+                    service_levels: {}
+                    integration_status: {}
+          description: ''
+components:
+  securitySchemes:
+    JWT:
+      in: header
+      type: apiKey
+      scheme: bearer
+      bearerFormat: JWT
+      name: Authorization
+      description: 'Authorization: Bearer xxx.xxx.xxx'
+    OAuth2:
+      type: oauth2
+      in: header
+      name: Authorization
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            read: Read access to Karrio data
+            write: Write access to Karrio data
+            openid: OpenID connect
+      description: 'Authorization: Bearer xxxxxxxx'
+    Token:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Authorization: Token key_xxxxxxxx'
+    TokenBasic:
+      type: http
+      scheme: basic
+      name: Authorization
+      description: '-u key_xxxxxxxx:'

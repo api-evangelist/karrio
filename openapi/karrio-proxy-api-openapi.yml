@@ -1,0 +1,4495 @@
+openapi: 3.2.0
+info:
+  description: "\nKarrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.\n\nThe Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded\nrequest bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.\n\nThe Karrio API differs for every account as we release new versions.\nThese docs are customized to your version of the API.\n\n\n## Versioning\n\nWhen backwards-incompatible changes are made to the API, a new, dated version is released.\nThe current version is `2026.1.32`.\n\nRead our API changelog to learn more about backwards compatibility.\n\nAs a precaution, use API versioning to check a new API version before committing to an upgrade.\n\n\n## Environments\n\nThe Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.\nIn development, it is therefore possible to add carrier connections, get live rates,\nbuy labels, create trackers and schedule pickups in `test_mode`.\n\n\n## Pagination\n\nAll top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses,\nlist shipments, and list trackers. These list API methods share a common structure, taking at least these\ntwo parameters: limit, and offset.\n\nKarrio utilizes offset-based pagination via the offset and limit parameters.\nBoth parameters take a number as value (see below) and return objects in reverse chronological order.\nThe offset parameter returns objects listed after an index.\nThe limit parameter take a limit on the number of objects to be returned from 1 to 100.\n\n\n```json\n{\n    \"count\": 100,\n    \"next\": \"/v1/shipments?limit=25&offset=50\",\n    \"previous\": \"/v1/shipments?limit=25&offset=25\",\n    \"results\": [\n        { ... },\n    ]\n}\n```\n\n## Metadata\n\nUpdateable Karrio objects—including Shipment and Order have a metadata parameter.\nYou can use this parameter to attach key-value data to these Karrio objects.\n\nMetadata is useful for storing additional, structured information on an object.\nAs an example, you could store your user's full name and corresponding unique identifier\nfrom your system on a Karrio Order object.\n\nDo not store any sensitive information as metadata.\n\n## Authentication\n\nAPI keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.\n\nYour API keys carry many privileges, so be sure to keep them secure! Do not share your secret\nAPI keys in publicly accessible areas such as GitHub, client-side code, and so forth.\n\nAuthentication to the API is performed via HTTP Basic Auth. Provide your API token as\nthe basic auth username value. You do not need to provide a password.\n\n```shell\n$ curl https://instance.api.com/v1/shipments \\\n    -u key_xxxxxx:\n# The colon prevents curl from asking for a password.\n```\n\nIf you need to authenticate via bearer auth (e.g., for a cross-origin request),\nuse `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.\n\nAll API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure).\nAPI requests without authentication will also fail.\n"
+  title: Karrio Proxy API
+  version: 2026.1.32
+tags:
+- name: Proxy
+  description: "In some scenarios, all we need is to send request to a carrier using the Karrio unified API.\n                The Proxy API comes handy for that as it turn Karrio into a simple middleware that converts and\n                validate your request and simply forward it to the shipping carrier server.<br/>\n                **Note:**<br/>\n                    When using the proxy API, no objects are created in the Karrio system.\n                    excpet API logs and tracing records for debugging purposes.\n                "
+paths:
+  /v1/proxy/manifest:
+    post:
+      operationId: '@@@$generate_manifest'
+      description: '
+
+        Some carriers require shipment manifests to be created for pickups and dropoff.
+
+        Creating a manifest for a shipment also kicks off billing as a commitment or confirmation of the shipment.
+
+        '
+      summary: Create a manifest
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManifestRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManifestResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: generateManifest
+  /v1/proxy/pickups/{carrier_name}:
+    post:
+      operationId: '@schedule_pickup'
+      description: Schedule one or many parcels pickup
+      summary: Schedule a pickup
+      parameters:
+      - in: path
+        name: carrier_name
+        schema:
+          type: string
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - easypost
+          - easyship
+          - eshipper
+          - fedex
+          - freightcom
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - parcelone
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - sapient
+          - seko
+          - sendle
+          - shipengine
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+        required: true
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickupResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: pickupSchedule
+  /v1/proxy/pickups/{carrier_name}/cancel:
+    post:
+      operationId: '@cancel_pickup'
+      description: Cancel a pickup previously scheduled
+      summary: Cancel a pickup
+      parameters:
+      - in: path
+        name: carrier_name
+        schema:
+          type: string
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - easypost
+          - easyship
+          - eshipper
+          - fedex
+          - freightcom
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - parcelone
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - sapient
+          - seko
+          - sendle
+          - shipengine
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+        required: true
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupCancelRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: pickupCancel
+  /v1/proxy/pickups/{carrier_name}/update:
+    post:
+      operationId: '@update_pickup'
+      description: Modify a scheduled pickup
+      summary: Update a pickup
+      parameters:
+      - in: path
+        name: carrier_name
+        schema:
+          type: string
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - easypost
+          - easyship
+          - eshipper
+          - fedex
+          - freightcom
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - parcelone
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - sapient
+          - seko
+          - sendle
+          - shipengine
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+        required: true
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupUpdateRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickupResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: pickupUpdate
+  /v1/proxy/rates:
+    post:
+      operationId: '@@fetch_rates'
+      description: '
+
+        The Shipping process begins by fetching rates for your shipment.
+
+        Use this service to fetch a shipping rates available.
+
+        '
+      summary: Fetch shipment rates
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: fetchRates
+  /v1/proxy/shipping:
+    post:
+      operationId: '@@@buy_label'
+      description: 'Once the shipping rates are retrieved, provide the required info to
+
+        submit the shipment by specifying your preferred rate.'
+      summary: Buy a shipment label
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: buyLabel
+  /v1/proxy/shipping/{carrier_name}/cancel:
+    post:
+      operationId: '@@@void_label'
+      description: Cancel a shipment and the label previously created
+      summary: Void a shipment label
+      parameters:
+      - in: path
+        name: carrier_name
+        schema:
+          type: string
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - easypost
+          - easyship
+          - eshipper
+          - fedex
+          - freightcom
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - parcelone
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - sapient
+          - seko
+          - sendle
+          - shipengine
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+        required: true
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentCancelRequest'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+      x-operationId: voidLabel
+  /v1/proxy/tracking:
+    post:
+      operationId: '@@@@get_tracking'
+      description: You can track a shipment by specifying the carrier and the shipment tracking number.
+      summary: Get tracking details
+      parameters:
+      - in: query
+        name: hub
+        schema:
+          type: string
+      tags:
+      - Proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackingData'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: getTracking
+  /v1/proxy/tracking/{carrier_name}/{tracking_number}:
+    get:
+      operationId: '@@@@track_shipment'
+      description: You can track a shipment by specifying the carrier and the shipment tracking number.
+      summary: Track a shipment
+      parameters:
+      - in: path
+        name: carrier_name
+        schema:
+          type: string
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - fedex
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - seko
+          - sendle
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+        required: true
+      - in: query
+        name: hub
+        schema:
+          type: string
+      - in: path
+        name: tracking_number
+        schema:
+          type: string
+        required: true
+      tags:
+      - Proxy
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      deprecated: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '424':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: trackShipment
+components:
+  schemas:
+    Documents:
+      type: object
+      properties:
+        label:
+          type:
+          - string
+          - 'null'
+          description: A shipping label in base64 string
+        invoice:
+          type:
+          - string
+          - 'null'
+          description: A shipping invoice in base64 string
+        extra_documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShippingDocument'
+          default: []
+          description: Additional shipping documents (return labels, COD documents, etc.)
+    Parcel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        weight:
+          type: number
+          format: double
+          description: The parcel's weight
+        width:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's width
+        height:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's height
+        length:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's length
+        packaging_type:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's packaging type.<br/>\n        **Note that the packaging is optional when using a package preset.**<br/>\n        values: <br/>\n        `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`<br/>\n        For carrier specific packaging types, please consult the reference.\n        "
+          maxLength: 100
+        package_preset:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's package preset.<br/>\n        For carrier specific package presets, please consult the reference.\n        "
+          maxLength: 100
+        description:
+          type:
+          - string
+          - 'null'
+          description: The parcel's description
+          maxLength: 250
+        content:
+          type:
+          - string
+          - 'null'
+          description: The parcel's content description
+          maxLength: 100
+        is_document:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicates if the parcel is composed of documents only
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The parcel's weight unit
+        dimension_unit:
+          enum:
+          - CM
+          - IN
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 41993cb8117c279c
+          description: The parcel's dimension unit
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commodity'
+          description: The parcel items.
+        reference_number:
+          type:
+          - string
+          - 'null'
+          description: "The parcel reference number.<br/>\n        (can be used as tracking number for custom carriers)\n        "
+          maxLength: 100
+        freight_class:
+          type:
+          - string
+          - 'null'
+          description: The parcel's freight class for pallet and freight shipments.
+          maxLength: 6
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>Parcel specific options.</summary>\n\n        {\n            \"insurance\": \"100.00\",\n            \"insured_by\": \"carrier\",\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
+        object_type:
+          type: string
+          default: parcel
+          description: Specifies the object type
+      required:
+      - weight
+      - weight_unit
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        object_type:
+          type: string
+          default: rate
+          description: Specifies the object type
+        carrier_name:
+          type: string
+          description: The rate's carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier's name (unique identifier)
+        currency:
+          type: string
+          description: The rate monetary values currency code
+        service:
+          type:
+          - string
+          - 'null'
+          description: The carrier's rate (quote) service
+        total_charge:
+          type: number
+          format: double
+          default: 0.0
+          description: "The rate's monetary amount of the total charge.<br/>\n        This is the gross amount of the rate after adding the additional charges\n        "
+        transit_days:
+          type:
+          - integer
+          - 'null'
+          description: The estimated delivery transit days
+        extra_charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+          default: []
+          description: list of the rate's additional charges
+        estimated_delivery:
+          type:
+          - string
+          - 'null'
+          description: The delivery estimated date
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+      required:
+      - carrier_id
+      - carrier_name
+      - test_mode
+    RateRequest:
+      type: object
+      properties:
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: "The address of the party<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: "The address of the party<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParcelData'
+          description: The shipment's parcels
+        services:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The requested carrier service for the shipment.<br/>\n        Please consult the reference for specific carriers services.<br/>\n        Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.\n        "
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"insured_by\": \"carrier\",\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          description: The payment details
+        customs:
+          allOf:
+          - $ref: '#/components/schemas/CustomsData'
+          description: "The customs details.<br/>\n        **Note that this is required for international shipments.**\n        "
+        return_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The return address for this shipment. Defaults to the shipper address.
+        billing_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The billing address for this shipment.
+        is_return:
+          type: boolean
+          default: false
+          description: Indicates whether this is a return shipment rate request.
+        carrier_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: The list of configured carriers you wish to get rates from.
+      required:
+      - parcels
+      - recipient
+      - shipper
+    TrackingData:
+      type: object
+      properties:
+        tracking_number:
+          type: string
+          description: The package tracking number
+        carrier_name:
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - fedex
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - seko
+          - sendle
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+          type: string
+          x-spec-enum-id: b6c8e3114206d815
+          description: The tracking carrier
+        account_number:
+          type:
+          - string
+          - 'null'
+          description: The shipper account number
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+        info:
+          allOf:
+          - $ref: '#/components/schemas/TrackingInfo'
+          description: The package and shipment tracking details
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: The carrier user metadata.
+      required:
+      - carrier_name
+      - tracking_number
+    TrackingInfo:
+      type: object
+      properties:
+        carrier_tracking_link:
+          type:
+          - string
+          - 'null'
+          description: The carrier tracking link
+        customer_name:
+          type:
+          - string
+          - 'null'
+          description: The customer name
+        expected_delivery:
+          type:
+          - string
+          - 'null'
+          description: The expected delivery date
+        note:
+          type:
+          - string
+          - 'null'
+          description: A tracking note
+        order_date:
+          type:
+          - string
+          - 'null'
+          description: The package order date
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The package order id or number
+        package_weight:
+          type:
+          - string
+          - 'null'
+          description: The package weight
+        package_weight_unit:
+          type:
+          - string
+          - 'null'
+          description: The package weight unit
+        shipment_package_count:
+          type:
+          - string
+          - 'null'
+          description: The package count
+        shipment_pickup_date:
+          type:
+          - string
+          - 'null'
+          description: The shipment pickup date
+        shipment_delivery_date:
+          type:
+          - string
+          - 'null'
+          description: The shipment delivery date
+        shipment_service:
+          type:
+          - string
+          - 'null'
+          description: The shipment service
+        shipment_origin_country:
+          type:
+          - string
+          - 'null'
+          description: The shipment origin country
+        shipment_origin_postal_code:
+          type:
+          - string
+          - 'null'
+          description: The shipment origin postal code
+        shipment_destination_country:
+          type:
+          - string
+          - 'null'
+          description: The shipment destination country
+        shipment_destination_postal_code:
+          type:
+          - string
+          - 'null'
+          description: The shipment destination postal code
+        shipping_date:
+          type:
+          - string
+          - 'null'
+          description: The shipping date
+        signed_by:
+          type:
+          - string
+          - 'null'
+          description: The person who signed for the package
+        source:
+          type:
+          - string
+          - 'null'
+          description: The tracker source
+    PickupRequest:
+      type: object
+      properties:
+        carrier_code:
+          type:
+          - string
+          - 'null'
+          description: "The carrier code for the pickup (e.g., 'canadapost', 'fedex').<br/>\n        Required when using `POST /v1/pickups`."
+        pickup_date:
+          type: string
+          description: "The expected pickup date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The pickup address
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParcelData'
+          description: The shipment parcels to pickup.
+        parcels_count:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+          description: The number of parcels to be picked up (alternative to providing parcels array)
+        ready_time:
+          type: string
+          description: "The ready time for pickup.<br/>\n        Time Format: `HH:MM`\n        "
+        closing_time:
+          type: string
+          description: "The closing or late time of the pickup.<br/>\n        Time Format: `HH:MM`\n        "
+        instruction:
+          type:
+          - string
+          - 'null'
+          description: "The pickup instruction.<br/>\n        eg: Handle with care.\n        "
+          maxLength: 50
+        package_location:
+          type:
+          - string
+          - 'null'
+          description: "The package(s) location.<br/>\n        eg: Behind the entrance door.\n        "
+          maxLength: 50
+        pickup_type:
+          enum:
+          - one_time
+          - daily
+          - recurring
+          type: string
+          x-spec-enum-id: f6e56facfab73bf5
+          default: one_time
+          description: "The pickup scheduling type.<br/>\n        - one_time: Single pickup on a specific date<br/>\n        - daily: Recurring pickup every business day<br/>\n        - recurring: Custom recurring schedule\n        "
+        recurrence:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Recurrence configuration for recurring pickups.<br/>\n        Example: {\"frequency\": \"weekly\", \"days_of_week\": [\"monday\", \"wednesday\", \"friday\"], \"end_date\": \"2024-12-31\"}\n        "
+        options:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Advanced carrier specific pickup options
+      required:
+      - closing_time
+      - pickup_date
+      - ready_time
+    RateResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of note or warning messages
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+          description: The list of returned rates
+      required:
+      - rates
+    TrackerDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        carrier_name:
+          type: string
+          description: The tracking carrier
+        carrier_id:
+          type: string
+          description: The tracking carrier configured identifier
+        tracking_number:
+          type: string
+          description: The shipment tracking number
+        info:
+          allOf:
+          - $ref: '#/components/schemas/TrackingInfo'
+          default:
+            carrier_tracking_link: null
+            customer_name: null
+            expected_delivery: null
+            note: null
+            order_date: null
+            order_id: null
+            package_weight: null
+            package_weight_unit: null
+            shipment_package_count: null
+            shipment_pickup_date: null
+            shipment_delivery_date: null
+            shipment_service: null
+            shipment_origin_country: null
+            shipment_origin_postal_code: null
+            shipment_destination_country: null
+            shipment_destination_postal_code: null
+            shipping_date: null
+            signed_by: null
+            source: null
+          description: The package and shipment tracking details
+        events:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TrackingEvent'
+          description: The tracking details events
+        delivered:
+          type: boolean
+          description: Specified whether the related shipment was delivered
+        test_mode:
+          type: boolean
+          description: Specified whether the object was created with a carrier in test mode
+        status:
+          enum:
+          - pending
+          - picked_up
+          - unknown
+          - on_hold
+          - cancelled
+          - delivered
+          - in_transit
+          - delivery_delayed
+          - out_for_delivery
+          - ready_for_pickup
+          - delivery_failed
+          - return_to_sender
+          type: string
+          x-spec-enum-id: 74b67d0ba94b1fa9
+          default: pending
+          description: The current tracking status
+        estimated_delivery:
+          type: string
+          description: The delivery estimated date
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        images:
+          allOf:
+          - $ref: '#/components/schemas/Images'
+          description: The tracker documents
+        object_type:
+          type: string
+          default: tracker
+          description: Specifies the object type
+        is_archived:
+          type: boolean
+          default: false
+          description: Indicates whether this tracker is archived.
+        archived_at:
+          type:
+          - string
+          - 'null'
+          description: Timestamp when the tracker was archived.
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the tracker
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          default: []
+          description: The list of note or warning messages
+      required:
+      - carrier_id
+      - carrier_name
+      - test_mode
+      - tracking_number
+    CustomsData:
+      type: object
+      properties:
+        commodities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommodityData'
+          description: The parcel content items
+        duty:
+          allOf:
+          - $ref: '#/components/schemas/Duty'
+          description: "The payment details.<br/>\n        **Note that this is required for a Dutiable parcel shipped internationally.**\n        "
+        duty_billing_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The duty payor address.
+        content_type:
+          enum:
+          - documents
+          - gift
+          - sample
+          - merchandise
+          - return_merchandise
+          - other
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: b8935f22b570da75
+        content_description:
+          type:
+          - string
+          - 'null'
+        incoterm:
+          enum:
+          - CFR
+          - CIF
+          - CIP
+          - CPT
+          - DAP
+          - DAF
+          - DDP
+          - DDU
+          - DEQ
+          - DES
+          - EXW
+          - FAS
+          - FCA
+          - FOB
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 61b2121fbcca17a7
+          description: The customs 'term of trade' also known as 'incoterm'
+        invoice:
+          type:
+          - string
+          - 'null'
+          description: The invoice reference number
+          maxLength: 50
+        invoice_date:
+          type:
+          - string
+          - 'null'
+          description: "The invoice date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
+        commercial_invoice:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates if the shipment is commercial
+        certify:
+          type:
+          - boolean
+          - 'null'
+          description: Indicate that signer certified confirmed all
+        signer:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>Customs identification options.</summary>\n\n        {\n            \"aes\": \"5218487281\",\n            \"eel_pfc\": \"5218487281\",\n            \"license_number\": \"5218487281\",\n            \"certificate_number\": \"5218487281\",\n            \"nip_number\": \"5218487281\",\n            \"eori_number\": \"5218487281\",\n            \"vat_registration_number\": \"5218487281\",\n        }\n        </details>\n        "
+      required:
+      - commodities
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    OperationResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of note or warning messages
+        confirmation:
+          allOf:
+          - $ref: '#/components/schemas/OperationConfirmation'
+          description: The operation details
+    ShipmentCancelRequest:
+      type: object
+      properties:
+        shipment_identifier:
+          type: string
+          description: The shipment identifier returned during creation.
+        service:
+          type:
+          - string
+          - 'null'
+          description: The selected shipment service
+        carrier_id:
+          type: string
+          description: The shipment carrier_id for specific connection selection.
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: Advanced carrier specific cancellation options.
+      required:
+      - shipment_identifier
+    CommodityData:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: The commodity's weight
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The commodity's weight unit
+        title:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        quantity:
+          type: integer
+          default: 1
+          description: The commodity's quantity (number or item)
+        sku:
+          type:
+          - string
+          - 'null'
+          description: The commodity's sku number
+          maxLength: 100
+        hs_code:
+          type:
+          - string
+          - 'null'
+          description: The commodity's hs_code number
+          maxLength: 100
+        value_amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The monetary value of the commodity
+        value_currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The currency of the commodity value amount
+        origin_country:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The origin or manufacture country
+        product_url:
+          type:
+          - string
+          - 'null'
+          description: The product url
+        image_url:
+          type:
+          - string
+          - 'null'
+          description: The image url
+        product_id:
+          type:
+          - string
+          - 'null'
+          description: The product id
+        variant_id:
+          type:
+          - string
+          - 'null'
+          description: The variant id
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: The id of the related order line item.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
+      required:
+      - weight
+      - weight_unit
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
+    ManifestDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique manifest identifier
+        object_type:
+          type: string
+          default: manifest
+          description: Specifies the object type
+        carrier_name:
+          type: string
+          description: The manifest carrier
+        carrier_id:
+          type: string
+          description: The manifest carrier configured name
+        doc:
+          allOf:
+          - $ref: '#/components/schemas/ManifestDocument'
+          description: The manifest documents
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+      required:
+      - carrier_id
+      - carrier_name
+      - test_mode
+    AddressData:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for the address (used in JSON embedded data)
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: "The address postal code\n        **(required for shipment purchase)**\n        "
+          maxLength: 20
+        city:
+          type:
+          - string
+          - 'null'
+          description: "The address city.\n        **(required for shipment purchase)**\n        "
+          maxLength: 50
+        federal_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party frederal tax id
+          maxLength: 50
+        state_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party state id
+          maxLength: 50
+        person_name:
+          type:
+          - string
+          - 'null'
+          description: "Attention to\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        company_name:
+          type:
+          - string
+          - 'null'
+          description: The company name if the party is a company
+          maxLength: 100
+        country_code:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          type: string
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The address country code
+        email:
+          type:
+          - string
+          - 'null'
+          description: The party email
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The party phone number.
+          maxLength: 50
+        state_code:
+          type:
+          - string
+          - 'null'
+          description: The address state code
+          maxLength: 50
+        residential:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address is residential or commercial (enterprise)
+        street_number:
+          type:
+          - string
+          - 'null'
+          description: The address street number
+          maxLength: 100
+        address_line1:
+          type:
+          - string
+          - 'null'
+          description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        address_line2:
+          type:
+          - string
+          - 'null'
+          description: The address line with suite number
+          maxLength: 100
+        validate_location:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address should be validated
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
+      required:
+      - country_code
+    TrackingEvent:
+      type: object
+      properties:
+        date:
+          type: string
+          description: 'The tracking event''s date. Format: `YYYY-MM-DD`'
+        time:
+          type:
+          - string
+          - 'null'
+          description: 'The tracking event''s time. Format: `HH:MM AM/PM`'
+        timestamp:
+          type:
+          - string
+          - 'null'
+          description: 'The tracking event''s timestamp. Format: `YYYY-MM-DDTHH:MM:SS.sssZ` (ISO 8601)'
+        status:
+          enum:
+          - pending
+          - picked_up
+          - unknown
+          - on_hold
+          - cancelled
+          - delivered
+          - in_transit
+          - delivery_delayed
+          - out_for_delivery
+          - ready_for_pickup
+          - delivery_failed
+          - return_to_sender
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 74b67d0ba94b1fa9
+          description: The normalized status of this specific event
+        code:
+          type:
+          - string
+          - 'null'
+          description: The tracking event's code
+        reason:
+          enum:
+          - carrier_damaged_parcel
+          - carrier_sorting_error
+          - carrier_address_not_found
+          - carrier_parcel_lost
+          - carrier_not_enough_time
+          - carrier_vehicle_issue
+          - carrier_capacity_exceeded
+          - carrier_mechanical_delay
+          - retailer_cancelled
+          - retailer_incorrect_data
+          - retailer_not_ready
+          - retailer_incorrect_parcel
+          - retailer_incorrect_dimensions
+          - retailer_packaging_issue
+          - consignee_refused
+          - consignee_business_closed
+          - consignee_not_available
+          - consignee_not_home
+          - consignee_cancelled
+          - consignee_verification_failed
+          - consignee_incorrect_address
+          - consignee_access_restricted
+          - consignee_safe_place_unavailable
+          - customs_delay
+          - customs_documentation
+          - customs_duties_unpaid
+          - customs_prohibited
+          - customs_inspection
+          - weather_delay
+          - natural_disaster
+          - force_majeure
+          - parcel_being_researched
+          - security_issue
+          - regulatory_hold
+          - unknown
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 8b6be95e78b07e31
+          description: The normalized incident reason (for exception events only)
+        description:
+          type:
+          - string
+          - 'null'
+          description: The tracking event's description
+        location:
+          type: string
+          description: The tracking event's location
+        latitude:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The tracking event's latitude.
+        longitude:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The tracking event's longitude.
+    Images:
+      type: object
+      properties:
+        delivery_image:
+          type:
+          - string
+          - 'null'
+          description: A delivery image in base64 string
+        signature_image:
+          type:
+          - string
+          - 'null'
+          description: A signature image in base64 string
+    Duty:
+      type: object
+      properties:
+        paid_by:
+          enum:
+          - sender
+          - recipient
+          - third_party
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 26ff4db10d761aa1
+          description: The duty payer
+        currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The declared value currency
+        declared_value:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The package declared value
+        account_number:
+          type:
+          - string
+          - 'null'
+          description: The duty payment account number
+    ShippingDocument:
+      type: object
+      description: Serializer for shipping document download response.
+      properties:
+        category:
+          type: string
+          description: The document category (e.g., 'label', 'invoice', 'manifest')
+        format:
+          type: string
+          description: The document format (e.g., 'PDF', 'ZPL')
+        print_format:
+          type:
+          - string
+          - 'null'
+          description: The document print format (e.g., 'A4', '6x4', '8.5x11')
+        url:
+          type:
+          - string
+          - 'null'
+          description: The document URL
+        base64:
+          type:
+          - string
+          - 'null'
+          description: The document content encoded in base64
+      required:
+      - category
+      - format
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: "The address postal code\n        **(required for shipment purchase)**\n        "
+          maxLength: 20
+        city:
+          type:
+          - string
+          - 'null'
+          description: "The address city.\n        **(required for shipment purchase)**\n        "
+          maxLength: 50
+        federal_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party frederal tax id
+          maxLength: 50
+        state_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party state id
+          maxLength: 50
+        person_name:
+          type:
+          - string
+          - 'null'
+          description: "Attention to\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        company_name:
+          type:
+          - string
+          - 'null'
+          description: The company name if the party is a company
+          maxLength: 100
+        country_code:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          type: string
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The address country code
+        email:
+          type:
+          - string
+          - 'null'
+          description: The party email
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The party phone number.
+          maxLength: 50
+        state_code:
+          type:
+          - string
+          - 'null'
+          description: The address state code
+          maxLength: 50
+        residential:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address is residential or commercial (enterprise)
+        street_number:
+          type:
+          - string
+          - 'null'
+          description: The address street number
+          maxLength: 100
+        address_line1:
+          type:
+          - string
+          - 'null'
+          description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        address_line2:
+          type:
+          - string
+          - 'null'
+          description: The address line with suite number
+          maxLength: 100
+        validate_location:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address should be validated
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
+        object_type:
+          type: string
+          default: address
+          description: Specifies the object type
+        validation:
+          allOf:
+          - $ref: '#/components/schemas/AddressValidation'
+          description: Specify address validation result
+      required:
+      - country_code
+    Charge:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The charge description
+        amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The charge monetary value
+        currency:
+          type:
+          - string
+          - 'null'
+          description: The charge amount currency
+        id:
+          type:
+          - string
+          - 'null'
+          description: A surcharge id
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    PickupUpdateRequest:
+      type: object
+      properties:
+        pickup_date:
+          type: string
+          description: "The expected pickup date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The pickup address
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parcel'
+          description: The shipment parcels to pickup.
+        confirmation_number:
+          type: string
+          description: pickup identification number
+        ready_time:
+          type: string
+          description: "The ready time for pickup.\n        Time Format: `HH:MM`\n        "
+        closing_time:
+          type: string
+          description: "The closing or late time of the pickup.<br/>\n        Time Format: `HH:MM`\n        "
+        instruction:
+          type:
+          - string
+          - 'null'
+          description: "The pickup instruction.<br/>\n        eg: Handle with care.\n        "
+          maxLength: 50
+        package_location:
+          type:
+          - string
+          - 'null'
+          description: "The package(s) location.<br/>\n        eg: Behind the entrance door.\n        "
+          maxLength: 50
+        pickup_type:
+          enum:
+          - one_time
+          - daily
+          - recurring
+          type: string
+          x-spec-enum-id: f6e56facfab73bf5
+          default: one_time
+          description: "The pickup scheduling type.<br/>\n        - one_time: Single pickup on a specific date<br/>\n        - daily: Recurring pickup every business day<br/>\n        - recurring: Custom recurring schedule\n        "
+        recurrence:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Recurrence configuration for recurring pickups.<br/>\n        Example: {\"frequency\": \"weekly\", \"days_of_week\": [\"monday\", \"wednesday\", \"friday\"], \"end_date\": \"2024-12-31\"}\n        "
+        options:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Advanced carrier specific pickup options
+      required:
+      - address
+      - closing_time
+      - confirmation_number
+      - parcels
+      - pickup_date
+      - ready_time
+    TrackingResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of note or warning messages
+        tracking:
+          allOf:
+          - $ref: '#/components/schemas/TrackerDetails'
+          description: The tracking details retrieved
+    ManifestDocument:
+      type: object
+      properties:
+        manifest:
+          type:
+          - string
+          - 'null'
+          description: A manifest file in base64 string
+    ShippingResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        object_type:
+          type: string
+          default: shipment
+          description: Specifies the object type
+        tracking_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: The shipment tracking url
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        return_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The return address for this shipment. Defaults to the shipper address.
+        billing_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The payor address.
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parcel'
+          description: The shipment's parcels
+        services:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The carriers services requested for the shipment.<br/>\n        Please consult the reference for specific carriers services.<br/>\n        **Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.**\n        "
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          default:
+            paid_by: sender
+            currency: null
+            account_number: null
+          description: The payment details
+        customs:
+          allOf:
+          - $ref: '#/components/schemas/CustomsData'
+          description: "The customs details.<br/>\n        **Note that this is required for the shipment of an international Dutiable parcel.**\n        "
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+          default: []
+          description: The list for shipment rates fetched previously
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The order identifier associated with this shipment
+        label_type:
+          enum:
+          - PDF
+          - ZPL
+          - PNG
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 49b2c844813c9a67
+          description: The shipment label file type.
+        carrier_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The list of configured carriers you wish to get rates from.<br/>\n        **Note that the request will be sent to all carriers in nothing is specified**\n        "
+        tracker_id:
+          type:
+          - string
+          - 'null'
+          description: The attached tracker id
+        created_at:
+          type: string
+          description: "The shipment creation datetime.<br/>\n        Date Format: `YYYY-MM-DD HH:MM:SS.mmmmmmz`\n        "
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the shipment
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          default: []
+          description: The list of note or warning messages
+        is_archived:
+          type: boolean
+          default: false
+          description: Indicates whether this shipment is archived.
+        archived_at:
+          type:
+          - string
+          - 'null'
+          description: Timestamp when the shipment was archived.
+        status:
+          enum:
+          - draft
+          - created
+          - cancelled
+          - shipped
+          - in_transit
+          - delivered
+          - needs_attention
+          - out_for_delivery
+          - delivery_failed
+          type: string
+          x-spec-enum-id: f4c394c6818de493
+          default: draft
+          description: The current Shipment status
+        carrier_name:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier
+        carrier_id:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier configured identifier
+        tracking_number:
+          type:
+          - string
+          - 'null'
+          description: The shipment tracking number
+        shipment_identifier:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier system identifier
+        selected_rate:
+          allOf:
+          - $ref: '#/components/schemas/Rate'
+          description: The shipment selected rate
+        docs:
+          allOf:
+          - $ref: '#/components/schemas/Documents'
+          description: The shipment documents
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        return_shipment:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Return shipment details when a return label is provided with outbound shipment
+        service:
+          type:
+          - string
+          - 'null'
+          description: The selected service
+        selected_rate_id:
+          type:
+          - string
+          - 'null'
+          description: The shipment selected rate.
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+        is_return:
+          type: boolean
+          default: false
+          description: Indicates whether this shipment is a return shipment.
+      required:
+      - created_at
+      - parcels
+      - recipient
+      - shipper
+      - test_mode
+    OperationConfirmation:
+      type: object
+      properties:
+        operation:
+          type: string
+          description: Operation performed
+        success:
+          type: boolean
+          description: Specify whether the operation was successful
+        carrier_name:
+          type: string
+          description: The operation carrier
+        carrier_id:
+          type:
+          - string
+          - 'null'
+          description: The targeted carrier's name (unique identifier)
+      required:
+      - carrier_name
+      - operation
+      - success
+    ShippingRequest:
+      type: object
+      properties:
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        return_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The return address for this shipment. Defaults to the shipper address.
+        billing_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The payor address.
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParcelData'
+          description: The shipment's parcels
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          default:
+            paid_by: sender
+            currency: null
+            account_number: null
+          description: The payment details
+        customs:
+          allOf:
+          - $ref: '#/components/schemas/CustomsData'
+          description: "The customs details.<br/>\n        **Note that this is required for the shipment of an international Dutiable parcel.**\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+          maxLength: 100
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The order identifier associated with this shipment
+          maxLength: 50
+        label_type:
+          enum:
+          - PDF
+          - ZPL
+          - PNG
+          type: string
+          x-spec-enum-id: 49b2c844813c9a67
+          default: PDF
+          description: The shipment label file type.
+        is_return:
+          type: boolean
+          default: false
+          description: Indicates whether this shipment is a return shipment. When true, addresses are auto-swapped and the request is routed to the carrier's return shipment API.
+        selected_rate_id:
+          type: string
+          description: The shipment selected rate.
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+          description: The list for shipment rates fetched previously
+      required:
+      - parcels
+      - rates
+      - recipient
+      - selected_rate_id
+      - shipper
+    Commodity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        weight:
+          type: number
+          format: double
+          description: The commodity's weight
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The commodity's weight unit
+        title:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        quantity:
+          type: integer
+          default: 1
+          description: The commodity's quantity (number or item)
+        sku:
+          type:
+          - string
+          - 'null'
+          description: The commodity's sku number
+          maxLength: 100
+        hs_code:
+          type:
+          - string
+          - 'null'
+          description: The commodity's hs_code number
+          maxLength: 100
+        value_amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The monetary value of the commodity
+        value_currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The currency of the commodity value amount
+        origin_country:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The origin or manufacture country
+        product_url:
+          type:
+          - string
+          - 'null'
+          description: The product url
+        image_url:
+          type:
+          - string
+          - 'null'
+          description: The image url
+        product_id:
+          type:
+          - string
+          - 'null'
+          description: The product id
+        variant_id:
+          type:
+          - string
+          - 'null'
+          description: The variant id
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: The id of the related order line item.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
+        object_type:
+          type: string
+          default: commodity
+          description: Specifies the object type
+      required:
+      - weight
+      - weight_unit
+    Pickup:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique pickup identifier
+        object_type:
+          type: string
+          default: pickup
+          description: Specifies the object type
+        is_archived:
+          type: boolean
+          default: false
+          description: Indicates whether this pickup is archived.
+        archived_at:
+          type:
+          - string
+          - 'null'
+          description: Timestamp when the pickup was archived.
+        carrier_name:
+          type: string
+          description: The pickup carrier
+        carrier_id:
+          type: string
+          description: The pickup carrier configured name
+        confirmation_number:
+          type: string
+          description: The pickup confirmation identifier
+        status:
+          enum:
+          - scheduled
+          - picked_up
+          - cancelled
+          - closed
+          type: string
+          x-spec-enum-id: 04b3c4e318bbbc64
+          default: scheduled
+          description: The current pickup status
+        pickup_date:
+          type:
+          - string
+          - 'null'
+          description: The pickup date
+        pickup_charge:
+          allOf:
+          - $ref: '#/components/schemas/Charge'
+          description: The pickup cost details
+        ready_time:
+          type:
+          - string
+          - 'null'
+          description: The pickup expected ready time
+        closing_time:
+          type:
+          - string
+          - 'null'
+          description: The pickup expected closing or late time
+        pickup_type:
+          enum:
+          - one_time
+          - daily
+          - recurring
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: f6e56facfab73bf5
+          default: one_time
+          description: "The pickup scheduling type.<br/>\n        - one_time: Single pickup on a specific date<br/>\n        - daily: Recurring pickup every business day<br/>\n        - recurring: Custom recurring schedule\n        "
+        recurrence:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Recurrence configuration for recurring pickups.<br/>\n        Example: {\"frequency\": \"weekly\", \"days_of_week\": [\"monday\", \"wednesday\", \"friday\"]}\n        "
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the pickup
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        carrier_code:
+          type:
+          - string
+          - 'null'
+          description: "The carrier code for the pickup (e.g., 'canadapost', 'fedex').<br/>\n        Required when using `POST /v1/pickups`."
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The pickup address
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parcel'
+          description: The shipment parcels to pickup.
+        parcels_count:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+          description: The number of parcels to be picked up (alternative to providing parcels array)
+        instruction:
+          type:
+          - string
+          - 'null'
+          description: "The pickup instruction.<br/>\n        eg: Handle with care.\n        "
+          maxLength: 50
+        package_location:
+          type:
+          - string
+          - 'null'
+          description: "The package(s) location.<br/>\n        eg: Behind the entrance door.\n        "
+          maxLength: 50
+        options:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Advanced carrier specific pickup options
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+      required:
+      - address
+      - carrier_id
+      - carrier_name
+      - confirmation_number
+      - parcels
+      - test_mode
+    ParcelData:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: The parcel's weight
+        width:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's width
+        height:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's height
+        length:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's length
+        packaging_type:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's packaging type.<br/>\n        **Note that the packaging is optional when using a package preset.**<br/>\n        values: <br/>\n        `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`<br/>\n        For carrier specific packaging types, please consult the reference.\n        "
+          maxLength: 100
+        package_preset:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's package preset.<br/>\n        For carrier specific package presets, please consult the reference.\n        "
+          maxLength: 100
+        description:
+          type:
+          - string
+          - 'null'
+          description: The parcel's description
+          maxLength: 250
+        content:
+          type:
+          - string
+          - 'null'
+          description: The parcel's content description
+          maxLength: 100
+        is_document:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicates if the parcel is composed of documents only
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The parcel's weight unit
+        dimension_unit:
+          enum:
+          - CM
+          - IN
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 41993cb8117c279c
+          description: The parcel's dimension unit
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommodityData'
+          description: The parcel items.
+        reference_number:
+          type:
+          - string
+          - 'null'
+          description: "The parcel reference number.<br/>\n        (can be used as tracking number for custom carriers)\n        "
+          maxLength: 100
+        freight_class:
+          type:
+          - string
+          - 'null'
+          description: The parcel's freight class for pallet and freight shipments.
+          maxLength: 6
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>Parcel specific options.</summary>\n\n        {\n            \"insurance\": \"100.00\",\n            \"insured_by\": \"carrier\",\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
+      required:
+      - weight
+      - weight_unit
+    AddressValidation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: True if the address is valid
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: validation service details
+      required:
+      - success
+    Payment:
+      type: object
+      properties:
+        paid_by:
+          enum:
+          - sender
+          - recipient
+          - third_party
+          type: string
+          x-spec-enum-id: 26ff4db10d761aa1
+          default: sender
+          description: The payor type
+        currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The payment amount currency
+        account_number:
+          type:
+          - string
+          - 'null'
+          description: The payor account number
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    PickupCancelRequest:
+      type: object
+      properties:
+        confirmation_number:
+          type: string
+          description: The pickup confirmation identifier
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The pickup address
+        pickup_date:
+          type:
+          - string
+          - 'null'
+          description: "The pickup date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
+        reason:
+          type: string
+          description: The reason of the pickup cancellation
+      required:
+      - confirmation_number
+    PickupResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of note or warning messages
+        pickup:
+          allOf:
+          - $ref: '#/components/schemas/Pickup'
+          description: The scheduled pickup's summary
+    ManifestResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of note or warning messages
+        manifest:
+          allOf:
+          - $ref: '#/components/schemas/ManifestDetails'
+          description: The manifest details
+    ManifestRequest:
+      type: object
+      properties:
+        carrier_name:
+          type: string
+          description: The manifest's carrier
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The address of the warehouse or location where the shipments originate.
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The manifest reference
+        shipment_identifiers:
+          type: array
+          items:
+            type: string
+          description: "The list of shipment identifiers you want to add to your manifest.<br/>\n        shipment_identifier is often a tracking_number or shipment_id returned when you purchase a label.\n        "
+      required:
+      - address
+      - carrier_name
+      - shipment_identifiers
+  securitySchemes:
+    JWT:
+      in: header
+      type: apiKey
+      scheme: bearer
+      bearerFormat: JWT
+      name: Authorization
+      description: 'Authorization: Bearer xxx.xxx.xxx'
+    OAuth2:
+      type: oauth2
+      in: header
+      name: Authorization
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            read: Read access to Karrio data
+            write: Write access to Karrio data
+            openid: OpenID connect
+      description: 'Authorization: Bearer xxxxxxxx'
+    Token:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Authorization: Token key_xxxxxxxx'
+    TokenBasic:
+      type: http
+      scheme: basic
+      name: Authorization
+      description: '-u key_xxxxxxxx:'

@@ -1,0 +1,506 @@
+openapi: 3.2.0
+info:
+  description: "\nKarrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.\n\nThe Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded\nrequest bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.\n\nThe Karrio API differs for every account as we release new versions.\nThese docs are customized to your version of the API.\n\n\n## Versioning\n\nWhen backwards-incompatible changes are made to the API, a new, dated version is released.\nThe current version is `2026.1.32`.\n\nRead our API changelog to learn more about backwards compatibility.\n\nAs a precaution, use API versioning to check a new API version before committing to an upgrade.\n\n\n## Environments\n\nThe Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.\nIn development, it is therefore possible to add carrier connections, get live rates,\nbuy labels, create trackers and schedule pickups in `test_mode`.\n\n\n## Pagination\n\nAll top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses,\nlist shipments, and list trackers. These list API methods share a common structure, taking at least these\ntwo parameters: limit, and offset.\n\nKarrio utilizes offset-based pagination via the offset and limit parameters.\nBoth parameters take a number as value (see below) and return objects in reverse chronological order.\nThe offset parameter returns objects listed after an index.\nThe limit parameter take a limit on the number of objects to be returned from 1 to 100.\n\n\n```json\n{\n    \"count\": 100,\n    \"next\": \"/v1/shipments?limit=25&offset=50\",\n    \"previous\": \"/v1/shipments?limit=25&offset=25\",\n    \"results\": [\n        { ... },\n    ]\n}\n```\n\n## Metadata\n\nUpdateable Karrio objects—including Shipment and Order have a metadata parameter.\nYou can use this parameter to attach key-value data to these Karrio objects.\n\nMetadata is useful for storing additional, structured information on an object.\nAs an example, you could store your user's full name and corresponding unique identifier\nfrom your system on a Karrio Order object.\n\nDo not store any sensitive information as metadata.\n\n## Authentication\n\nAPI keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.\n\nYour API keys carry many privileges, so be sure to keep them secure! Do not share your secret\nAPI keys in publicly accessible areas such as GitHub, client-side code, and so forth.\n\nAuthentication to the API is performed via HTTP Basic Auth. Provide your API token as\nthe basic auth username value. You do not need to provide a password.\n\n```shell\n$ curl https://instance.api.com/v1/shipments \\\n    -u key_xxxxxx:\n# The colon prevents curl from asking for a password.\n```\n\nIf you need to authenticate via bearer auth (e.g., for a cross-origin request),\nuse `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.\n\nAll API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure).\nAPI requests without authentication will also fail.\n"
+  title: Karrio Webhooks API
+  version: 2026.1.32
+tags:
+- name: Webhooks
+  description: "This is an object representing your Karrio webhook.\n                You can configure webhook endpoints via the API to be notified about events happen in your\n                Karrio account.\n                "
+paths:
+  /v1/webhooks:
+    get:
+      operationId: $$$$$$$list
+      description: Retrieve all webhooks.
+      summary: List all webhooks
+      tags:
+      - Webhooks
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookList'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: listWebhooks
+    post:
+      operationId: $$$$$$$create
+      description: Create a new webhook.
+      summary: Create a webhook
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookData'
+        required: true
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: createWebhook
+  /v1/webhooks/{id}:
+    get:
+      operationId: $$$$$$$retrieve
+      description: Retrieve a webhook.
+      summary: Retrieve a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: retrieveWebhook
+    patch:
+      operationId: $$$$$$$update
+      description: update a webhook.
+      summary: Update a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhookData'
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: updateWebhook
+    delete:
+      operationId: $$$$$$$remove
+      description: Remove a webhook.
+      summary: Remove a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: removeWebhook
+  /v1/webhooks/{id}/test:
+    post:
+      operationId: $$$$$$$test
+      description: test a webhook.
+      summary: Test a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTestRequest'
+      security:
+      - TokenBasic: []
+      - Token: []
+      - OAuth2: []
+      - JWT: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+      x-operationId: testWebhook
+components:
+  schemas:
+    PatchedWebhookData:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL of the webhook endpoint.
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of what the webhook is used for.
+        enabled_events:
+          type: array
+          items:
+            enum:
+            - all
+            - shipment_purchased
+            - shipment_cancelled
+            - shipment_fulfilled
+            - shipment_out_for_delivery
+            - shipment_needs_attention
+            - shipment_delivery_failed
+            - tracker_created
+            - tracker_updated
+            - pickup_scheduled
+            - pickup_cancelled
+            - pickup_closed
+            - order_created
+            - order_updated
+            - order_fulfilled
+            - order_cancelled
+            - order_delivered
+            - batch_queued
+            - batch_failed
+            - batch_running
+            - batch_completed
+            type: string
+            x-spec-enum-id: 7310794d8b16bdaf
+          description: The list of events to enable for this endpoint.
+        disabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates that the webhook is disabled
+    Operation:
+      type: object
+      properties:
+        operation:
+          type: string
+          description: Operation performed
+        success:
+          type: boolean
+          description: Specify whether the operation was successful
+      required:
+      - operation
+      - success
+    WebhookData:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL of the webhook endpoint.
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of what the webhook is used for.
+        enabled_events:
+          type: array
+          items:
+            enum:
+            - all
+            - shipment_purchased
+            - shipment_cancelled
+            - shipment_fulfilled
+            - shipment_out_for_delivery
+            - shipment_needs_attention
+            - shipment_delivery_failed
+            - tracker_created
+            - tracker_updated
+            - pickup_scheduled
+            - pickup_cancelled
+            - pickup_closed
+            - order_created
+            - order_updated
+            - order_fulfilled
+            - order_cancelled
+            - order_delivered
+            - batch_queued
+            - batch_failed
+            - batch_running
+            - batch_completed
+            type: string
+            x-spec-enum-id: 7310794d8b16bdaf
+          description: The list of events to enable for this endpoint.
+        disabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates that the webhook is disabled
+      required:
+      - enabled_events
+      - url
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    WebhookTestRequest:
+      type: object
+      properties:
+        payload:
+          type: object
+          additionalProperties: {}
+        event_id:
+          type: string
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        url:
+          type: string
+          format: uri
+          description: The URL of the webhook endpoint.
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of what the webhook is used for.
+        enabled_events:
+          type: array
+          items:
+            enum:
+            - all
+            - shipment_purchased
+            - shipment_cancelled
+            - shipment_fulfilled
+            - shipment_out_for_delivery
+            - shipment_needs_attention
+            - shipment_delivery_failed
+            - tracker_created
+            - tracker_updated
+            - pickup_scheduled
+            - pickup_cancelled
+            - pickup_closed
+            - order_created
+            - order_updated
+            - order_fulfilled
+            - order_cancelled
+            - order_delivered
+            - batch_queued
+            - batch_failed
+            - batch_running
+            - batch_completed
+            type: string
+            x-spec-enum-id: 7310794d8b16bdaf
+          description: The list of events to enable for this endpoint.
+        disabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates that the webhook is disabled
+        object_type:
+          type: string
+          default: webhook
+          description: Specifies the object type
+        last_event_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime of the last event sent.
+        secret:
+          type: string
+          description: Header signature secret
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+      required:
+      - enabled_events
+      - secret
+      - test_mode
+      - url
+    WebhookList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+      required:
+      - results
+  securitySchemes:
+    JWT:
+      in: header
+      type: apiKey
+      scheme: bearer
+      bearerFormat: JWT
+      name: Authorization
+      description: 'Authorization: Bearer xxx.xxx.xxx'
+    OAuth2:
+      type: oauth2
+      in: header
+      name: Authorization
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            read: Read access to Karrio data
+            write: Write access to Karrio data
+            openid: OpenID connect
+      description: 'Authorization: Bearer xxxxxxxx'
+    Token:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Authorization: Token key_xxxxxxxx'
+    TokenBasic:
+      type: http
+      scheme: basic
+      name: Authorization
+      description: '-u key_xxxxxxxx:'
