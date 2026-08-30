@@ -41,6 +41,17 @@ tags:
   - Package Tracking
   - Carriers
   - Fulfillment
+  - Open-Source
+  - Multi-Carrier
+  - Rating
+  - Webhook
+tags_raw:
+  - Shipping
+  - Logistics
+  - Label Generation
+  - Package Tracking
+  - Carriers
+  - Fulfillment
   - Open Source
   - Multi-Carrier
   - Rating
@@ -74,7 +85,8 @@ apis:
   description: API instance metadata resources.
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
-  tags:
+  tags: []
+  tags_raw:
   - API
   properties:
   - type: OpenAPI
@@ -89,6 +101,8 @@ apis:
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
+  - Authentication
+  tags_raw:
   - Auth
   properties:
   - type: OpenAPI
@@ -188,6 +202,8 @@ apis:
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
@@ -239,6 +255,8 @@ apis:
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -313,6 +331,8 @@ apis:
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
