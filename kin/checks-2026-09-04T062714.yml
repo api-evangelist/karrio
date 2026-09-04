@@ -1,17 +1,17 @@
 ---
 kin_checks:
   slug: karrio
-  schema_version: 0.17.2
-  scored_at: '2026-09-01'
-  run_ts: 2026-09-01T063623
+  schema_version: 0.18.2
+  scored_at: '2026-09-04'
+  run_ts: 2026-09-04T062714
   note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.17.2.yml; counts below let you verify that.
+    in rubric/scoring-0.18.2.yml; counts below let you verify that.
   counts:
-    total: 130
-    earned: 50
-    partial: 14
-    missed: 46
-    na: 20
+    total: 132
+    earned: 48
+    partial: 18
+    missed: 45
+    na: 21
   checks:
   - id: multiple_apis
     status: missed
@@ -94,8 +94,6 @@ kin_checks:
     status: missed
   - id: reg_camara_conformance
     status: missed
-  - id: reversibility_documented
-    status: missed
   - id: idempotency
     status: missed
   - id: well_known_catalog
@@ -129,20 +127,27 @@ kin_checks:
     status: partial
     earned: 2.63
     detail: 14 of 16 openapi documents pass
+  - id: lifecycle_documented
+    status: partial
+    earned: 4.33
+  - id: conformance_declared
+    status: partial
+    earned: 1.5
   - id: github_org_present
     status: partial
     earned: 1.0
     detail: pointer liveness 0.5
-  - id: plans_present
+  - id: agent_skill_present
     status: partial
-    earned: 2.0
-  - id: plans_multiple
-    status: partial
-    earned: 1.0
+    earned: 0.75
   - id: agentic_access
     status: partial
     earned: 2.5
     detail: 'authorship: derived'
+  - id: reversibility_documented
+    status: partial
+    earned: 2.4
+    detail: 'grade: documented'
   - id: mcp_server
     status: partial
     earned: 4.8
@@ -159,6 +164,14 @@ kin_checks:
     status: partial
     earned: 3.5
     detail: 'grade: documented'
+  - id: event_surface_described
+    status: partial
+    earned: 1.5
+    detail: 'authorship: derived'
+  - id: agent_skills
+    status: partial
+    earned: 1.25
+    detail: 'authorship: derived'
   - id: delegated_identity
     status: partial
     earned: 3.0
