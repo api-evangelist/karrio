@@ -38,11 +38,11 @@ tags:
 - Logistics
 - Label Generation
 - Package Tracking
-- Carriers
+- Carrier
 - Fulfillment
 - Open-Source
 - Multi-Carrier
-- Rating
+- Ratings
 - Webhook
 tags_raw:
 - Shipping
@@ -130,6 +130,8 @@ apis:
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
+  - Carrier
+  tags_raw:
   - Carriers
   properties:
   - type: OpenAPI
@@ -211,6 +213,8 @@ apis:
   humanURL: https://karrio.io/docs/api-reference
   baseURL: https://{karrio-instance-host}/
   tags:
+  - Parcel
+  tags_raw:
   - Parcels
   properties:
   - type: OpenAPI
