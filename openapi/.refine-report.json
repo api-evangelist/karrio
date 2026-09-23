@@ -1,12 +1,50 @@
 {
   "provider": "karrio",
-  "sources": [],
-  "outputs": [],
+  "sources": [
+    "_original/karrio-api-openapi.yml"
+  ],
+  "outputs": [
+    "karrio-api-api-openapi.yml",
+    "karrio-addresses-api-openapi.yml",
+    "karrio-auth-api-openapi.yml",
+    "karrio-batches-api-openapi.yml",
+    "karrio-carriers-api-openapi.yml",
+    "karrio-connections-api-openapi.yml",
+    "karrio-documents-api-openapi.yml",
+    "karrio-manifests-api-openapi.yml",
+    "karrio-orders-api-openapi.yml",
+    "karrio-parcels-api-openapi.yml",
+    "karrio-pickups-api-openapi.yml",
+    "karrio-products-api-openapi.yml",
+    "karrio-proxy-api-openapi.yml",
+    "karrio-shipments-api-openapi.yml",
+    "karrio-trackers-api-openapi.yml",
+    "karrio-webhooks-api-openapi.yml"
+  ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
-    "Reset 2026-08-27 by the enrichment pipeline. The prior report described karrio-shipments-api-openapi.yml, a scaffolded 7-operation spec that has been removed. The real first-party contract (Karrio API 2026.1.32, 65 paths / 95 operations / 159 schemas) was harvested to karrio-api-openapi.yml and has NOT yet been refined or split by tag."
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "karrio-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "karrio-addresses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-batches-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-carriers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-connections-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-manifests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-parcels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-pickups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-proxy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-shipments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-trackers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
