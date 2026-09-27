@@ -180,6 +180,42 @@ paths:
       x-operationId: retrieveManifestDocument
 components:
   schemas:
+    ShippingDocument:
+      type: object
+      description: Serializer for shipping document download response.
+      properties:
+        category:
+          type: string
+          description: The document category (e.g., 'label', 'invoice', 'manifest')
+        format:
+          type: string
+          description: The document format (e.g., 'PDF', 'ZPL')
+        print_format:
+          type:
+          - string
+          - 'null'
+          description: The document print format (e.g., 'A4', '6x4', '8.5x11')
+        url:
+          type:
+          - string
+          - 'null'
+          description: The document URL
+        base64:
+          type:
+          - string
+          - 'null'
+          description: The document content encoded in base64
+      required:
+      - category
+      - format
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
     Manifest:
       type: object
       properties:
@@ -247,34 +283,74 @@ components:
       - carrier_name
       - shipment_identifiers
       - test_mode
-    ShippingDocument:
+    APIError:
       type: object
-      description: Serializer for shipping document download response.
       properties:
-        category:
+        message:
           type: string
-          description: The document category (e.g., 'label', 'invoice', 'manifest')
-        format:
+          description: The error or warning message
+        code:
           type: string
-          description: The document format (e.g., 'PDF', 'ZPL')
-        print_format:
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    ManifestList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
           type:
           - string
           - 'null'
-          description: The document print format (e.g., 'A4', '6x4', '8.5x11')
-        url:
+          format: uri
+        previous:
           type:
           - string
           - 'null'
-          description: The document URL
-        base64:
-          type:
-          - string
-          - 'null'
-          description: The document content encoded in base64
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Manifest'
       required:
-      - category
-      - format
+      - results
+    ManifestData:
+      type: object
+      properties:
+        carrier_name:
+          type: string
+          description: The manifest's carrier
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The address of the warehouse or location where the shipments originate.
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The manifest reference
+        shipment_ids:
+          type: array
+          items:
+            type: string
+          description: The list of existing shipment object ids with label purchased.
+      required:
+      - address
+      - carrier_name
+      - shipment_ids
     Message:
       type: object
       properties:
@@ -305,82 +381,6 @@ components:
           items:
             $ref: '#/components/schemas/APIError'
           description: The list of API errors
-    ManifestList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Manifest'
-      required:
-      - results
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-    ManifestData:
-      type: object
-      properties:
-        carrier_name:
-          type: string
-          description: The manifest's carrier
-        address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The address of the warehouse or location where the shipments originate.
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The manifest reference
-        shipment_ids:
-          type: array
-          items:
-            type: string
-          description: The list of existing shipment object ids with label purchased.
-      required:
-      - address
-      - carrier_name
-      - shipment_ids
     AddressData:
       type: object
       properties:

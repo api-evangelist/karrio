@@ -167,43 +167,14 @@ paths:
           description: ''
 components:
   schemas:
-    VerifiedTokenObtainPair:
+    TokenVerify:
       type: object
       properties:
-        refresh:
-          type: string
-        access:
-          type: string
-          readOnly: true
-        otp_token:
-          type: string
-          description: "The OTP (One Time Password) token received by the user from the\n        configured Two Factor Authentication method.\n        "
-      required:
-      - access
-      - otp_token
-      - refresh
-    TokenPair:
-      type: object
-      properties:
-        access:
-          type: string
-        refresh:
-          type: string
-      required:
-      - access
-      - refresh
-    TokenObtainPair:
-      type: object
-      properties:
-        email:
-          type: string
-          writeOnly: true
-        password:
+        token:
           type: string
           writeOnly: true
       required:
-      - email
-      - password
+      - token
     ResourceTokenRequest:
       type: object
       properties:
@@ -260,6 +231,21 @@ components:
       - access
       - resource_ids
       - resource_type
+    VerifiedTokenObtainPair:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+          readOnly: true
+        otp_token:
+          type: string
+          description: "The OTP (One Time Password) token received by the user from the\n        configured Two Factor Authentication method.\n        "
+      required:
+      - access
+      - otp_token
+      - refresh
     ResourceTokenResponse:
       type: object
       properties:
@@ -290,14 +276,28 @@ components:
       required:
       - access
       - refresh
-    TokenVerify:
+    TokenObtainPair:
       type: object
       properties:
-        token:
+        email:
+          type: string
+          writeOnly: true
+        password:
           type: string
           writeOnly: true
       required:
-      - token
+      - email
+      - password
+    TokenPair:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
   securitySchemes:
     JWT:
       in: header

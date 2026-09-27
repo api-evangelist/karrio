@@ -233,54 +233,6 @@ paths:
       x-operationId: removeCarrierConnection
 components:
   schemas:
-    seko:
-      type: object
-      properties:
-        access_key:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - access_key
-    easypost:
-      type: object
-      properties:
-        api_key:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - api_key
-    nationex:
-      type: object
-      properties:
-        api_key:
-          type: string
-        customer_id:
-          type: string
-        billing_account:
-          type:
-          - string
-          - 'null'
-        language:
-          enum:
-          - en
-          - fr
-          type: string
-          x-spec-enum-id: e4be23cf445bc4cb
-          description: Indicates a language string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: CA
-      required:
-      - api_key
-      - customer_id
     dhl_universal:
       type: object
       properties:
@@ -303,370 +255,6 @@ components:
       required:
       - consumer_key
       - consumer_secret
-    tnt:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - password
-      - username
-    shipengine:
-      type: object
-      properties:
-        api_key:
-          type: string
-        carrier_ids:
-          type:
-          - string
-          - 'null'
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - api_key
-    CarrierConnectionList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarrierConnection'
-      required:
-      - results
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
-    asendia:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        customer_id:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - password
-      - username
-    spring:
-      type: object
-      properties:
-        api_key:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - api_key
-    mydhl:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - password
-      - username
-    hay_post:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        customer_id:
-          type: string
-        customer_type:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - customer_id
-      - customer_type
-      - password
-      - username
-    ConnectionCredentialsField:
-      oneOf:
-      - $ref: '#/components/schemas/aramex'
-      - $ref: '#/components/schemas/asendia'
-      - $ref: '#/components/schemas/asendia_us'
-      - $ref: '#/components/schemas/australiapost'
-      - $ref: '#/components/schemas/boxknight'
-      - $ref: '#/components/schemas/bpost'
-      - $ref: '#/components/schemas/canadapost'
-      - $ref: '#/components/schemas/canpar'
-      - $ref: '#/components/schemas/chronopost'
-      - $ref: '#/components/schemas/colissimo'
-      - $ref: '#/components/schemas/dhl_express'
-      - $ref: '#/components/schemas/dhl_parcel_de'
-      - $ref: '#/components/schemas/dhl_poland'
-      - $ref: '#/components/schemas/dhl_universal'
-      - $ref: '#/components/schemas/dicom'
-      - $ref: '#/components/schemas/dpd'
-      - $ref: '#/components/schemas/dpd_meta'
-      - $ref: '#/components/schemas/dtdc'
-      - $ref: '#/components/schemas/easypost'
-      - $ref: '#/components/schemas/easyship'
-      - $ref: '#/components/schemas/eshipper'
-      - $ref: '#/components/schemas/fedex'
-      - $ref: '#/components/schemas/freightcom'
-      - $ref: '#/components/schemas/generic'
-      - $ref: '#/components/schemas/geodis'
-      - $ref: '#/components/schemas/gls'
-      - $ref: '#/components/schemas/hay_post'
-      - $ref: '#/components/schemas/hermes'
-      - $ref: '#/components/schemas/landmark'
-      - $ref: '#/components/schemas/laposte'
-      - $ref: '#/components/schemas/locate2u'
-      - $ref: '#/components/schemas/mydhl'
-      - $ref: '#/components/schemas/nationex'
-      - $ref: '#/components/schemas/parcelone'
-      - $ref: '#/components/schemas/postat'
-      - $ref: '#/components/schemas/purolator'
-      - $ref: '#/components/schemas/roadie'
-      - $ref: '#/components/schemas/royalmail'
-      - $ref: '#/components/schemas/sapient'
-      - $ref: '#/components/schemas/seko'
-      - $ref: '#/components/schemas/sendle'
-      - $ref: '#/components/schemas/shipengine'
-      - $ref: '#/components/schemas/smartkargo'
-      - $ref: '#/components/schemas/spring'
-      - $ref: '#/components/schemas/teleship'
-      - $ref: '#/components/schemas/tge'
-      - $ref: '#/components/schemas/tnt'
-      - $ref: '#/components/schemas/ups'
-      - $ref: '#/components/schemas/usps'
-      - $ref: '#/components/schemas/usps_international'
-      - $ref: '#/components/schemas/veho'
-      - $ref: '#/components/schemas/zoom2u'
-    smartkargo:
-      type: object
-      properties:
-        api_key:
-          type: string
-        account_number:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - account_number
-      - api_key
-    royalmail:
-      type: object
-      properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: UK
-      required:
-      - client_id
-      - client_secret
-    parcelone:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        mandator_id:
-          type: string
-        consigner_id:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: DE
-      required:
-      - consigner_id
-      - mandator_id
-      - password
-      - username
-    roadie:
-      type: object
-      properties:
-        api_key:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: US
-      required:
-      - api_key
-    usps:
-      type: object
-      properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_type:
-          enum:
-          - EPS
-          - PERMIT
-          - METER
-          type: string
-          x-spec-enum-id: e8d4abea89e0d6bd
-          description: Indicates a account_type string
-        manifest_MID:
-          type:
-          - string
-          - 'null'
-        CRID:
-          type:
-          - string
-          - 'null'
-        MID:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: US
-      required:
-      - client_id
-      - client_secret
-    tge:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        api_key:
-          type: string
-        toll_username:
-          type: string
-        toll_password:
-          type: string
-        my_toll_token:
-          type: string
-        my_toll_identity:
-          type: string
-        account_code:
-          type:
-          - string
-          - 'null'
-        sscc_count:
-          type: integer
-        shipment_count:
-          type: integer
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: AU
-      required:
-      - api_key
-      - my_toll_identity
-      - my_toll_token
-      - password
-      - toll_password
-      - toll_username
-      - username
-    postat:
-      type: object
-      properties:
-        client_id:
-          type: string
-        org_unit_id:
-          type: string
-        org_unit_guid:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: AT
-      required:
-      - client_id
-      - org_unit_guid
-      - org_unit_id
-    generic:
-      type: object
-      properties:
-        display_name:
-          type: string
-        custom_carrier_name:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-        account_number:
-          type:
-          - string
-          - 'null'
-      required:
-      - custom_carrier_name
-      - display_name
     geodis:
       type: object
       properties:
@@ -720,127 +308,6 @@ components:
       required:
       - account_number
       - password
-    teleship:
-      type: object
-      properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - client_id
-      - client_secret
-    australiapost:
-      type: object
-      properties:
-        api_key:
-          type: string
-        password:
-          type: string
-        account_number:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: AU
-      required:
-      - account_number
-      - api_key
-      - password
-    dicom:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        billing_account:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - password
-      - username
-    asendia_us:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        api_key:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: US
-      required:
-      - api_key
-      - password
-      - username
-    dtdc:
-      type: object
-      properties:
-        api_key:
-          type: string
-        customer_code:
-          type: string
-        username:
-          type:
-          - string
-          - 'null'
-        password:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: IN
-      required:
-      - api_key
-      - customer_code
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    dhl_express:
-      type: object
-      properties:
-        site_id:
-          type: string
-        password:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - password
-      - site_id
     bpost:
       type: object
       properties:
@@ -856,139 +323,6 @@ components:
       required:
       - account_id
       - passphrase
-    dhl_poland:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: PL
-      required:
-      - password
-      - username
-    locate2u:
-      type: object
-      properties:
-        client_id:
-          type:
-          - string
-          - 'null'
-        client_secret:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: AU
-    aramex:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_pin:
-          type: string
-        account_entity:
-          type: string
-        account_number:
-          type: string
-        account_country_code:
-          type: string
-      required:
-      - account_country_code
-      - account_entity
-      - account_number
-      - account_pin
-      - password
-      - username
-    dhl_parcel_de:
-      type: object
-      properties:
-        username:
-          type:
-          - string
-          - 'null'
-        password:
-          type:
-          - string
-          - 'null'
-        client_id:
-          type:
-          - string
-          - 'null'
-        client_secret:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: DE
-    zoom2u:
-      type: object
-      properties:
-        api_key:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: AU
-      required:
-      - api_key
-    ups:
-      type: object
-      properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - client_id
-      - client_secret
-    Message:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-        carrier_name:
-          type: string
-          description: The targeted carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier name (unique identifier)
     PatchedCarrierConnectionData:
       type: object
       properties:
@@ -1077,6 +411,692 @@ components:
           type: boolean
           default: true
           description: The active flag indicates whether the carrier account is active or not.
+    mydhl:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - password
+      - username
+    boxknight:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: CA
+      required:
+      - password
+      - username
+    seko:
+      type: object
+      properties:
+        access_key:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - access_key
+    sendle:
+      type: object
+      properties:
+        sendle_id:
+          type: string
+        api_key:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - api_key
+      - sendle_id
+    zoom2u:
+      type: object
+      properties:
+        api_key:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: AU
+      required:
+      - api_key
+    sapient:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        shipping_account_id:
+          type: string
+        sapient_carrier_code:
+          enum:
+          - DX
+          - EVRI
+          - RM
+          - UPS
+          - YODEL
+          type: string
+          x-spec-enum-id: 24b797aea0df4a45
+          description: Indicates a sapient_carrier_code string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: GB
+      required:
+      - client_id
+      - client_secret
+      - shipping_account_id
+    shipengine:
+      type: object
+      properties:
+        api_key:
+          type: string
+        carrier_ids:
+          type:
+          - string
+          - 'null'
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - api_key
+    dhl_poland:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: PL
+      required:
+      - password
+      - username
+    dhl_express:
+      type: object
+      properties:
+        site_id:
+          type: string
+        password:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - password
+      - site_id
+    veho:
+      type: object
+      properties:
+        api_key:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - api_key
+    tge:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        api_key:
+          type: string
+        toll_username:
+          type: string
+        toll_password:
+          type: string
+        my_toll_token:
+          type: string
+        my_toll_identity:
+          type: string
+        account_code:
+          type:
+          - string
+          - 'null'
+        sscc_count:
+          type: integer
+        shipment_count:
+          type: integer
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: AU
+      required:
+      - api_key
+      - my_toll_identity
+      - my_toll_token
+      - password
+      - toll_password
+      - toll_username
+      - username
+    usps:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_type:
+          enum:
+          - EPS
+          - PERMIT
+          - METER
+          type: string
+          x-spec-enum-id: e8d4abea89e0d6bd
+          description: Indicates a account_type string
+        manifest_MID:
+          type:
+          - string
+          - 'null'
+        CRID:
+          type:
+          - string
+          - 'null'
+        MID:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: US
+      required:
+      - client_id
+      - client_secret
+    freightcom:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - password
+      - username
+    easyship:
+      type: object
+      properties:
+        access_token:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - access_token
+    ups:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - client_id
+      - client_secret
+    aramex:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_pin:
+          type: string
+        account_entity:
+          type: string
+        account_number:
+          type: string
+        account_country_code:
+          type: string
+      required:
+      - account_country_code
+      - account_entity
+      - account_number
+      - account_pin
+      - password
+      - username
+    dpd_meta:
+      type: object
+      properties:
+        dpd_login:
+          type:
+          - string
+          - 'null'
+        dpd_password:
+          type:
+          - string
+          - 'null'
+        dpd_client_id:
+          type:
+          - string
+          - 'null'
+        dpd_client_secret:
+          type:
+          - string
+          - 'null'
+        dpd_bucode:
+          type:
+          - string
+          - 'null'
+        customer_id:
+          type:
+          - string
+          - 'null'
+        customer_account_number:
+          type:
+          - string
+          - 'null'
+        customer_sub_account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+    asendia:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        customer_id:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - password
+      - username
+    smartkargo:
+      type: object
+      properties:
+        api_key:
+          type: string
+        account_number:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - account_number
+      - api_key
+    landmark:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        client_id:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        region:
+          type:
+          - string
+          - 'null'
+          default: Landmark CMH
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - client_id
+      - password
+      - username
+    dhl_parcel_de:
+      type: object
+      properties:
+        username:
+          type:
+          - string
+          - 'null'
+        password:
+          type:
+          - string
+          - 'null'
+        client_id:
+          type:
+          - string
+          - 'null'
+        client_secret:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: DE
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
+    australiapost:
+      type: object
+      properties:
+        api_key:
+          type: string
+        password:
+          type: string
+        account_number:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: AU
+      required:
+      - account_number
+      - api_key
+      - password
+    easypost:
+      type: object
+      properties:
+        api_key:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - api_key
+    generic:
+      type: object
+      properties:
+        display_name:
+          type: string
+        custom_carrier_name:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+        account_number:
+          type:
+          - string
+          - 'null'
+      required:
+      - custom_carrier_name
+      - display_name
+    nationex:
+      type: object
+      properties:
+        api_key:
+          type: string
+        customer_id:
+          type: string
+        billing_account:
+          type:
+          - string
+          - 'null'
+        language:
+          enum:
+          - en
+          - fr
+          type: string
+          x-spec-enum-id: e4be23cf445bc4cb
+          description: Indicates a language string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: CA
+      required:
+      - api_key
+      - customer_id
+    usps_international:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_type:
+          enum:
+          - EPS
+          - PERMIT
+          - METER
+          type: string
+          x-spec-enum-id: e8d4abea89e0d6bd
+          description: Indicates a account_type string
+        manifest_MID:
+          type:
+          - string
+          - 'null'
+        CRID:
+          type:
+          - string
+          - 'null'
+        MID:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: US
+      required:
+      - client_id
+      - client_secret
+    locate2u:
+      type: object
+      properties:
+        client_id:
+          type:
+          - string
+          - 'null'
+        client_secret:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: AU
+    roadie:
+      type: object
+      properties:
+        api_key:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: US
+      required:
+      - api_key
+    CarrierConnectionData:
+      type: object
+      properties:
+        carrier_name:
+          enum:
+          - aramex
+          - asendia
+          - asendia_us
+          - australiapost
+          - boxknight
+          - bpost
+          - canadapost
+          - canpar
+          - chronopost
+          - colissimo
+          - dhl_express
+          - dhl_parcel_de
+          - dhl_poland
+          - dhl_universal
+          - dicom
+          - dpd
+          - dpd_meta
+          - dtdc
+          - easypost
+          - easyship
+          - eshipper
+          - fedex
+          - freightcom
+          - generic
+          - geodis
+          - gls
+          - hay_post
+          - hermes
+          - landmark
+          - laposte
+          - locate2u
+          - mydhl
+          - nationex
+          - parcelone
+          - postat
+          - purolator
+          - roadie
+          - royalmail
+          - sapient
+          - seko
+          - sendle
+          - shipengine
+          - smartkargo
+          - spring
+          - teleship
+          - tge
+          - tnt
+          - ups
+          - usps
+          - usps_international
+          - veho
+          - zoom2u
+          type: string
+          x-spec-enum-id: ae0f7f0940fb5243
+          description: A carrier connection type.
+        carrier_id:
+          type: string
+          description: A carrier connection friendly name.
+        credentials:
+          allOf:
+          - $ref: '#/components/schemas/ConnectionCredentialsField'
+          description: Carrier connection credentials.
+        capabilities:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The carrier enabled capabilities.
+        config:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: Carrier connection custom config.
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the carrier.
+        active:
+          type: boolean
+          default: true
+          description: The active flag indicates whether the carrier account is active or not.
+      required:
+      - carrier_id
+      - carrier_name
+      - credentials
     canpar:
       type: object
       properties:
@@ -1099,26 +1119,63 @@ components:
       required:
       - password
       - username
-    fedex:
+    canadapost:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        customer_number:
+          type:
+          - string
+          - 'null'
+        contract_id:
+          type:
+          - string
+          - 'null'
+        language:
+          enum:
+          - en
+          - fr
+          type: string
+          x-spec-enum-id: e4be23cf445bc4cb
+          description: Indicates a language string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: CA
+      required:
+      - password
+      - username
+    laposte:
       type: object
       properties:
         api_key:
+          type: string
+        lang:
+          enum:
+          - fr_FR
+          - en_US
+          type: string
+          x-spec-enum-id: e280227d9b64bf79
+          description: Indicates a lang string
+        account_country_code:
           type:
           - string
           - 'null'
-        secret_key:
-          type:
-          - string
-          - 'null'
-        account_number:
-          type:
-          - string
-          - 'null'
-        track_api_key:
-          type:
-          - string
-          - 'null'
-        track_secret_key:
+          default: FR
+      required:
+      - api_key
+    colissimo:
+      type: object
+      properties:
+        password:
+          type: string
+        contract_number:
+          type: string
+        laposte_api_key:
           type:
           - string
           - 'null'
@@ -1126,6 +1183,370 @@ components:
           type:
           - string
           - 'null'
+          default: FR
+      required:
+      - contract_number
+      - password
+    tnt:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - password
+      - username
+    spring:
+      type: object
+      properties:
+        api_key:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - api_key
+    gls:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        contact_id:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: DE
+      required:
+      - client_id
+      - client_secret
+    postat:
+      type: object
+      properties:
+        client_id:
+          type: string
+        org_unit_id:
+          type: string
+        org_unit_guid:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: AT
+      required:
+      - client_id
+      - org_unit_guid
+      - org_unit_id
+    dicom:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        billing_account:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - password
+      - username
+    purolator:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        account_number:
+          type: string
+        user_token:
+          type:
+          - string
+          - 'null'
+        language:
+          enum:
+          - en
+          - fr
+          type: string
+          x-spec-enum-id: e4be23cf445bc4cb
+          description: Indicates a language string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: CA
+      required:
+      - account_number
+      - password
+      - username
+    ConnectionCredentialsField:
+      oneOf:
+      - $ref: '#/components/schemas/aramex'
+      - $ref: '#/components/schemas/asendia'
+      - $ref: '#/components/schemas/asendia_us'
+      - $ref: '#/components/schemas/australiapost'
+      - $ref: '#/components/schemas/boxknight'
+      - $ref: '#/components/schemas/bpost'
+      - $ref: '#/components/schemas/canadapost'
+      - $ref: '#/components/schemas/canpar'
+      - $ref: '#/components/schemas/chronopost'
+      - $ref: '#/components/schemas/colissimo'
+      - $ref: '#/components/schemas/dhl_express'
+      - $ref: '#/components/schemas/dhl_parcel_de'
+      - $ref: '#/components/schemas/dhl_poland'
+      - $ref: '#/components/schemas/dhl_universal'
+      - $ref: '#/components/schemas/dicom'
+      - $ref: '#/components/schemas/dpd'
+      - $ref: '#/components/schemas/dpd_meta'
+      - $ref: '#/components/schemas/dtdc'
+      - $ref: '#/components/schemas/easypost'
+      - $ref: '#/components/schemas/easyship'
+      - $ref: '#/components/schemas/eshipper'
+      - $ref: '#/components/schemas/fedex'
+      - $ref: '#/components/schemas/freightcom'
+      - $ref: '#/components/schemas/generic'
+      - $ref: '#/components/schemas/geodis'
+      - $ref: '#/components/schemas/gls'
+      - $ref: '#/components/schemas/hay_post'
+      - $ref: '#/components/schemas/hermes'
+      - $ref: '#/components/schemas/landmark'
+      - $ref: '#/components/schemas/laposte'
+      - $ref: '#/components/schemas/locate2u'
+      - $ref: '#/components/schemas/mydhl'
+      - $ref: '#/components/schemas/nationex'
+      - $ref: '#/components/schemas/parcelone'
+      - $ref: '#/components/schemas/postat'
+      - $ref: '#/components/schemas/purolator'
+      - $ref: '#/components/schemas/roadie'
+      - $ref: '#/components/schemas/royalmail'
+      - $ref: '#/components/schemas/sapient'
+      - $ref: '#/components/schemas/seko'
+      - $ref: '#/components/schemas/sendle'
+      - $ref: '#/components/schemas/shipengine'
+      - $ref: '#/components/schemas/smartkargo'
+      - $ref: '#/components/schemas/spring'
+      - $ref: '#/components/schemas/teleship'
+      - $ref: '#/components/schemas/tge'
+      - $ref: '#/components/schemas/tnt'
+      - $ref: '#/components/schemas/ups'
+      - $ref: '#/components/schemas/usps'
+      - $ref: '#/components/schemas/usps_international'
+      - $ref: '#/components/schemas/veho'
+      - $ref: '#/components/schemas/zoom2u'
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    hay_post:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        customer_id:
+          type: string
+        customer_type:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - customer_id
+      - customer_type
+      - password
+      - username
+    parcelone:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        mandator_id:
+          type: string
+        consigner_id:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: DE
+      required:
+      - consigner_id
+      - mandator_id
+      - password
+      - username
+    asendia_us:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        api_key:
+          type: string
+        account_number:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: US
+      required:
+      - api_key
+      - password
+      - username
+    teleship:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - client_id
+      - client_secret
+    eshipper:
+      type: object
+      properties:
+        principal:
+          type: string
+        credential:
+          type: string
+        account_country_code:
+          type:
+          - string
+          - 'null'
+      required:
+      - credential
+      - principal
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    CarrierConnectionList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierConnection'
+      required:
+      - results
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    dtdc:
+      type: object
+      properties:
+        api_key:
+          type: string
+        customer_code:
+          type: string
+        username:
+          type:
+          - string
+          - 'null'
+        password:
+          type:
+          - string
+          - 'null'
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: IN
+      required:
+      - api_key
+      - customer_code
+    dpd:
+      type: object
+      properties:
+        delis_id:
+          type: string
+        password:
+          type: string
+        depot:
+          type:
+          - string
+          - 'null'
+        message_language:
+          type:
+          - string
+          - 'null'
+          default: en_EN
+        account_country_code:
+          type:
+          - string
+          - 'null'
+          default: BE
+      required:
+      - delis_id
+      - password
     CarrierConnection:
       type: object
       description: 'Response serializer for carrier connections.
@@ -1240,125 +1661,26 @@ components:
       - id
       - is_system
       - test_mode
-    gls:
+    fedex:
       type: object
       properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        contact_id:
+        api_key:
           type:
           - string
           - 'null'
-        account_country_code:
+        secret_key:
           type:
           - string
           - 'null'
-          default: DE
-      required:
-      - client_id
-      - client_secret
-    landmark:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        client_id:
-          type: string
         account_number:
           type:
           - string
           - 'null'
-        region:
+        track_api_key:
           type:
           - string
           - 'null'
-          default: Landmark CMH
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - client_id
-      - password
-      - username
-    freightcom:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - password
-      - username
-    sapient:
-      type: object
-      properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        shipping_account_id:
-          type: string
-        sapient_carrier_code:
-          enum:
-          - DX
-          - EVRI
-          - RM
-          - UPS
-          - YODEL
-          type: string
-          x-spec-enum-id: 24b797aea0df4a45
-          description: Indicates a sapient_carrier_code string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: GB
-      required:
-      - client_id
-      - client_secret
-      - shipping_account_id
-    dpd_meta:
-      type: object
-      properties:
-        dpd_login:
-          type:
-          - string
-          - 'null'
-        dpd_password:
-          type:
-          - string
-          - 'null'
-        dpd_client_id:
-          type:
-          - string
-          - 'null'
-        dpd_client_secret:
-          type:
-          - string
-          - 'null'
-        dpd_bucode:
-          type:
-          - string
-          - 'null'
-        customer_id:
-          type:
-          - string
-          - 'null'
-        customer_account_number:
-          type:
-          - string
-          - 'null'
-        customer_sub_account_number:
+        track_secret_key:
           type:
           - string
           - 'null'
@@ -1366,59 +1688,6 @@ components:
           type:
           - string
           - 'null'
-    boxknight:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: CA
-      required:
-      - password
-      - username
-    colissimo:
-      type: object
-      properties:
-        password:
-          type: string
-        contract_number:
-          type: string
-        laposte_api_key:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: FR
-      required:
-      - contract_number
-      - password
-    laposte:
-      type: object
-      properties:
-        api_key:
-          type: string
-        lang:
-          enum:
-          - fr_FR
-          - en_US
-          type: string
-          x-spec-enum-id: e280227d9b64bf79
-          description: Indicates a lang string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: FR
-      required:
-      - api_key
     hermes:
       type: object
       properties:
@@ -1440,290 +1709,21 @@ components:
       - client_secret
       - password
       - username
-    usps_international:
+    royalmail:
       type: object
       properties:
         client_id:
           type: string
         client_secret:
           type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_type:
-          enum:
-          - EPS
-          - PERMIT
-          - METER
-          type: string
-          x-spec-enum-id: e8d4abea89e0d6bd
-          description: Indicates a account_type string
-        manifest_MID:
-          type:
-          - string
-          - 'null'
-        CRID:
-          type:
-          - string
-          - 'null'
-        MID:
-          type:
-          - string
-          - 'null'
         account_country_code:
           type:
           - string
           - 'null'
-          default: US
+          default: UK
       required:
       - client_id
       - client_secret
-    sendle:
-      type: object
-      properties:
-        sendle_id:
-          type: string
-        api_key:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - api_key
-      - sendle_id
-    easyship:
-      type: object
-      properties:
-        access_token:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - access_token
-    canadapost:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        customer_number:
-          type:
-          - string
-          - 'null'
-        contract_id:
-          type:
-          - string
-          - 'null'
-        language:
-          enum:
-          - en
-          - fr
-          type: string
-          x-spec-enum-id: e4be23cf445bc4cb
-          description: Indicates a language string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: CA
-      required:
-      - password
-      - username
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-    eshipper:
-      type: object
-      properties:
-        principal:
-          type: string
-        credential:
-          type: string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - credential
-      - principal
-    purolator:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        account_number:
-          type: string
-        user_token:
-          type:
-          - string
-          - 'null'
-        language:
-          enum:
-          - en
-          - fr
-          type: string
-          x-spec-enum-id: e4be23cf445bc4cb
-          description: Indicates a language string
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: CA
-      required:
-      - account_number
-      - password
-      - username
-    veho:
-      type: object
-      properties:
-        api_key:
-          type: string
-        account_number:
-          type:
-          - string
-          - 'null'
-        account_country_code:
-          type:
-          - string
-          - 'null'
-      required:
-      - api_key
-    CarrierConnectionData:
-      type: object
-      properties:
-        carrier_name:
-          enum:
-          - aramex
-          - asendia
-          - asendia_us
-          - australiapost
-          - boxknight
-          - bpost
-          - canadapost
-          - canpar
-          - chronopost
-          - colissimo
-          - dhl_express
-          - dhl_parcel_de
-          - dhl_poland
-          - dhl_universal
-          - dicom
-          - dpd
-          - dpd_meta
-          - dtdc
-          - easypost
-          - easyship
-          - eshipper
-          - fedex
-          - freightcom
-          - generic
-          - geodis
-          - gls
-          - hay_post
-          - hermes
-          - landmark
-          - laposte
-          - locate2u
-          - mydhl
-          - nationex
-          - parcelone
-          - postat
-          - purolator
-          - roadie
-          - royalmail
-          - sapient
-          - seko
-          - sendle
-          - shipengine
-          - smartkargo
-          - spring
-          - teleship
-          - tge
-          - tnt
-          - ups
-          - usps
-          - usps_international
-          - veho
-          - zoom2u
-          type: string
-          x-spec-enum-id: ae0f7f0940fb5243
-          description: A carrier connection type.
-        carrier_id:
-          type: string
-          description: A carrier connection friendly name.
-        credentials:
-          allOf:
-          - $ref: '#/components/schemas/ConnectionCredentialsField'
-          description: Carrier connection credentials.
-        capabilities:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: The carrier enabled capabilities.
-        config:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: Carrier connection custom config.
-        metadata:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: User metadata for the carrier.
-        active:
-          type: boolean
-          default: true
-          description: The active flag indicates whether the carrier account is active or not.
-      required:
-      - carrier_id
-      - carrier_name
-      - credentials
-    dpd:
-      type: object
-      properties:
-        delis_id:
-          type: string
-        password:
-          type: string
-        depot:
-          type:
-          - string
-          - 'null'
-        message_language:
-          type:
-          - string
-          - 'null'
-          default: en_EN
-        account_country_code:
-          type:
-          - string
-          - 'null'
-          default: BE
-      required:
-      - delis_id
-      - password
   securitySchemes:
     JWT:
       in: header

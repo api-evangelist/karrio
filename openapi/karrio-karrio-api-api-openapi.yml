@@ -1,0 +1,79 @@
+openapi: 3.2.0
+info:
+  description: Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+  title: Karrio API
+  version: 2026.1.32
+tags:
+- name: Karrio API
+paths:
+  /:
+    get:
+      operationId: '&&ping'
+      summary: Instance Metadata
+      tags:
+      - Karrio API
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+              examples:
+                Metadata:
+                  value:
+                    VERSION: ''
+                    APP_NAME: ''
+                    APP_WEBSITE: ''
+                    HOST: ''
+                    ADMIN: ''
+                    OPENAPI: ''
+                    GRAPHQL: ''
+                    AUDIT_LOGGING: true
+                    ALLOW_SIGNUP: true
+                    ALLOW_ADMIN_APPROVED_SIGNUP: true
+                    ALLOW_MULTI_ACCOUNT: true
+                    ADMIN_DASHBOARD: true
+                    MULTI_ORGANIZATIONS: true
+                    ORDERS_MANAGEMENT: true
+                    APPS_MANAGEMENT: true
+                    DOCUMENTS_MANAGEMENT: true
+                    DATA_IMPORT_EXPORT: true
+                    PERSIST_SDK_TRACING: true
+                    WORKFLOW_MANAGEMENT: true
+                    SHIPPING_RULES: true
+                    SHIPPING_METHODS: true
+                    ADVANCED_ANALYTICS: true
+          description: ''
+components:
+  securitySchemes:
+    JWT:
+      in: header
+      type: apiKey
+      scheme: bearer
+      bearerFormat: JWT
+      name: Authorization
+      description: 'Authorization: Bearer xxx.xxx.xxx'
+    OAuth2:
+      type: oauth2
+      in: header
+      name: Authorization
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            read: Read access to Karrio data
+            write: Write access to Karrio data
+            openid: OpenID connect
+      description: 'Authorization: Bearer xxxxxxxx'
+    Token:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Authorization: Token key_xxxxxxxx'
+    TokenBasic:
+      type: http
+      scheme: basic
+      name: Authorization
+      description: '-u key_xxxxxxxx:'

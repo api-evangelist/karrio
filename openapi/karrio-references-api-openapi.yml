@@ -1,57 +1,17 @@
 openapi: 3.2.0
 info:
   description: Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
-  title: Karrio API
+  title: Karrio References API
   version: 2026.1.32
 tags:
-- name: api
-  description: API instance metadata resources.
+- name: References
 paths:
-  /:
-    get:
-      operationId: '&&ping'
-      summary: Instance Metadata
-      tags:
-      - api
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-              examples:
-                Metadata:
-                  value:
-                    VERSION: ''
-                    APP_NAME: ''
-                    APP_WEBSITE: ''
-                    HOST: ''
-                    ADMIN: ''
-                    OPENAPI: ''
-                    GRAPHQL: ''
-                    AUDIT_LOGGING: true
-                    ALLOW_SIGNUP: true
-                    ALLOW_ADMIN_APPROVED_SIGNUP: true
-                    ALLOW_MULTI_ACCOUNT: true
-                    ADMIN_DASHBOARD: true
-                    MULTI_ORGANIZATIONS: true
-                    ORDERS_MANAGEMENT: true
-                    APPS_MANAGEMENT: true
-                    DOCUMENTS_MANAGEMENT: true
-                    DATA_IMPORT_EXPORT: true
-                    PERSIST_SDK_TRACING: true
-                    WORKFLOW_MANAGEMENT: true
-                    SHIPPING_RULES: true
-                    SHIPPING_METHODS: true
-                    ADVANCED_ANALYTICS: true
-          description: ''
   /v1/references:
     get:
       operationId: '&&data'
       summary: Data References
       tags:
-      - api
+      - References
       responses:
         '200':
           content:

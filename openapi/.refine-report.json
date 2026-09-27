@@ -4,30 +4,38 @@
     "_original/karrio-api-openapi.yml"
   ],
   "outputs": [
-    "karrio-api-api-openapi.yml",
     "karrio-addresses-api-openapi.yml",
     "karrio-auth-api-openapi.yml",
     "karrio-batches-api-openapi.yml",
     "karrio-carriers-api-openapi.yml",
     "karrio-connections-api-openapi.yml",
     "karrio-documents-api-openapi.yml",
+    "karrio-karrio-api-api-openapi.yml",
     "karrio-manifests-api-openapi.yml",
     "karrio-orders-api-openapi.yml",
     "karrio-parcels-api-openapi.yml",
     "karrio-pickups-api-openapi.yml",
     "karrio-products-api-openapi.yml",
     "karrio-proxy-api-openapi.yml",
+    "karrio-references-api-openapi.yml",
     "karrio-shipments-api-openapi.yml",
     "karrio-trackers-api-openapi.yml",
     "karrio-webhooks-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "karrio-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "karrio-api-openapi.yml: tagged paths GET / -> Karrio API",
+    "karrio-api-openapi.yml: tagged paths GET /v1/references -> References",
+    "karrio-api-openapi.yml: declared missing tag: Karrio API",
+    "karrio-api-openapi.yml: declared missing tag: References",
+    "superseded outputs removed: karrio-api-api-openapi.yml",
+    "apis.yml register: written (+2 apis, 17 total)"
   ],
   "skipped": [
     "karrio-addresses-api-openapi.yml: previously refined output, superseded by openapi/_original/",

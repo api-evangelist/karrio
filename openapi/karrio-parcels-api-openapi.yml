@@ -226,142 +226,7 @@ paths:
       x-operationId: discardParcel
 components:
   schemas:
-    Parcel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A unique identifier
-        weight:
-          type: number
-          format: double
-          description: The parcel's weight
-        width:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The parcel's width
-        height:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The parcel's height
-        length:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The parcel's length
-        packaging_type:
-          type:
-          - string
-          - 'null'
-          description: "The parcel's packaging type.<br/>\n        **Note that the packaging is optional when using a package preset.**<br/>\n        values: <br/>\n        `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`<br/>\n        For carrier specific packaging types, please consult the reference.\n        "
-          maxLength: 100
-        package_preset:
-          type:
-          - string
-          - 'null'
-          description: "The parcel's package preset.<br/>\n        For carrier specific package presets, please consult the reference.\n        "
-          maxLength: 100
-        description:
-          type:
-          - string
-          - 'null'
-          description: The parcel's description
-          maxLength: 250
-        content:
-          type:
-          - string
-          - 'null'
-          description: The parcel's content description
-          maxLength: 100
-        is_document:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: Indicates if the parcel is composed of documents only
-        weight_unit:
-          enum:
-          - KG
-          - LB
-          - OZ
-          - G
-          type: string
-          x-spec-enum-id: 3a766910e8401666
-          description: The parcel's weight unit
-        dimension_unit:
-          enum:
-          - CM
-          - IN
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 41993cb8117c279c
-          description: The parcel's dimension unit
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Commodity'
-          description: The parcel items.
-        reference_number:
-          type:
-          - string
-          - 'null'
-          description: "The parcel reference number.<br/>\n        (can be used as tracking number for custom carriers)\n        "
-          maxLength: 100
-        freight_class:
-          type:
-          - string
-          - 'null'
-          description: The parcel's freight class for pallet and freight shipments.
-          maxLength: 6
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>Parcel specific options.</summary>\n\n        {\n            \"insurance\": \"100.00\",\n            \"insured_by\": \"carrier\",\n        }\n        </details>\n        "
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
-        object_type:
-          type: string
-          default: parcel
-          description: Specifies the object type
-      required:
-      - weight
-      - weight_unit
-    ParcelList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Parcel'
-      required:
-      - results
-    PatchedParcelData:
+    ParcelData:
       type: object
       properties:
         weight:
@@ -463,6 +328,9 @@ components:
           - 'null'
           additionalProperties: {}
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
+      required:
+      - weight
+      - weight_unit
     CommodityData:
       type: object
       properties:
@@ -953,9 +821,12 @@ components:
       required:
       - weight
       - weight_unit
-    ParcelData:
+    Parcel:
       type: object
       properties:
+        id:
+          type: string
+          description: A unique identifier
         weight:
           type: number
           format: double
@@ -1030,7 +901,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/CommodityData'
+            $ref: '#/components/schemas/Commodity'
           description: The parcel items.
         reference_number:
           type:
@@ -1055,33 +926,13 @@ components:
           - 'null'
           additionalProperties: {}
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
+        object_type:
+          type: string
+          default: parcel
+          description: Specifies the object type
       required:
       - weight
       - weight_unit
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
     Commodity:
       type: object
       properties:
@@ -1579,6 +1430,155 @@ components:
       required:
       - weight
       - weight_unit
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    PatchedParcelData:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: The parcel's weight
+        width:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's width
+        height:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's height
+        length:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's length
+        packaging_type:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's packaging type.<br/>\n        **Note that the packaging is optional when using a package preset.**<br/>\n        values: <br/>\n        `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`<br/>\n        For carrier specific packaging types, please consult the reference.\n        "
+          maxLength: 100
+        package_preset:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's package preset.<br/>\n        For carrier specific package presets, please consult the reference.\n        "
+          maxLength: 100
+        description:
+          type:
+          - string
+          - 'null'
+          description: The parcel's description
+          maxLength: 250
+        content:
+          type:
+          - string
+          - 'null'
+          description: The parcel's content description
+          maxLength: 100
+        is_document:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicates if the parcel is composed of documents only
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The parcel's weight unit
+        dimension_unit:
+          enum:
+          - CM
+          - IN
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 41993cb8117c279c
+          description: The parcel's dimension unit
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommodityData'
+          description: The parcel items.
+        reference_number:
+          type:
+          - string
+          - 'null'
+          description: "The parcel reference number.<br/>\n        (can be used as tracking number for custom carriers)\n        "
+          maxLength: 100
+        freight_class:
+          type:
+          - string
+          - 'null'
+          description: The parcel's freight class for pallet and freight shipments.
+          maxLength: 6
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>Parcel specific options.</summary>\n\n        {\n            \"insurance\": \"100.00\",\n            \"insured_by\": \"carrier\",\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
+    ParcelList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parcel'
+      required:
+      - results
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
   securitySchemes:
     JWT:
       in: header
