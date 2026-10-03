@@ -256,6 +256,54 @@ components:
           additionalProperties: {}
         event_id:
           type: string
+    WebhookData:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL of the webhook endpoint.
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of what the webhook is used for.
+        enabled_events:
+          type: array
+          items:
+            enum:
+            - all
+            - shipment_purchased
+            - shipment_cancelled
+            - shipment_fulfilled
+            - shipment_out_for_delivery
+            - shipment_needs_attention
+            - shipment_delivery_failed
+            - tracker_created
+            - tracker_updated
+            - pickup_scheduled
+            - pickup_cancelled
+            - pickup_closed
+            - order_created
+            - order_updated
+            - order_fulfilled
+            - order_cancelled
+            - order_delivered
+            - batch_queued
+            - batch_failed
+            - batch_running
+            - batch_completed
+            type: string
+            x-spec-enum-id: 7310794d8b16bdaf
+          description: The list of events to enable for this endpoint.
+        disabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates that the webhook is disabled
+      required:
+      - enabled_events
+      - url
     APIError:
       type: object
       properties:
@@ -386,74 +434,6 @@ components:
           - boolean
           - 'null'
           description: Indicates that the webhook is disabled
-    WebhookData:
-      type: object
-      properties:
-        url:
-          type: string
-          format: uri
-          description: The URL of the webhook endpoint.
-        description:
-          type:
-          - string
-          - 'null'
-          description: An optional description of what the webhook is used for.
-        enabled_events:
-          type: array
-          items:
-            enum:
-            - all
-            - shipment_purchased
-            - shipment_cancelled
-            - shipment_fulfilled
-            - shipment_out_for_delivery
-            - shipment_needs_attention
-            - shipment_delivery_failed
-            - tracker_created
-            - tracker_updated
-            - pickup_scheduled
-            - pickup_cancelled
-            - pickup_closed
-            - order_created
-            - order_updated
-            - order_fulfilled
-            - order_cancelled
-            - order_delivered
-            - batch_queued
-            - batch_failed
-            - batch_running
-            - batch_completed
-            type: string
-            x-spec-enum-id: 7310794d8b16bdaf
-          description: The list of events to enable for this endpoint.
-        disabled:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates that the webhook is disabled
-      required:
-      - enabled_events
-      - url
-    Operation:
-      type: object
-      properties:
-        operation:
-          type: string
-          description: Operation performed
-        success:
-          type: boolean
-          description: Specify whether the operation was successful
-      required:
-      - operation
-      - success
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
     WebhookList:
       type: object
       properties:
@@ -477,6 +457,26 @@ components:
             $ref: '#/components/schemas/Webhook'
       required:
       - results
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    Operation:
+      type: object
+      properties:
+        operation:
+          type: string
+          description: Operation performed
+        success:
+          type: boolean
+          description: Specify whether the operation was successful
+      required:
+      - operation
+      - success
   securitySchemes:
     JWT:
       in: header

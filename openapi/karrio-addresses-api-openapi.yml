@@ -228,20 +228,350 @@ paths:
       x-operationId: discardAddress
 components:
   schemas:
-    AddressValidation:
+    AddressData:
       type: object
       properties:
-        success:
-          type: boolean
-          description: True if the address is valid
+        id:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for the address (used in JSON embedded data)
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: "The address postal code\n        **(required for shipment purchase)**\n        "
+          maxLength: 20
+        city:
+          type:
+          - string
+          - 'null'
+          description: "The address city.\n        **(required for shipment purchase)**\n        "
+          maxLength: 50
+        federal_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party frederal tax id
+          maxLength: 50
+        state_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party state id
+          maxLength: 50
+        person_name:
+          type:
+          - string
+          - 'null'
+          description: "Attention to\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        company_name:
+          type:
+          - string
+          - 'null'
+          description: The company name if the party is a company
+          maxLength: 100
+        country_code:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          type: string
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The address country code
+        email:
+          type:
+          - string
+          - 'null'
+          description: The party email
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The party phone number.
+          maxLength: 50
+        state_code:
+          type:
+          - string
+          - 'null'
+          description: The address state code
+          maxLength: 50
+        residential:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address is residential or commercial (enterprise)
+        street_number:
+          type:
+          - string
+          - 'null'
+          description: The address street number
+          maxLength: 100
+        address_line1:
+          type:
+          - string
+          - 'null'
+          description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        address_line2:
+          type:
+          - string
+          - 'null'
+          description: The address line with suite number
+          maxLength: 100
+        validate_location:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address should be validated
         meta:
           type:
           - object
           - 'null'
           additionalProperties: {}
-          description: validation service details
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
       required:
-      - success
+      - country_code
     PatchedAddressData:
       type: object
       properties:
@@ -584,6 +914,22 @@ components:
           - 'null'
           additionalProperties: {}
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
     AddressList:
       type: object
       properties:
@@ -607,22 +953,6 @@ components:
             $ref: '#/components/schemas/Address'
       required:
       - results
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
     Address:
       type: object
       properties:
@@ -981,350 +1311,20 @@ components:
           items:
             $ref: '#/components/schemas/APIError'
           description: The list of API errors
-    AddressData:
+    AddressValidation:
       type: object
       properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for the address (used in JSON embedded data)
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: "The address postal code\n        **(required for shipment purchase)**\n        "
-          maxLength: 20
-        city:
-          type:
-          - string
-          - 'null'
-          description: "The address city.\n        **(required for shipment purchase)**\n        "
-          maxLength: 50
-        federal_tax_id:
-          type:
-          - string
-          - 'null'
-          description: The party frederal tax id
-          maxLength: 50
-        state_tax_id:
-          type:
-          - string
-          - 'null'
-          description: The party state id
-          maxLength: 50
-        person_name:
-          type:
-          - string
-          - 'null'
-          description: "Attention to\n        **(required for shipment purchase)**\n        "
-          maxLength: 100
-        company_name:
-          type:
-          - string
-          - 'null'
-          description: The company name if the party is a company
-          maxLength: 100
-        country_code:
-          enum:
-          - AC
-          - AD
-          - AE
-          - AF
-          - AG
-          - AI
-          - AL
-          - AM
-          - AN
-          - AO
-          - AR
-          - AS
-          - AT
-          - AU
-          - AW
-          - AZ
-          - BA
-          - BB
-          - BD
-          - BE
-          - BF
-          - BG
-          - BH
-          - BI
-          - BJ
-          - BM
-          - BN
-          - BO
-          - BR
-          - BS
-          - BT
-          - BW
-          - BY
-          - BZ
-          - CA
-          - CD
-          - CF
-          - CG
-          - CH
-          - CI
-          - CK
-          - CL
-          - CM
-          - CN
-          - CO
-          - CR
-          - CU
-          - CV
-          - CY
-          - CZ
-          - DE
-          - DJ
-          - DK
-          - DM
-          - DO
-          - DZ
-          - EC
-          - EE
-          - EG
-          - ER
-          - ES
-          - ET
-          - FI
-          - FJ
-          - FK
-          - FM
-          - FO
-          - FR
-          - GA
-          - GB
-          - GD
-          - GE
-          - GF
-          - GG
-          - GH
-          - GI
-          - GL
-          - GM
-          - GN
-          - GP
-          - GQ
-          - GR
-          - GT
-          - GU
-          - GW
-          - GY
-          - HK
-          - HN
-          - HR
-          - HT
-          - HU
-          - IC
-          - ID
-          - IE
-          - IL
-          - IN
-          - IQ
-          - IR
-          - IS
-          - IT
-          - JE
-          - JM
-          - JO
-          - JP
-          - KE
-          - KG
-          - KH
-          - KI
-          - KM
-          - KN
-          - KP
-          - KR
-          - KV
-          - KW
-          - KY
-          - KZ
-          - LA
-          - LB
-          - LC
-          - LI
-          - LK
-          - LR
-          - LS
-          - LT
-          - LU
-          - LV
-          - LY
-          - MA
-          - MC
-          - MD
-          - ME
-          - MG
-          - MH
-          - MK
-          - ML
-          - MM
-          - MN
-          - MO
-          - MP
-          - MQ
-          - MR
-          - MS
-          - MT
-          - MU
-          - MV
-          - MW
-          - MX
-          - MY
-          - MZ
-          - NA
-          - NC
-          - NE
-          - NG
-          - NI
-          - NL
-          - 'NO'
-          - NP
-          - NR
-          - NU
-          - NZ
-          - OM
-          - PA
-          - PE
-          - PF
-          - PG
-          - PH
-          - PK
-          - PL
-          - PR
-          - PT
-          - PW
-          - PY
-          - QA
-          - RE
-          - RO
-          - RS
-          - RU
-          - RW
-          - SA
-          - SB
-          - SC
-          - SD
-          - SE
-          - SG
-          - SH
-          - SI
-          - SK
-          - SL
-          - SM
-          - SN
-          - SO
-          - SR
-          - SS
-          - ST
-          - SV
-          - SY
-          - SZ
-          - TC
-          - TD
-          - TG
-          - TH
-          - TJ
-          - TL
-          - TN
-          - TO
-          - TR
-          - TT
-          - TV
-          - TW
-          - TZ
-          - UA
-          - UG
-          - US
-          - UY
-          - UZ
-          - VA
-          - VC
-          - VE
-          - VG
-          - VI
-          - VN
-          - VU
-          - WS
-          - XB
-          - XC
-          - XE
-          - XM
-          - XN
-          - XS
-          - XY
-          - YE
-          - YT
-          - ZA
-          - ZM
-          - ZW
-          - EH
-          - IM
-          - BL
-          - MF
-          - SX
-          type: string
-          x-spec-enum-id: b4b44aee15c8daa0
-          description: The address country code
-        email:
-          type:
-          - string
-          - 'null'
-          description: The party email
-        phone_number:
-          type:
-          - string
-          - 'null'
-          description: The party phone number.
-          maxLength: 50
-        state_code:
-          type:
-          - string
-          - 'null'
-          description: The address state code
-          maxLength: 50
-        residential:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: Indicate if the address is residential or commercial (enterprise)
-        street_number:
-          type:
-          - string
-          - 'null'
-          description: The address street number
-          maxLength: 100
-        address_line1:
-          type:
-          - string
-          - 'null'
-          description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
-          maxLength: 100
-        address_line2:
-          type:
-          - string
-          - 'null'
-          description: The address line with suite number
-          maxLength: 100
-        validate_location:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: Indicate if the address should be validated
+        success:
+          type: boolean
+          description: True if the address is valid
         meta:
           type:
           - object
           - 'null'
           additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
+          description: validation service details
       required:
-      - country_code
+      - success
   securitySchemes:
     JWT:
       in: header

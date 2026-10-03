@@ -22,9 +22,7 @@
     "karrio-trackers-api-openapi.yml",
     "karrio-webhooks-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -34,23 +32,23 @@
     "karrio-api-openapi.yml: tagged paths GET /v1/references -> References",
     "karrio-api-openapi.yml: declared missing tag: Karrio API",
     "karrio-api-openapi.yml: declared missing tag: References",
-    "superseded outputs removed: karrio-api-api-openapi.yml",
-    "apis.yml register: written (+2 apis, 17 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "karrio-addresses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "karrio-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-batches-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-carriers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-connections-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-karrio-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-manifests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-parcels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-pickups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-proxy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karrio-references-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-shipments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-trackers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "karrio-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"

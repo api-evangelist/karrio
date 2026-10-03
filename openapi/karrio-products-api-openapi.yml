@@ -721,6 +721,45 @@ components:
           - 'null'
           additionalProperties: {}
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    ProductList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commodity'
+      required:
+      - results
     CommodityData:
       type: object
       properties:
@@ -1211,29 +1250,6 @@ components:
       required:
       - weight
       - weight_unit
-    ProductList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Commodity'
-      required:
-      - results
     Commodity:
       type: object
       properties:
@@ -1731,22 +1747,6 @@ components:
       required:
       - weight
       - weight_unit
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
     ErrorResponse:
       type: object
       properties:
