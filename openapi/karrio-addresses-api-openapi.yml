@@ -228,6 +228,28 @@ paths:
       x-operationId: discardAddress
 components:
   schemas:
+    AddressValidation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: True if the address is valid
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: validation service details
+      required:
+      - success
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
     AddressData:
       type: object
       properties:
@@ -914,22 +936,6 @@ components:
           - 'null'
           additionalProperties: {}
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
     AddressList:
       type: object
       properties:
@@ -953,6 +959,22 @@ components:
             $ref: '#/components/schemas/Address'
       required:
       - results
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
     Address:
       type: object
       properties:
@@ -1303,28 +1325,6 @@ components:
           description: Specify address validation result
       required:
       - country_code
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
-    AddressValidation:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: True if the address is valid
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: validation service details
-      required:
-      - success
   securitySchemes:
     JWT:
       in: header

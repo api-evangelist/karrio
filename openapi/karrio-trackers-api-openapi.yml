@@ -427,6 +427,55 @@ paths:
       x-operationId: injectTrackingEvents
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    TrackerEventInjectRequest:
+      type: object
+      description: Request payload for injecting tracking events.
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingEvent'
+          description: List of tracking events to inject into the tracker
+        status:
+          enum:
+          - pending
+          - picked_up
+          - unknown
+          - on_hold
+          - cancelled
+          - delivered
+          - in_transit
+          - delivery_delayed
+          - out_for_delivery
+          - ready_for_pickup
+          - delivery_failed
+          - return_to_sender
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 74b67d0ba94b1fa9
+          description: 'Optional: Override the tracker status'
+        delivered:
+          type: boolean
+          default: false
+          description: 'Optional: Mark the tracker as delivered'
+        estimated_delivery:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'Optional: Set the estimated delivery date'
+      required:
+      - events
     TrackingEvent:
       type: object
       properties:
@@ -533,7 +582,18 @@ components:
           - 'null'
           format: double
           description: The tracking event's longitude.
-    APIError:
+    TrackerUpdateData:
+      type: object
+      properties:
+        info:
+          allOf:
+          - $ref: '#/components/schemas/TrackingInfo'
+          description: The package and shipment tracking details
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: User metadata for the tracker
+    Message:
       type: object
       properties:
         message:
@@ -549,17 +609,35 @@ components:
           type: object
           additionalProperties: {}
           description: any additional details
-    TrackerUpdateData:
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
+    TrackerList:
       type: object
       properties:
-        info:
-          allOf:
-          - $ref: '#/components/schemas/TrackingInfo'
-          description: The package and shipment tracking details
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: User metadata for the tracker
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingStatus'
+      required:
+      - results
     TrackingData:
       type: object
       properties:
@@ -638,108 +716,18 @@ components:
       required:
       - carrier_name
       - tracking_number
-    Message:
+    Operation:
       type: object
       properties:
-        message:
+        operation:
           type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-        carrier_name:
-          type: string
-          description: The targeted carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier name (unique identifier)
-    TrackerList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingStatus'
-      required:
-      - results
-    TrackerEventInjectRequest:
-      type: object
-      description: Request payload for injecting tracking events.
-      properties:
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingEvent'
-          description: List of tracking events to inject into the tracker
-        status:
-          enum:
-          - pending
-          - picked_up
-          - unknown
-          - on_hold
-          - cancelled
-          - delivered
-          - in_transit
-          - delivery_delayed
-          - out_for_delivery
-          - ready_for_pickup
-          - delivery_failed
-          - return_to_sender
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 74b67d0ba94b1fa9
-          description: 'Optional: Override the tracker status'
-        delivered:
+          description: Operation performed
+        success:
           type: boolean
-          default: false
-          description: 'Optional: Mark the tracker as delivered'
-        estimated_delivery:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: 'Optional: Set the estimated delivery date'
+          description: Specify whether the operation was successful
       required:
-      - events
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
+      - operation
+      - success
     TrackingInfo:
       type: object
       properties:
@@ -838,6 +826,30 @@ components:
           - string
           - 'null'
           description: The tracker source
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
     TrackingStatus:
       type: object
       properties:
@@ -958,18 +970,6 @@ components:
       - carrier_name
       - test_mode
       - tracking_number
-    Operation:
-      type: object
-      properties:
-        operation:
-          type: string
-          description: Operation performed
-        success:
-          type: boolean
-          description: Specify whether the operation was successful
-      required:
-      - operation
-      - success
   securitySchemes:
     JWT:
       in: header

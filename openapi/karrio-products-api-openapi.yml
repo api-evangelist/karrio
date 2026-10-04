@@ -234,509 +234,14 @@ paths:
       x-operationId: discardProduct
 components:
   schemas:
-    PatchedCommodityData:
+    ErrorResponse:
       type: object
       properties:
-        weight:
-          type: number
-          format: double
-          description: The commodity's weight
-        weight_unit:
-          enum:
-          - KG
-          - LB
-          - OZ
-          - G
-          type: string
-          x-spec-enum-id: 3a766910e8401666
-          description: The commodity's weight unit
-        title:
-          type:
-          - string
-          - 'null'
-          description: A description of the commodity
-          maxLength: 200
-        description:
-          type:
-          - string
-          - 'null'
-          description: A description of the commodity
-          maxLength: 200
-        quantity:
-          type: integer
-          default: 1
-          description: The commodity's quantity (number or item)
-        sku:
-          type:
-          - string
-          - 'null'
-          description: The commodity's sku number
-          maxLength: 100
-        hs_code:
-          type:
-          - string
-          - 'null'
-          description: The commodity's hs_code number
-          maxLength: 100
-        value_amount:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The monetary value of the commodity
-        value_currency:
-          enum:
-          - EUR
-          - AED
-          - USD
-          - XCD
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - XOF
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - XAF
-          - CHF
-          - NZD
-          - CLP
-          - CNY
-          - COP
-          - CRC
-          - CUC
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - GBP
-          - GEL
-          - GHS
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRO
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MYR
-          - MZN
-          - NAD
-          - XPF
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - OMR
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SHP
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STD
-          - SYP
-          - SZL
-          - THB
-          - TJS
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UYU
-          - UZS
-          - VEF
-          - VND
-          - VUV
-          - WST
-          - YER
-          - ZAR
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: fd73376ae25ab80b
-          description: The currency of the commodity value amount
-        origin_country:
-          enum:
-          - AC
-          - AD
-          - AE
-          - AF
-          - AG
-          - AI
-          - AL
-          - AM
-          - AN
-          - AO
-          - AR
-          - AS
-          - AT
-          - AU
-          - AW
-          - AZ
-          - BA
-          - BB
-          - BD
-          - BE
-          - BF
-          - BG
-          - BH
-          - BI
-          - BJ
-          - BM
-          - BN
-          - BO
-          - BR
-          - BS
-          - BT
-          - BW
-          - BY
-          - BZ
-          - CA
-          - CD
-          - CF
-          - CG
-          - CH
-          - CI
-          - CK
-          - CL
-          - CM
-          - CN
-          - CO
-          - CR
-          - CU
-          - CV
-          - CY
-          - CZ
-          - DE
-          - DJ
-          - DK
-          - DM
-          - DO
-          - DZ
-          - EC
-          - EE
-          - EG
-          - ER
-          - ES
-          - ET
-          - FI
-          - FJ
-          - FK
-          - FM
-          - FO
-          - FR
-          - GA
-          - GB
-          - GD
-          - GE
-          - GF
-          - GG
-          - GH
-          - GI
-          - GL
-          - GM
-          - GN
-          - GP
-          - GQ
-          - GR
-          - GT
-          - GU
-          - GW
-          - GY
-          - HK
-          - HN
-          - HR
-          - HT
-          - HU
-          - IC
-          - ID
-          - IE
-          - IL
-          - IN
-          - IQ
-          - IR
-          - IS
-          - IT
-          - JE
-          - JM
-          - JO
-          - JP
-          - KE
-          - KG
-          - KH
-          - KI
-          - KM
-          - KN
-          - KP
-          - KR
-          - KV
-          - KW
-          - KY
-          - KZ
-          - LA
-          - LB
-          - LC
-          - LI
-          - LK
-          - LR
-          - LS
-          - LT
-          - LU
-          - LV
-          - LY
-          - MA
-          - MC
-          - MD
-          - ME
-          - MG
-          - MH
-          - MK
-          - ML
-          - MM
-          - MN
-          - MO
-          - MP
-          - MQ
-          - MR
-          - MS
-          - MT
-          - MU
-          - MV
-          - MW
-          - MX
-          - MY
-          - MZ
-          - NA
-          - NC
-          - NE
-          - NG
-          - NI
-          - NL
-          - 'NO'
-          - NP
-          - NR
-          - NU
-          - NZ
-          - OM
-          - PA
-          - PE
-          - PF
-          - PG
-          - PH
-          - PK
-          - PL
-          - PR
-          - PT
-          - PW
-          - PY
-          - QA
-          - RE
-          - RO
-          - RS
-          - RU
-          - RW
-          - SA
-          - SB
-          - SC
-          - SD
-          - SE
-          - SG
-          - SH
-          - SI
-          - SK
-          - SL
-          - SM
-          - SN
-          - SO
-          - SR
-          - SS
-          - ST
-          - SV
-          - SY
-          - SZ
-          - TC
-          - TD
-          - TG
-          - TH
-          - TJ
-          - TL
-          - TN
-          - TO
-          - TR
-          - TT
-          - TV
-          - TW
-          - TZ
-          - UA
-          - UG
-          - US
-          - UY
-          - UZ
-          - VA
-          - VC
-          - VE
-          - VG
-          - VI
-          - VN
-          - VU
-          - WS
-          - XB
-          - XC
-          - XE
-          - XM
-          - XN
-          - XS
-          - XY
-          - YE
-          - YT
-          - ZA
-          - ZM
-          - ZW
-          - EH
-          - IM
-          - BL
-          - MF
-          - SX
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: b4b44aee15c8daa0
-          description: The origin or manufacture country
-        product_url:
-          type:
-          - string
-          - 'null'
-          description: The product url
-        image_url:
-          type:
-          - string
-          - 'null'
-          description: The image url
-        product_id:
-          type:
-          - string
-          - 'null'
-          description: The product id
-        variant_id:
-          type:
-          - string
-          - 'null'
-          description: The variant id
-        parent_id:
-          type:
-          - string
-          - 'null'
-          description: The id of the related order line item.
-        metadata:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
     ProductList:
       type: object
       properties:
@@ -760,496 +265,22 @@ components:
             $ref: '#/components/schemas/Commodity'
       required:
       - results
-    CommodityData:
+    APIError:
       type: object
       properties:
-        weight:
-          type: number
-          format: double
-          description: The commodity's weight
-        weight_unit:
-          enum:
-          - KG
-          - LB
-          - OZ
-          - G
+        message:
           type: string
-          x-spec-enum-id: 3a766910e8401666
-          description: The commodity's weight unit
-        title:
-          type:
-          - string
-          - 'null'
-          description: A description of the commodity
-          maxLength: 200
-        description:
-          type:
-          - string
-          - 'null'
-          description: A description of the commodity
-          maxLength: 200
-        quantity:
-          type: integer
-          default: 1
-          description: The commodity's quantity (number or item)
-        sku:
-          type:
-          - string
-          - 'null'
-          description: The commodity's sku number
-          maxLength: 100
-        hs_code:
-          type:
-          - string
-          - 'null'
-          description: The commodity's hs_code number
-          maxLength: 100
-        value_amount:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The monetary value of the commodity
-        value_currency:
-          enum:
-          - EUR
-          - AED
-          - USD
-          - XCD
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - XOF
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - XAF
-          - CHF
-          - NZD
-          - CLP
-          - CNY
-          - COP
-          - CRC
-          - CUC
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - GBP
-          - GEL
-          - GHS
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRO
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MYR
-          - MZN
-          - NAD
-          - XPF
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - OMR
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SHP
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STD
-          - SYP
-          - SZL
-          - THB
-          - TJS
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UYU
-          - UZS
-          - VEF
-          - VND
-          - VUV
-          - WST
-          - YER
-          - ZAR
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: fd73376ae25ab80b
-          description: The currency of the commodity value amount
-        origin_country:
-          enum:
-          - AC
-          - AD
-          - AE
-          - AF
-          - AG
-          - AI
-          - AL
-          - AM
-          - AN
-          - AO
-          - AR
-          - AS
-          - AT
-          - AU
-          - AW
-          - AZ
-          - BA
-          - BB
-          - BD
-          - BE
-          - BF
-          - BG
-          - BH
-          - BI
-          - BJ
-          - BM
-          - BN
-          - BO
-          - BR
-          - BS
-          - BT
-          - BW
-          - BY
-          - BZ
-          - CA
-          - CD
-          - CF
-          - CG
-          - CH
-          - CI
-          - CK
-          - CL
-          - CM
-          - CN
-          - CO
-          - CR
-          - CU
-          - CV
-          - CY
-          - CZ
-          - DE
-          - DJ
-          - DK
-          - DM
-          - DO
-          - DZ
-          - EC
-          - EE
-          - EG
-          - ER
-          - ES
-          - ET
-          - FI
-          - FJ
-          - FK
-          - FM
-          - FO
-          - FR
-          - GA
-          - GB
-          - GD
-          - GE
-          - GF
-          - GG
-          - GH
-          - GI
-          - GL
-          - GM
-          - GN
-          - GP
-          - GQ
-          - GR
-          - GT
-          - GU
-          - GW
-          - GY
-          - HK
-          - HN
-          - HR
-          - HT
-          - HU
-          - IC
-          - ID
-          - IE
-          - IL
-          - IN
-          - IQ
-          - IR
-          - IS
-          - IT
-          - JE
-          - JM
-          - JO
-          - JP
-          - KE
-          - KG
-          - KH
-          - KI
-          - KM
-          - KN
-          - KP
-          - KR
-          - KV
-          - KW
-          - KY
-          - KZ
-          - LA
-          - LB
-          - LC
-          - LI
-          - LK
-          - LR
-          - LS
-          - LT
-          - LU
-          - LV
-          - LY
-          - MA
-          - MC
-          - MD
-          - ME
-          - MG
-          - MH
-          - MK
-          - ML
-          - MM
-          - MN
-          - MO
-          - MP
-          - MQ
-          - MR
-          - MS
-          - MT
-          - MU
-          - MV
-          - MW
-          - MX
-          - MY
-          - MZ
-          - NA
-          - NC
-          - NE
-          - NG
-          - NI
-          - NL
-          - 'NO'
-          - NP
-          - NR
-          - NU
-          - NZ
-          - OM
-          - PA
-          - PE
-          - PF
-          - PG
-          - PH
-          - PK
-          - PL
-          - PR
-          - PT
-          - PW
-          - PY
-          - QA
-          - RE
-          - RO
-          - RS
-          - RU
-          - RW
-          - SA
-          - SB
-          - SC
-          - SD
-          - SE
-          - SG
-          - SH
-          - SI
-          - SK
-          - SL
-          - SM
-          - SN
-          - SO
-          - SR
-          - SS
-          - ST
-          - SV
-          - SY
-          - SZ
-          - TC
-          - TD
-          - TG
-          - TH
-          - TJ
-          - TL
-          - TN
-          - TO
-          - TR
-          - TT
-          - TV
-          - TW
-          - TZ
-          - UA
-          - UG
-          - US
-          - UY
-          - UZ
-          - VA
-          - VC
-          - VE
-          - VG
-          - VI
-          - VN
-          - VU
-          - WS
-          - XB
-          - XC
-          - XE
-          - XM
-          - XN
-          - XS
-          - XY
-          - YE
-          - YT
-          - ZA
-          - ZM
-          - ZW
-          - EH
-          - IM
-          - BL
-          - MF
-          - SX
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: b4b44aee15c8daa0
-          description: The origin or manufacture country
-        product_url:
-          type:
-          - string
-          - 'null'
-          description: The product url
-        image_url:
-          type:
-          - string
-          - 'null'
-          description: The image url
-        product_id:
-          type:
-          - string
-          - 'null'
-          description: The product id
-        variant_id:
-          type:
-          - string
-          - 'null'
-          description: The variant id
-        parent_id:
-          type:
-          - string
-          - 'null'
-          description: The id of the related order line item.
-        metadata:
-          type:
-          - object
-          - 'null'
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
           additionalProperties: {}
-          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
-      required:
-      - weight
-      - weight_unit
+          description: any additional details
     Commodity:
       type: object
       properties:
@@ -1747,14 +778,983 @@ components:
       required:
       - weight
       - weight_unit
-    ErrorResponse:
+    CommodityData:
       type: object
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
+        weight:
+          type: number
+          format: double
+          description: The commodity's weight
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The commodity's weight unit
+        title:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        quantity:
+          type: integer
+          default: 1
+          description: The commodity's quantity (number or item)
+        sku:
+          type:
+          - string
+          - 'null'
+          description: The commodity's sku number
+          maxLength: 100
+        hs_code:
+          type:
+          - string
+          - 'null'
+          description: The commodity's hs_code number
+          maxLength: 100
+        value_amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The monetary value of the commodity
+        value_currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The currency of the commodity value amount
+        origin_country:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The origin or manufacture country
+        product_url:
+          type:
+          - string
+          - 'null'
+          description: The product url
+        image_url:
+          type:
+          - string
+          - 'null'
+          description: The image url
+        product_id:
+          type:
+          - string
+          - 'null'
+          description: The product id
+        variant_id:
+          type:
+          - string
+          - 'null'
+          description: The variant id
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: The id of the related order line item.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
+      required:
+      - weight
+      - weight_unit
+    PatchedCommodityData:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: The commodity's weight
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The commodity's weight unit
+        title:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        quantity:
+          type: integer
+          default: 1
+          description: The commodity's quantity (number or item)
+        sku:
+          type:
+          - string
+          - 'null'
+          description: The commodity's sku number
+          maxLength: 100
+        hs_code:
+          type:
+          - string
+          - 'null'
+          description: The commodity's hs_code number
+          maxLength: 100
+        value_amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The monetary value of the commodity
+        value_currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The currency of the commodity value amount
+        origin_country:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The origin or manufacture country
+        product_url:
+          type:
+          - string
+          - 'null'
+          description: The product url
+        image_url:
+          type:
+          - string
+          - 'null'
+          description: The image url
+        product_id:
+          type:
+          - string
+          - 'null'
+          description: The product id
+        variant_id:
+          type:
+          - string
+          - 'null'
+          description: The variant id
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: The id of the related order line item.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
   securitySchemes:
     JWT:
       in: header

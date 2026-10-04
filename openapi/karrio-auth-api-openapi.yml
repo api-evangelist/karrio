@@ -167,33 +167,6 @@ paths:
           description: ''
 components:
   schemas:
-    ResourceTokenResponse:
-      type: object
-      properties:
-        token:
-          type: string
-          description: The JWT access token.
-        expires_at:
-          type: string
-          format: date-time
-          description: Token expiration timestamp.
-        resource_urls:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of resource IDs to their access URLs with token.
-      required:
-      - expires_at
-      - resource_urls
-      - token
-    TokenVerify:
-      type: object
-      properties:
-        token:
-          type: string
-          writeOnly: true
-      required:
-      - token
     TokenObtainPair:
       type: object
       properties:
@@ -206,16 +179,6 @@ components:
       required:
       - email
       - password
-    TokenPair:
-      type: object
-      properties:
-        access:
-          type: string
-        refresh:
-          type: string
-      required:
-      - access
-      - refresh
     ResourceTokenRequest:
       type: object
       properties:
@@ -272,6 +235,16 @@ components:
       - access
       - resource_ids
       - resource_type
+    TokenPair:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
     TokenRefresh:
       type: object
       properties:
@@ -298,6 +271,33 @@ components:
       - access
       - otp_token
       - refresh
+    ResourceTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JWT access token.
+        expires_at:
+          type: string
+          format: date-time
+          description: Token expiration timestamp.
+        resource_urls:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of resource IDs to their access URLs with token.
+      required:
+      - expires_at
+      - resource_urls
+      - token
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
   securitySchemes:
     JWT:
       in: header

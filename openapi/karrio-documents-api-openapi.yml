@@ -382,7 +382,44 @@ paths:
           description: ''
 components:
   schemas:
-    PatchedDocumentTemplateData:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    DocumentDetails:
+      type: object
+      properties:
+        doc_id:
+          type: string
+          description: The uploaded document id.
+        file_name:
+          type: string
+          description: The uploaded document file name.
+    DocumentUploadData:
+      type: object
+      properties:
+        shipment_id:
+          type: string
+          description: The documents related shipment.
+        document_files:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentFileData'
+          description: Shipping document files
+        reference:
+          type:
+          - string
+          - 'null'
+          description: Shipping document file reference
+          maxLength: 50
+      required:
+      - document_files
+      - shipment_id
+    DocumentTemplateData:
       type: object
       properties:
         name:
@@ -421,55 +458,10 @@ components:
           x-spec-enum-id: b3691dad14d14121
           default: other
           description: The template related object
-    DocumentUploadRecord:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A unique identifier
-        carrier_name:
-          type:
-          - string
-          - 'null'
-          description: The shipment carrier
-        carrier_id:
-          type:
-          - string
-          - 'null'
-          description: The shipment carrier configured identifier
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentDetails'
-          default: []
-          description: the carrier shipping document ids
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: provider specific metadata
-        reference:
-          type:
-          - string
-          - 'null'
-          description: Shipping document file reference
-          maxLength: 50
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          default: []
-          description: The list of note or warning messages
-    DocumentDetails:
-      type: object
-      properties:
-        doc_id:
-          type: string
-          description: The uploaded document id.
-        file_name:
-          type: string
-          description: The uploaded document file name.
+      required:
+      - name
+      - slug
+      - template
     DocumentTemplate:
       type: object
       properties:
@@ -524,91 +516,7 @@ components:
       - name
       - slug
       - template
-    DocumentUploadData:
-      type: object
-      properties:
-        shipment_id:
-          type: string
-          description: The documents related shipment.
-        document_files:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentFileData'
-          description: Shipping document files
-        reference:
-          type:
-          - string
-          - 'null'
-          description: Shipping document file reference
-          maxLength: 50
-      required:
-      - document_files
-      - shipment_id
-    DocumentData:
-      type: object
-      properties:
-        template_id:
-          type: string
-          description: The template name. **Required if template is not provided.**
-        template:
-          type: string
-          description: The template content. **Required if template_id is not provided.**
-        doc_format:
-          type: string
-          description: The format of the document
-        doc_name:
-          type: string
-          description: The file name
-        data:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: The template data
-        options:
-          type: object
-          additionalProperties: {}
-          description: The template rendering options
-    DocumentFileData:
-      type: object
-      properties:
-        doc_file:
-          type: string
-          description: A base64 file to upload
-        doc_name:
-          type: string
-          description: The file name
-        doc_format:
-          type:
-          - string
-          - 'null'
-          description: The file format
-        doc_type:
-          type:
-          - string
-          - 'null'
-          default: other
-          description: "\n        Shipment document type\n\n        values: <br/>\n        `certificate_of_origin` `commercial_invoice` `pro_forma_invoice` `packing_list` `other`\n\n        For carrier specific packaging types, please consult the reference.\n        "
-          maxLength: 50
-      required:
-      - doc_file
-      - doc_name
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-    DocumentTemplateData:
+    PatchedDocumentTemplateData:
       type: object
       properties:
         name:
@@ -647,33 +555,6 @@ components:
           x-spec-enum-id: b3691dad14d14121
           default: other
           description: The template related object
-      required:
-      - name
-      - slug
-      - template
-    DocumentTemplateList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentTemplate'
-      required:
-      - results
     Message:
       type: object
       properties:
@@ -696,6 +577,31 @@ components:
         carrier_id:
           type: string
           description: The targeted carrier name (unique identifier)
+    GeneratedDocument:
+      type: object
+      properties:
+        template_id:
+          type: string
+          description: The template name
+        doc_format:
+          type: string
+          description: The format of the document
+        doc_name:
+          type: string
+          description: The file name
+        doc_file:
+          type: string
+          description: A base64 file content
+      required:
+      - doc_file
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
     DocumentUploadRecords:
       type: object
       properties:
@@ -719,39 +625,133 @@ components:
             $ref: '#/components/schemas/DocumentUploadRecord'
       required:
       - results
-    ErrorMessages:
+    DocumentUploadRecord:
       type: object
       properties:
+        id:
+          type: string
+          description: A unique identifier
+        carrier_name:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier
+        carrier_id:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier configured identifier
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentDetails'
+          default: []
+          description: the carrier shipping document ids
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        reference:
+          type:
+          - string
+          - 'null'
+          description: Shipping document file reference
+          maxLength: 50
         messages:
           type: array
           items:
             $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
-    GeneratedDocument:
+          default: []
+          description: The list of note or warning messages
+    DocumentData:
       type: object
       properties:
         template_id:
           type: string
-          description: The template name
+          description: The template name. **Required if template is not provided.**
+        template:
+          type: string
+          description: The template content. **Required if template_id is not provided.**
         doc_format:
           type: string
           description: The format of the document
         doc_name:
           type: string
           description: The file name
+        data:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: The template data
+        options:
+          type: object
+          additionalProperties: {}
+          description: The template rendering options
+    DocumentTemplateList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTemplate'
+      required:
+      - results
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    DocumentFileData:
+      type: object
+      properties:
         doc_file:
           type: string
-          description: A base64 file content
+          description: A base64 file to upload
+        doc_name:
+          type: string
+          description: The file name
+        doc_format:
+          type:
+          - string
+          - 'null'
+          description: The file format
+        doc_type:
+          type:
+          - string
+          - 'null'
+          default: other
+          description: "\n        Shipment document type\n\n        values: <br/>\n        `certificate_of_origin` `commercial_invoice` `pro_forma_invoice` `packing_list` `other`\n\n        For carrier specific packaging types, please consult the reference.\n        "
+          maxLength: 50
       required:
       - doc_file
+      - doc_name
   securitySchemes:
     JWT:
       in: header

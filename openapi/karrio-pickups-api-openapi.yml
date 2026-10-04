@@ -349,6 +349,75 @@ paths:
       x-operationId: cancelPickup
 components:
   schemas:
+    AddressValidation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: True if the address is valid
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: validation service details
+      required:
+      - success
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    Charge:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The charge description
+        amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The charge monetary value
+        currency:
+          type:
+          - string
+          - 'null'
+          description: The charge amount currency
+        id:
+          type:
+          - string
+          - 'null'
+          description: A surcharge id
+    PickupList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pickup'
+      required:
+      - results
     PickupUpdateData:
       type: object
       properties:
@@ -426,29 +495,588 @@ components:
           description: pickup identification number
       required:
       - confirmation_number
-    PickupList:
+    Message:
       type: object
       properties:
-        count:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
+    PickupData:
+      type: object
+      properties:
+        carrier_code:
+          type:
+          - string
+          - 'null'
+          description: "The carrier code for the pickup (e.g., 'canadapost', 'fedex').<br/>\n        Required when using `POST /v1/pickups`."
+        pickup_date:
+          type: string
+          description: "The expected pickup date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The pickup address
+        parcels_count:
           type:
           - integer
           - 'null'
-        next:
+          minimum: 1
+          description: The number of parcels to be picked up (alternative to linking shipments)
+        ready_time:
+          type: string
+          description: "The ready time for pickup.<br/>\n        Time Format: `HH:MM`\n        "
+        closing_time:
+          type: string
+          description: "The closing or late time of the pickup.<br/>\n        Time Format: `HH:MM`\n        "
+        instruction:
           type:
           - string
           - 'null'
-          format: uri
-        previous:
+          description: "The pickup instruction.<br/>\n        eg: Handle with care.\n        "
+          maxLength: 50
+        package_location:
           type:
           - string
           - 'null'
-          format: uri
-        results:
+          description: "The package(s) location.<br/>\n        eg: Behind the entrance door.\n        "
+          maxLength: 50
+        pickup_type:
+          enum:
+          - one_time
+          - daily
+          - recurring
+          type: string
+          x-spec-enum-id: f6e56facfab73bf5
+          default: one_time
+          description: "The pickup scheduling type.<br/>\n        - one_time: Single pickup on a specific date<br/>\n        - daily: Recurring pickup every business day<br/>\n        - recurring: Custom recurring schedule\n        "
+        recurrence:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Recurrence configuration for recurring pickups.<br/>\n        Example: {\"frequency\": \"weekly\", \"days_of_week\": [\"monday\", \"wednesday\", \"friday\"], \"end_date\": \"2024-12-31\"}\n        "
+        options:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Advanced carrier specific pickup options
+        tracking_numbers:
           type: array
           items:
-            $ref: '#/components/schemas/Pickup'
+            type: string
+          description: The list of shipments to be picked up (optional if parcels_count provided)
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the pickup
       required:
-      - results
+      - closing_time
+      - pickup_date
+      - ready_time
+    AddressData:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for the address (used in JSON embedded data)
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: "The address postal code\n        **(required for shipment purchase)**\n        "
+          maxLength: 20
+        city:
+          type:
+          - string
+          - 'null'
+          description: "The address city.\n        **(required for shipment purchase)**\n        "
+          maxLength: 50
+        federal_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party frederal tax id
+          maxLength: 50
+        state_tax_id:
+          type:
+          - string
+          - 'null'
+          description: The party state id
+          maxLength: 50
+        person_name:
+          type:
+          - string
+          - 'null'
+          description: "Attention to\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        company_name:
+          type:
+          - string
+          - 'null'
+          description: The company name if the party is a company
+          maxLength: 100
+        country_code:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          type: string
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The address country code
+        email:
+          type:
+          - string
+          - 'null'
+          description: The party email
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The party phone number.
+          maxLength: 50
+        state_code:
+          type:
+          - string
+          - 'null'
+          description: The address state code
+          maxLength: 50
+        residential:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address is residential or commercial (enterprise)
+        street_number:
+          type:
+          - string
+          - 'null'
+          description: The address street number
+          maxLength: 100
+        address_line1:
+          type:
+          - string
+          - 'null'
+          description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
+          maxLength: 100
+        address_line2:
+          type:
+          - string
+          - 'null'
+          description: The address line with suite number
+          maxLength: 100
+        validate_location:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicate if the address should be validated
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
+      required:
+      - country_code
+    PickupCancelData:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: The reason of the pickup cancellation
+    Parcel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        weight:
+          type: number
+          format: double
+          description: The parcel's weight
+        width:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's width
+        height:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's height
+        length:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The parcel's length
+        packaging_type:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's packaging type.<br/>\n        **Note that the packaging is optional when using a package preset.**<br/>\n        values: <br/>\n        `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`<br/>\n        For carrier specific packaging types, please consult the reference.\n        "
+          maxLength: 100
+        package_preset:
+          type:
+          - string
+          - 'null'
+          description: "The parcel's package preset.<br/>\n        For carrier specific package presets, please consult the reference.\n        "
+          maxLength: 100
+        description:
+          type:
+          - string
+          - 'null'
+          description: The parcel's description
+          maxLength: 250
+        content:
+          type:
+          - string
+          - 'null'
+          description: The parcel's content description
+          maxLength: 100
+        is_document:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: Indicates if the parcel is composed of documents only
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The parcel's weight unit
+        dimension_unit:
+          enum:
+          - CM
+          - IN
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 41993cb8117c279c
+          description: The parcel's dimension unit
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commodity'
+          description: The parcel items.
+        reference_number:
+          type:
+          - string
+          - 'null'
+          description: "The parcel reference number.<br/>\n        (can be used as tracking number for custom carriers)\n        "
+          maxLength: 100
+        freight_class:
+          type:
+          - string
+          - 'null'
+          description: The parcel's freight class for pallet and freight shipments.
+          maxLength: 6
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>Parcel specific options.</summary>\n\n        {\n            \"insurance\": \"100.00\",\n            \"insured_by\": \"carrier\",\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
+        object_type:
+          type: string
+          default: parcel
+          description: Specifies the object type
+      required:
+      - weight
+      - weight_unit
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
     Commodity:
       type: object
       properties:
@@ -946,604 +1574,6 @@ components:
       required:
       - weight
       - weight_unit
-    PickupCancelData:
-      type: object
-      properties:
-        reason:
-          type: string
-          description: The reason of the pickup cancellation
-    Parcel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A unique identifier
-        weight:
-          type: number
-          format: double
-          description: The parcel's weight
-        width:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The parcel's width
-        height:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The parcel's height
-        length:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The parcel's length
-        packaging_type:
-          type:
-          - string
-          - 'null'
-          description: "The parcel's packaging type.<br/>\n        **Note that the packaging is optional when using a package preset.**<br/>\n        values: <br/>\n        `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`<br/>\n        For carrier specific packaging types, please consult the reference.\n        "
-          maxLength: 100
-        package_preset:
-          type:
-          - string
-          - 'null'
-          description: "The parcel's package preset.<br/>\n        For carrier specific package presets, please consult the reference.\n        "
-          maxLength: 100
-        description:
-          type:
-          - string
-          - 'null'
-          description: The parcel's description
-          maxLength: 250
-        content:
-          type:
-          - string
-          - 'null'
-          description: The parcel's content description
-          maxLength: 100
-        is_document:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: Indicates if the parcel is composed of documents only
-        weight_unit:
-          enum:
-          - KG
-          - LB
-          - OZ
-          - G
-          type: string
-          x-spec-enum-id: 3a766910e8401666
-          description: The parcel's weight unit
-        dimension_unit:
-          enum:
-          - CM
-          - IN
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 41993cb8117c279c
-          description: The parcel's dimension unit
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Commodity'
-          description: The parcel items.
-        reference_number:
-          type:
-          - string
-          - 'null'
-          description: "The parcel reference number.<br/>\n        (can be used as tracking number for custom carriers)\n        "
-          maxLength: 100
-        freight_class:
-          type:
-          - string
-          - 'null'
-          description: The parcel's freight class for pallet and freight shipments.
-          maxLength: 6
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>Parcel specific options.</summary>\n\n        {\n            \"insurance\": \"100.00\",\n            \"insured_by\": \"carrier\",\n        }\n        </details>\n        "
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Standard Box\", \"is_default\": true}\n        "
-        object_type:
-          type: string
-          default: parcel
-          description: Specifies the object type
-      required:
-      - weight
-      - weight_unit
-    Charge:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The charge description
-        amount:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The charge monetary value
-        currency:
-          type:
-          - string
-          - 'null'
-          description: The charge amount currency
-        id:
-          type:
-          - string
-          - 'null'
-          description: A surcharge id
-    AddressData:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for the address (used in JSON embedded data)
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: "The address postal code\n        **(required for shipment purchase)**\n        "
-          maxLength: 20
-        city:
-          type:
-          - string
-          - 'null'
-          description: "The address city.\n        **(required for shipment purchase)**\n        "
-          maxLength: 50
-        federal_tax_id:
-          type:
-          - string
-          - 'null'
-          description: The party frederal tax id
-          maxLength: 50
-        state_tax_id:
-          type:
-          - string
-          - 'null'
-          description: The party state id
-          maxLength: 50
-        person_name:
-          type:
-          - string
-          - 'null'
-          description: "Attention to\n        **(required for shipment purchase)**\n        "
-          maxLength: 100
-        company_name:
-          type:
-          - string
-          - 'null'
-          description: The company name if the party is a company
-          maxLength: 100
-        country_code:
-          enum:
-          - AC
-          - AD
-          - AE
-          - AF
-          - AG
-          - AI
-          - AL
-          - AM
-          - AN
-          - AO
-          - AR
-          - AS
-          - AT
-          - AU
-          - AW
-          - AZ
-          - BA
-          - BB
-          - BD
-          - BE
-          - BF
-          - BG
-          - BH
-          - BI
-          - BJ
-          - BM
-          - BN
-          - BO
-          - BR
-          - BS
-          - BT
-          - BW
-          - BY
-          - BZ
-          - CA
-          - CD
-          - CF
-          - CG
-          - CH
-          - CI
-          - CK
-          - CL
-          - CM
-          - CN
-          - CO
-          - CR
-          - CU
-          - CV
-          - CY
-          - CZ
-          - DE
-          - DJ
-          - DK
-          - DM
-          - DO
-          - DZ
-          - EC
-          - EE
-          - EG
-          - ER
-          - ES
-          - ET
-          - FI
-          - FJ
-          - FK
-          - FM
-          - FO
-          - FR
-          - GA
-          - GB
-          - GD
-          - GE
-          - GF
-          - GG
-          - GH
-          - GI
-          - GL
-          - GM
-          - GN
-          - GP
-          - GQ
-          - GR
-          - GT
-          - GU
-          - GW
-          - GY
-          - HK
-          - HN
-          - HR
-          - HT
-          - HU
-          - IC
-          - ID
-          - IE
-          - IL
-          - IN
-          - IQ
-          - IR
-          - IS
-          - IT
-          - JE
-          - JM
-          - JO
-          - JP
-          - KE
-          - KG
-          - KH
-          - KI
-          - KM
-          - KN
-          - KP
-          - KR
-          - KV
-          - KW
-          - KY
-          - KZ
-          - LA
-          - LB
-          - LC
-          - LI
-          - LK
-          - LR
-          - LS
-          - LT
-          - LU
-          - LV
-          - LY
-          - MA
-          - MC
-          - MD
-          - ME
-          - MG
-          - MH
-          - MK
-          - ML
-          - MM
-          - MN
-          - MO
-          - MP
-          - MQ
-          - MR
-          - MS
-          - MT
-          - MU
-          - MV
-          - MW
-          - MX
-          - MY
-          - MZ
-          - NA
-          - NC
-          - NE
-          - NG
-          - NI
-          - NL
-          - 'NO'
-          - NP
-          - NR
-          - NU
-          - NZ
-          - OM
-          - PA
-          - PE
-          - PF
-          - PG
-          - PH
-          - PK
-          - PL
-          - PR
-          - PT
-          - PW
-          - PY
-          - QA
-          - RE
-          - RO
-          - RS
-          - RU
-          - RW
-          - SA
-          - SB
-          - SC
-          - SD
-          - SE
-          - SG
-          - SH
-          - SI
-          - SK
-          - SL
-          - SM
-          - SN
-          - SO
-          - SR
-          - SS
-          - ST
-          - SV
-          - SY
-          - SZ
-          - TC
-          - TD
-          - TG
-          - TH
-          - TJ
-          - TL
-          - TN
-          - TO
-          - TR
-          - TT
-          - TV
-          - TW
-          - TZ
-          - UA
-          - UG
-          - US
-          - UY
-          - UZ
-          - VA
-          - VC
-          - VE
-          - VG
-          - VI
-          - VN
-          - VU
-          - WS
-          - XB
-          - XC
-          - XE
-          - XM
-          - XN
-          - XS
-          - XY
-          - YE
-          - YT
-          - ZA
-          - ZM
-          - ZW
-          - EH
-          - IM
-          - BL
-          - MF
-          - SX
-          type: string
-          x-spec-enum-id: b4b44aee15c8daa0
-          description: The address country code
-        email:
-          type:
-          - string
-          - 'null'
-          description: The party email
-        phone_number:
-          type:
-          - string
-          - 'null'
-          description: The party phone number.
-          maxLength: 50
-        state_code:
-          type:
-          - string
-          - 'null'
-          description: The address state code
-          maxLength: 50
-        residential:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: Indicate if the address is residential or commercial (enterprise)
-        street_number:
-          type:
-          - string
-          - 'null'
-          description: The address street number
-          maxLength: 100
-        address_line1:
-          type:
-          - string
-          - 'null'
-          description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
-          maxLength: 100
-        address_line2:
-          type:
-          - string
-          - 'null'
-          description: The address line with suite number
-          maxLength: 100
-        validate_location:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: Indicate if the address should be validated
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
-      required:
-      - country_code
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-    PickupData:
-      type: object
-      properties:
-        carrier_code:
-          type:
-          - string
-          - 'null'
-          description: "The carrier code for the pickup (e.g., 'canadapost', 'fedex').<br/>\n        Required when using `POST /v1/pickups`."
-        pickup_date:
-          type: string
-          description: "The expected pickup date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
-        address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The pickup address
-        parcels_count:
-          type:
-          - integer
-          - 'null'
-          minimum: 1
-          description: The number of parcels to be picked up (alternative to linking shipments)
-        ready_time:
-          type: string
-          description: "The ready time for pickup.<br/>\n        Time Format: `HH:MM`\n        "
-        closing_time:
-          type: string
-          description: "The closing or late time of the pickup.<br/>\n        Time Format: `HH:MM`\n        "
-        instruction:
-          type:
-          - string
-          - 'null'
-          description: "The pickup instruction.<br/>\n        eg: Handle with care.\n        "
-          maxLength: 50
-        package_location:
-          type:
-          - string
-          - 'null'
-          description: "The package(s) location.<br/>\n        eg: Behind the entrance door.\n        "
-          maxLength: 50
-        pickup_type:
-          enum:
-          - one_time
-          - daily
-          - recurring
-          type: string
-          x-spec-enum-id: f6e56facfab73bf5
-          default: one_time
-          description: "The pickup scheduling type.<br/>\n        - one_time: Single pickup on a specific date<br/>\n        - daily: Recurring pickup every business day<br/>\n        - recurring: Custom recurring schedule\n        "
-        recurrence:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Recurrence configuration for recurring pickups.<br/>\n        Example: {\"frequency\": \"weekly\", \"days_of_week\": [\"monday\", \"wednesday\", \"friday\"], \"end_date\": \"2024-12-31\"}\n        "
-        options:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: Advanced carrier specific pickup options
-        tracking_numbers:
-          type: array
-          items:
-            type: string
-          description: The list of shipments to be picked up (optional if parcels_count provided)
-        metadata:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: User metadata for the pickup
-      required:
-      - closing_time
-      - pickup_date
-      - ready_time
-    Message:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-        carrier_name:
-          type: string
-          description: The targeted carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier name (unique identifier)
     Pickup:
       type: object
       properties:
@@ -2028,36 +2058,6 @@ components:
           description: Specify address validation result
       required:
       - country_code
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
-    AddressValidation:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: True if the address is valid
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: validation service details
-      required:
-      - success
   securitySchemes:
     JWT:
       in: header
