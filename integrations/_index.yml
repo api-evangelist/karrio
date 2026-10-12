@@ -19,7 +19,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-canadapost
   label: canadapost
@@ -37,7 +37,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-partner-spec
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-dhl-express
   label: dhl_express
@@ -55,7 +55,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-fedex
   label: fedex
@@ -73,7 +73,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-gls
   label: gls
@@ -91,7 +91,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-laposte
   label: laposte
@@ -109,7 +109,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-royalmail
   label: royalmail
@@ -127,7 +127,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-sendle
   label: sendle
@@ -145,7 +145,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-ups
   label: ups
@@ -163,7 +163,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-usps
   label: usps
@@ -181,7 +181,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-veho
   label: veho
@@ -199,7 +199,7 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-easypost
   label: easypost
@@ -217,7 +217,7 @@
     property: schemas.CarrierDetails.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-easyship
   label: easyship
@@ -235,7 +235,7 @@
     property: schemas.CarrierDetails.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: karrio-shipengine
   label: shipengine
@@ -253,5 +253,5 @@
     property: schemas.CarrierDetails.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-partner-spec
+  status: not-a-workflow
   arazzo: null
