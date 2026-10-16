@@ -2,11 +2,11 @@
   "repo": "karrio",
   "feeds": [
     {
-      "source": "https://karrio.io/docs/api-reference",
-      "feed_url": "https://karrio.io/docs/api-reference",
+      "source": "https://karrio.io/blog",
+      "feed_url": "https://karrio.io/blog/feed.xml",
       "title": "",
       "saved": 0,
-      "method": "none"
+      "method": "discovered"
     },
     {
       "source": "https://www.karrio.io/blog/feed.xml",
@@ -14,9 +14,16 @@
       "title": "",
       "saved": 0,
       "method": "feed"
+    },
+    {
+      "source": "https://karrio.io/docs/api-reference",
+      "feed_url": "https://karrio.io/docs/api-reference",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "fetched": "2026-10-03T12:30:02Z",
+  "fetched": "2026-10-10T13:15:00Z",
   "post_count": 12,
   "feed_nature": "vendor-blog",
   "feed_nature_basis": "path_blog",
