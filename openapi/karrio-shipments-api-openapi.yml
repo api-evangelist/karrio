@@ -517,373 +517,6 @@ paths:
           description: ''
 components:
   schemas:
-    CustomsData:
-      type: object
-      properties:
-        commodities:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommodityData'
-          description: The parcel content items
-        duty:
-          allOf:
-          - $ref: '#/components/schemas/Duty'
-          description: "The payment details.<br/>\n        **Note that this is required for a Dutiable parcel shipped internationally.**\n        "
-        duty_billing_address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The duty payor address.
-        content_type:
-          enum:
-          - documents
-          - gift
-          - sample
-          - merchandise
-          - return_merchandise
-          - other
-          - ''
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: b8935f22b570da75
-        content_description:
-          type:
-          - string
-          - 'null'
-        incoterm:
-          enum:
-          - CFR
-          - CIF
-          - CIP
-          - CPT
-          - DAP
-          - DAF
-          - DDP
-          - DDU
-          - DEQ
-          - DES
-          - EXW
-          - FAS
-          - FCA
-          - FOB
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 61b2121fbcca17a7
-          description: The customs 'term of trade' also known as 'incoterm'
-        invoice:
-          type:
-          - string
-          - 'null'
-          description: The invoice reference number
-          maxLength: 50
-        invoice_date:
-          type:
-          - string
-          - 'null'
-          description: "The invoice date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
-        commercial_invoice:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates if the shipment is commercial
-        certify:
-          type:
-          - boolean
-          - 'null'
-          description: Indicate that signer certified confirmed all
-        signer:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>Customs identification options.</summary>\n\n        {\n            \"aes\": \"5218487281\",\n            \"eel_pfc\": \"5218487281\",\n            \"license_number\": \"5218487281\",\n            \"certificate_number\": \"5218487281\",\n            \"nip_number\": \"5218487281\",\n            \"eori_number\": \"5218487281\",\n            \"vat_registration_number\": \"5218487281\",\n        }\n        </details>\n        "
-      required:
-      - commodities
-    Payment:
-      type: object
-      properties:
-        paid_by:
-          enum:
-          - sender
-          - recipient
-          - third_party
-          type: string
-          x-spec-enum-id: 26ff4db10d761aa1
-          default: sender
-          description: The payor type
-        currency:
-          enum:
-          - EUR
-          - AED
-          - USD
-          - XCD
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - XOF
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - XAF
-          - CHF
-          - NZD
-          - CLP
-          - CNY
-          - COP
-          - CRC
-          - CUC
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - GBP
-          - GEL
-          - GHS
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRO
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MYR
-          - MZN
-          - NAD
-          - XPF
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - OMR
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SHP
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STD
-          - SYP
-          - SZL
-          - THB
-          - TJS
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UYU
-          - UZS
-          - VEF
-          - VND
-          - VUV
-          - WST
-          - YER
-          - ZAR
-          - ''
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: fd73376ae25ab80b
-          description: The payment amount currency
-        account_number:
-          type:
-          - string
-          - 'null'
-          description: The payor account number
-    AddressValidation:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: True if the address is valid
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: validation service details
-      required:
-      - success
-    ShipmentData:
-      type: object
-      properties:
-        recipient:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
-        return_address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The return address for this shipment. Defaults to the shipper address.
-        billing_address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The payor address.
-        parcels:
-          type: array
-          items:
-            $ref: '#/components/schemas/ParcelData'
-          description: The shipment's parcels
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
-        payment:
-          allOf:
-          - $ref: '#/components/schemas/Payment'
-          default:
-            paid_by: sender
-            currency: null
-            account_number: null
-          description: The payment details
-        customs:
-          allOf:
-          - $ref: '#/components/schemas/CustomsData'
-          description: "The customs details.<br/>\n        **Note that this is required for the shipment of an international Dutiable parcel.**\n        "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The shipment reference
-          maxLength: 100
-        order_id:
-          type:
-          - string
-          - 'null'
-          description: The order identifier associated with this shipment
-          maxLength: 50
-        label_type:
-          enum:
-          - PDF
-          - ZPL
-          - PNG
-          type: string
-          x-spec-enum-id: 49b2c844813c9a67
-          default: PDF
-          description: The shipment label file type.
-        is_return:
-          type: boolean
-          default: false
-          description: Indicates whether this shipment is a return shipment. When true, addresses are auto-swapped and the request is routed to the carrier's return shipment API.
-        service:
-          type: string
-          description: '**Specify a service to Buy a label in one call without rating.**'
-        services:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          default: []
-          description: "The requested carrier service for the shipment.<br/>\n        Please consult the reference for specific carriers services.<br/>\n        **Note that this is a list because on a Multi-carrier rate request\n        you could specify a service per carrier.**\n        "
-        carrier_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          default: []
-          description: "The list of configured carriers you wish to get rates from.<br/>\n        **Note that the request will be sent to all carriers in nothing is specified**\n        "
-        metadata:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: User metadata for the shipment
-      required:
-      - parcels
-      - recipient
-      - shipper
     ErrorResponse:
       type: object
       properties:
@@ -892,28 +525,6 @@ components:
           items:
             $ref: '#/components/schemas/APIError'
           description: The list of API errors
-    Message:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-        carrier_name:
-          type: string
-          description: The targeted carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier name (unique identifier)
     ParcelData:
       type: object
       properties:
@@ -1019,253 +630,6 @@ components:
       required:
       - weight
       - weight_unit
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    Duty:
-      type: object
-      properties:
-        paid_by:
-          enum:
-          - sender
-          - recipient
-          - third_party
-          - ''
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 26ff4db10d761aa1
-          description: The duty payer
-        currency:
-          enum:
-          - EUR
-          - AED
-          - USD
-          - XCD
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - XOF
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - XAF
-          - CHF
-          - NZD
-          - CLP
-          - CNY
-          - COP
-          - CRC
-          - CUC
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - GBP
-          - GEL
-          - GHS
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRO
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MYR
-          - MZN
-          - NAD
-          - XPF
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - OMR
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SHP
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STD
-          - SYP
-          - SZL
-          - THB
-          - TJS
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UYU
-          - UZS
-          - VEF
-          - VND
-          - VUV
-          - WST
-          - YER
-          - ZAR
-          - ''
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: fd73376ae25ab80b
-          description: The declared value currency
-        declared_value:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The package declared value
-        account_number:
-          type:
-          - string
-          - 'null'
-          description: The duty payment account number
-    Charge:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The charge description
-        amount:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The charge monetary value
-        currency:
-          type:
-          - string
-          - 'null'
-          description: The charge amount currency
-        id:
-          type:
-          - string
-          - 'null'
-          description: A surcharge id
-    ShipmentUpdateData:
-      type: object
-      properties:
-        label_type:
-          enum:
-          - PDF
-          - ZPL
-          - PNG
-          type: string
-          x-spec-enum-id: 49b2c844813c9a67
-          default: PDF
-          description: The shipment label file type.
-        payment:
-          allOf:
-          - $ref: '#/components/schemas/Payment'
-          description: The payment details
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipping_charges\": 10.00,\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The shipment reference
-        order_id:
-          type:
-          - string
-          - 'null'
-          description: The order identifier associated with this shipment
-          maxLength: 50
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: User metadata for the shipment
     Address:
       type: object
       properties:
@@ -1616,6 +980,353 @@ components:
           description: Specify address validation result
       required:
       - country_code
+    ShipmentPurchaseData:
+      type: object
+      properties:
+        selected_rate_id:
+          type:
+          - string
+          - 'null'
+          description: The shipment selected rate.
+        service:
+          type:
+          - string
+          - 'null'
+          description: The carrier service to use for the shipment (alternative to selected_rate_id).
+        label_type:
+          enum:
+          - PDF
+          - ZPL
+          - PNG
+          type: string
+          x-spec-enum-id: 49b2c844813c9a67
+          default: PDF
+          description: The shipment label file type.
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          description: The payment details
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: User metadata for the shipment
+    ShipmentData:
+      type: object
+      properties:
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        return_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The return address for this shipment. Defaults to the shipper address.
+        billing_address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The payor address.
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParcelData'
+          description: The shipment's parcels
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          default:
+            paid_by: sender
+            currency: null
+            account_number: null
+          description: The payment details
+        customs:
+          allOf:
+          - $ref: '#/components/schemas/CustomsData'
+          description: "The customs details.<br/>\n        **Note that this is required for the shipment of an international Dutiable parcel.**\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+          maxLength: 100
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The order identifier associated with this shipment
+          maxLength: 50
+        label_type:
+          enum:
+          - PDF
+          - ZPL
+          - PNG
+          type: string
+          x-spec-enum-id: 49b2c844813c9a67
+          default: PDF
+          description: The shipment label file type.
+        is_return:
+          type: boolean
+          default: false
+          description: Indicates whether this shipment is a return shipment. When true, addresses are auto-swapped and the request is routed to the carrier's return shipment API.
+        service:
+          type: string
+          description: '**Specify a service to Buy a label in one call without rating.**'
+        services:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The requested carrier service for the shipment.<br/>\n        Please consult the reference for specific carriers services.<br/>\n        **Note that this is a list because on a Multi-carrier rate request\n        you could specify a service per carrier.**\n        "
+        carrier_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The list of configured carriers you wish to get rates from.<br/>\n        **Note that the request will be sent to all carriers in nothing is specified**\n        "
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the shipment
+      required:
+      - parcels
+      - recipient
+      - shipper
+    Shipment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        object_type:
+          type: string
+          default: shipment
+          description: Specifies the object type
+        tracking_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: The shipment tracking url
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
+        return_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The return address for this shipment. Defaults to the shipper address.
+        billing_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The payor address.
+        parcels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parcel'
+          description: The shipment's parcels
+        services:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The carriers services requested for the shipment.<br/>\n        Please consult the reference for specific carriers services.<br/>\n        **Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.**\n        "
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          default:
+            paid_by: sender
+            currency: null
+            account_number: null
+          description: The payment details
+        customs:
+          allOf:
+          - $ref: '#/components/schemas/CustomsData'
+          description: "The customs details.<br/>\n        **Note that this is required for the shipment of an international Dutiable parcel.**\n        "
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+          default: []
+          description: The list for shipment rates fetched previously
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The order identifier associated with this shipment
+        label_type:
+          enum:
+          - PDF
+          - ZPL
+          - PNG
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 49b2c844813c9a67
+          description: The shipment label file type.
+        carrier_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: []
+          description: "The list of configured carriers you wish to get rates from.<br/>\n        **Note that the request will be sent to all carriers in nothing is specified**\n        "
+        tracker_id:
+          type:
+          - string
+          - 'null'
+          description: The attached tracker id
+        created_at:
+          type: string
+          description: "The shipment creation datetime.<br/>\n        Date Format: `YYYY-MM-DD HH:MM:SS.mmmmmmz`\n        "
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the shipment
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          default: []
+          description: The list of note or warning messages
+        is_archived:
+          type: boolean
+          default: false
+          description: Indicates whether this shipment is archived.
+        archived_at:
+          type:
+          - string
+          - 'null'
+          description: Timestamp when the shipment was archived.
+        status:
+          enum:
+          - draft
+          - created
+          - cancelled
+          - shipped
+          - in_transit
+          - delivered
+          - needs_attention
+          - out_for_delivery
+          - delivery_failed
+          type: string
+          x-spec-enum-id: f4c394c6818de493
+          default: draft
+          description: The current Shipment status
+        carrier_name:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier
+        carrier_id:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier configured identifier
+        tracking_number:
+          type:
+          - string
+          - 'null'
+          description: The shipment tracking number
+        shipment_identifier:
+          type:
+          - string
+          - 'null'
+          description: The shipment carrier system identifier
+        selected_rate:
+          allOf:
+          - $ref: '#/components/schemas/Rate'
+          description: The shipment selected rate
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        return_shipment:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Return shipment details when a return label is provided with outbound shipment
+        service:
+          type:
+          - string
+          - 'null'
+          description: The selected service
+        selected_rate_id:
+          type:
+          - string
+          - 'null'
+          description: The shipment selected rate.
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+        is_return:
+          type: boolean
+          default: false
+          description: Indicates whether this shipment is a return shipment.
+        label_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: The shipment label URL
+        invoice_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: The shipment invoice URL
+        shipping_documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShippingDocument'
+          default: []
+          description: The list of shipping documents
+      required:
+      - created_at
+      - parcels
+      - recipient
+      - shipper
+      - test_mode
     AddressData:
       type: object
       properties:
@@ -1960,34 +1671,28 @@ components:
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
       required:
       - country_code
-    ShippingDocument:
+    AddressValidation:
       type: object
-      description: Serializer for shipping document download response.
       properties:
-        category:
-          type: string
-          description: The document category (e.g., 'label', 'invoice', 'manifest')
-        format:
-          type: string
-          description: The document format (e.g., 'PDF', 'ZPL')
-        print_format:
+        success:
+          type: boolean
+          description: True if the address is valid
+        meta:
           type:
-          - string
+          - object
           - 'null'
-          description: The document print format (e.g., 'A4', '6x4', '8.5x11')
-        url:
-          type:
-          - string
-          - 'null'
-          description: The document URL
-        base64:
-          type:
-          - string
-          - 'null'
-          description: The document content encoded in base64
+          additionalProperties: {}
+          description: validation service details
       required:
-      - category
-      - format
+      - success
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
     Parcel:
       type: object
       properties:
@@ -2100,6 +1805,270 @@ components:
       required:
       - weight
       - weight_unit
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier
+        object_type:
+          type: string
+          default: rate
+          description: Specifies the object type
+        carrier_name:
+          type: string
+          description: The rate's carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier's name (unique identifier)
+        currency:
+          type: string
+          description: The rate monetary values currency code
+        service:
+          type:
+          - string
+          - 'null'
+          description: The carrier's rate (quote) service
+        total_charge:
+          type: number
+          format: double
+          default: 0.0
+          description: "The rate's monetary amount of the total charge.<br/>\n        This is the gross amount of the rate after adding the additional charges\n        "
+        transit_days:
+          type:
+          - integer
+          - 'null'
+          description: The estimated delivery transit days
+        extra_charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+          default: []
+          description: list of the rate's additional charges
+        estimated_delivery:
+          type:
+          - string
+          - 'null'
+          description: The delivery estimated date
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: provider specific metadata
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+      required:
+      - carrier_id
+      - carrier_name
+      - test_mode
+    ShipmentUpdateData:
+      type: object
+      properties:
+        label_type:
+          enum:
+          - PDF
+          - ZPL
+          - PNG
+          type: string
+          x-spec-enum-id: 49b2c844813c9a67
+          default: PDF
+          description: The shipment label file type.
+        payment:
+          allOf:
+          - $ref: '#/components/schemas/Payment'
+          description: The payment details
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipping_charges\": 10.00,\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The shipment reference
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The order identifier associated with this shipment
+          maxLength: 50
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: User metadata for the shipment
+    Payment:
+      type: object
+      properties:
+        paid_by:
+          enum:
+          - sender
+          - recipient
+          - third_party
+          type: string
+          x-spec-enum-id: 26ff4db10d761aa1
+          default: sender
+          description: The payor type
+        currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The payment amount currency
+        account_number:
+          type:
+          - string
+          - 'null'
+          description: The payor account number
     APIError:
       type: object
       properties:
@@ -2116,6 +2085,542 @@ components:
           type: object
           additionalProperties: {}
           description: any additional details
+    Charge:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The charge description
+        amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The charge monetary value
+        currency:
+          type:
+          - string
+          - 'null'
+          description: The charge amount currency
+        id:
+          type:
+          - string
+          - 'null'
+          description: A surcharge id
+    CommodityData:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: The commodity's weight
+        weight_unit:
+          enum:
+          - KG
+          - LB
+          - OZ
+          - G
+          type: string
+          x-spec-enum-id: 3a766910e8401666
+          description: The commodity's weight unit
+        title:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the commodity
+          maxLength: 200
+        quantity:
+          type: integer
+          default: 1
+          description: The commodity's quantity (number or item)
+        sku:
+          type:
+          - string
+          - 'null'
+          description: The commodity's sku number
+          maxLength: 100
+        hs_code:
+          type:
+          - string
+          - 'null'
+          description: The commodity's hs_code number
+          maxLength: 100
+        value_amount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The monetary value of the commodity
+        value_currency:
+          enum:
+          - EUR
+          - AED
+          - USD
+          - XCD
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - XOF
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - XAF
+          - CHF
+          - NZD
+          - CLP
+          - CNY
+          - COP
+          - CRC
+          - CUC
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - GBP
+          - GEL
+          - GHS
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MYR
+          - MZN
+          - NAD
+          - XPF
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - OMR
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - YER
+          - ZAR
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: fd73376ae25ab80b
+          description: The currency of the commodity value amount
+        origin_country:
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BM
+          - BN
+          - BO
+          - BR
+          - BS
+          - BT
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CR
+          - CU
+          - CV
+          - CY
+          - CZ
+          - DE
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EC
+          - EE
+          - EG
+          - ER
+          - ES
+          - ET
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IN
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KV
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PR
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SG
+          - SH
+          - SI
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SV
+          - SY
+          - SZ
+          - TC
+          - TD
+          - TG
+          - TH
+          - TJ
+          - TL
+          - TN
+          - TO
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WS
+          - XB
+          - XC
+          - XE
+          - XM
+          - XN
+          - XS
+          - XY
+          - YE
+          - YT
+          - ZA
+          - ZM
+          - ZW
+          - EH
+          - IM
+          - BL
+          - MF
+          - SX
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: b4b44aee15c8daa0
+          description: The origin or manufacture country
+        product_url:
+          type:
+          - string
+          - 'null'
+          description: The product url
+        image_url:
+          type:
+          - string
+          - 'null'
+          description: The image url
+        product_id:
+          type:
+          - string
+          - 'null'
+          description: The product id
+        variant_id:
+          type:
+          - string
+          - 'null'
+          description: The variant id
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: The id of the related order line item.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
+      required:
+      - weight
+      - weight_unit
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
     Commodity:
       type: object
       properties:
@@ -2644,310 +3149,139 @@ components:
           type: object
           additionalProperties: {}
           description: User metadata for the shipment
-    Shipment:
+    CustomsData:
       type: object
       properties:
-        id:
-          type: string
-          description: A unique identifier
-        object_type:
-          type: string
-          default: shipment
-          description: Specifies the object type
-        tracking_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: The shipment tracking url
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
-        recipient:
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          description: "The address of the party.<br/>\n        Origin address (ship from) for the **shipper**<br/>\n        Destination address (ship to) for the **recipient**\n        "
-        return_address:
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          description: The return address for this shipment. Defaults to the shipper address.
-        billing_address:
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          description: The payor address.
-        parcels:
+        commodities:
           type: array
           items:
-            $ref: '#/components/schemas/Parcel'
-          description: The shipment's parcels
-        services:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          default: []
-          description: "The carriers services requested for the shipment.<br/>\n        Please consult the reference for specific carriers services.<br/>\n        **Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.**\n        "
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>The options available for the shipment.</summary>\n\n        {\n            \"currency\": \"USD\",\n            \"insurance\": 100.00,\n            \"cash_on_delivery\": 30.00,\n            \"dangerous_good\": true,\n            \"declared_value\": 150.00,\n            \"sms_notification\": true,\n            \"email_notification\": true,\n            \"email_notification_to\": \"shipper@mail.com\",\n            \"hold_at_location\": true,\n            \"paperless_trade\": true,\n            \"preferred_service\": \"fedex_express_saver\",\n            \"shipment_date\": \"2020-01-01\",  # TODO: deprecate\n            \"shipping_date\": \"2020-01-01T00:00\",\n            \"shipment_note\": \"This is a shipment note\",\n            \"signature_confirmation\": true,\n            \"saturday_delivery\": true,\n            \"shipper_instructions\": \"This is a shipper instruction\",\n            \"recipient_instructions\": \"This is a recipient instruction\",\n            \"doc_files\": [\n                {\n                    \"doc_type\": \"commercial_invoice\",\n                    \"doc_file\": \"base64 encoded file\",\n                    \"doc_name\": \"commercial_invoice.pdf\",\n                    \"doc_format\": \"pdf\",\n                }\n            ],\n            \"doc_references\": [\n                {\n                    \"doc_id\": \"123456789\",\n                    \"doc_type\": \"commercial_invoice\",\n                }\n            ],\n        }\n        </details>\n        "
-        payment:
+            $ref: '#/components/schemas/CommodityData'
+          description: The parcel content items
+        duty:
           allOf:
-          - $ref: '#/components/schemas/Payment'
-          default:
-            paid_by: sender
-            currency: null
-            account_number: null
-          description: The payment details
-        customs:
+          - $ref: '#/components/schemas/Duty'
+          description: "The payment details.<br/>\n        **Note that this is required for a Dutiable parcel shipped internationally.**\n        "
+        duty_billing_address:
           allOf:
-          - $ref: '#/components/schemas/CustomsData'
-          description: "The customs details.<br/>\n        **Note that this is required for the shipment of an international Dutiable parcel.**\n        "
-        rates:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rate'
-          default: []
-          description: The list for shipment rates fetched previously
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The shipment reference
-        order_id:
-          type:
-          - string
-          - 'null'
-          description: The order identifier associated with this shipment
-        label_type:
+          - $ref: '#/components/schemas/AddressData'
+          description: The duty payor address.
+        content_type:
           enum:
-          - PDF
-          - ZPL
-          - PNG
+          - documents
+          - gift
+          - sample
+          - merchandise
+          - return_merchandise
+          - other
           - ''
           - null
           type:
           - string
           - 'null'
-          x-spec-enum-id: 49b2c844813c9a67
-          description: The shipment label file type.
-        carrier_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          default: []
-          description: "The list of configured carriers you wish to get rates from.<br/>\n        **Note that the request will be sent to all carriers in nothing is specified**\n        "
-        tracker_id:
+          x-spec-enum-id: b8935f22b570da75
+        content_description:
           type:
           - string
           - 'null'
-          description: The attached tracker id
-        created_at:
-          type: string
-          description: "The shipment creation datetime.<br/>\n        Date Format: `YYYY-MM-DD HH:MM:SS.mmmmmmz`\n        "
-        metadata:
+        incoterm:
+          enum:
+          - CFR
+          - CIF
+          - CIP
+          - CPT
+          - DAP
+          - DAF
+          - DDP
+          - DDU
+          - DEQ
+          - DES
+          - EXW
+          - FAS
+          - FCA
+          - FOB
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 61b2121fbcca17a7
+          description: The customs 'term of trade' also known as 'incoterm'
+        invoice:
+          type:
+          - string
+          - 'null'
+          description: The invoice reference number
+          maxLength: 50
+        invoice_date:
+          type:
+          - string
+          - 'null'
+          description: "The invoice date.<br/>\n        Date Format: `YYYY-MM-DD`\n        "
+        commercial_invoice:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates if the shipment is commercial
+        certify:
+          type:
+          - boolean
+          - 'null'
+          description: Indicate that signer certified confirmed all
+        signer:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        options:
           type: object
           additionalProperties: {}
           default: {}
-          description: User metadata for the shipment
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          default: []
-          description: The list of note or warning messages
-        is_archived:
-          type: boolean
-          default: false
-          description: Indicates whether this shipment is archived.
-        archived_at:
-          type:
-          - string
-          - 'null'
-          description: Timestamp when the shipment was archived.
-        status:
-          enum:
-          - draft
-          - created
-          - cancelled
-          - shipped
-          - in_transit
-          - delivered
-          - needs_attention
-          - out_for_delivery
-          - delivery_failed
-          type: string
-          x-spec-enum-id: f4c394c6818de493
-          default: draft
-          description: The current Shipment status
-        carrier_name:
-          type:
-          - string
-          - 'null'
-          description: The shipment carrier
-        carrier_id:
-          type:
-          - string
-          - 'null'
-          description: The shipment carrier configured identifier
-        tracking_number:
-          type:
-          - string
-          - 'null'
-          description: The shipment tracking number
-        shipment_identifier:
-          type:
-          - string
-          - 'null'
-          description: The shipment carrier system identifier
-        selected_rate:
-          allOf:
-          - $ref: '#/components/schemas/Rate'
-          description: The shipment selected rate
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: provider specific metadata
-        return_shipment:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: Return shipment details when a return label is provided with outbound shipment
-        service:
-          type:
-          - string
-          - 'null'
-          description: The selected service
-        selected_rate_id:
-          type:
-          - string
-          - 'null'
-          description: The shipment selected rate.
-        test_mode:
-          type: boolean
-          description: Specified whether it was created with a carrier in test mode
-        is_return:
-          type: boolean
-          default: false
-          description: Indicates whether this shipment is a return shipment.
-        label_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: The shipment label URL
-        invoice_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: The shipment invoice URL
-        shipping_documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/ShippingDocument'
-          default: []
-          description: The list of shipping documents
+          description: "<details>\n        <summary>Customs identification options.</summary>\n\n        {\n            \"aes\": \"5218487281\",\n            \"eel_pfc\": \"5218487281\",\n            \"license_number\": \"5218487281\",\n            \"certificate_number\": \"5218487281\",\n            \"nip_number\": \"5218487281\",\n            \"eori_number\": \"5218487281\",\n            \"vat_registration_number\": \"5218487281\",\n        }\n        </details>\n        "
       required:
-      - created_at
-      - parcels
-      - recipient
-      - shipper
-      - test_mode
-    ShipmentPurchaseData:
+      - commodities
+    ShippingDocument:
+      type: object
+      description: Serializer for shipping document download response.
+      properties:
+        category:
+          type: string
+          description: The document category (e.g., 'label', 'invoice', 'manifest')
+        format:
+          type: string
+          description: The document format (e.g., 'PDF', 'ZPL')
+        print_format:
+          type:
+          - string
+          - 'null'
+          description: The document print format (e.g., 'A4', '6x4', '8.5x11')
+        url:
+          type:
+          - string
+          - 'null'
+          description: The document URL
+        base64:
+          type:
+          - string
+          - 'null'
+          description: The document content encoded in base64
+      required:
+      - category
+      - format
+    Duty:
       type: object
       properties:
-        selected_rate_id:
-          type:
-          - string
-          - 'null'
-          description: The shipment selected rate.
-        service:
-          type:
-          - string
-          - 'null'
-          description: The carrier service to use for the shipment (alternative to selected_rate_id).
-        label_type:
+        paid_by:
           enum:
-          - PDF
-          - ZPL
-          - PNG
-          type: string
-          x-spec-enum-id: 49b2c844813c9a67
-          default: PDF
-          description: The shipment label file type.
-        payment:
-          allOf:
-          - $ref: '#/components/schemas/Payment'
-          description: The payment details
-        reference:
+          - sender
+          - recipient
+          - third_party
+          - ''
+          - null
           type:
           - string
           - 'null'
-          description: The shipment reference
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: User metadata for the shipment
-    CommodityData:
-      type: object
-      properties:
-        weight:
-          type: number
-          format: double
-          description: The commodity's weight
-        weight_unit:
-          enum:
-          - KG
-          - LB
-          - OZ
-          - G
-          type: string
-          x-spec-enum-id: 3a766910e8401666
-          description: The commodity's weight unit
-        title:
-          type:
-          - string
-          - 'null'
-          description: A description of the commodity
-          maxLength: 200
-        description:
-          type:
-          - string
-          - 'null'
-          description: A description of the commodity
-          maxLength: 200
-        quantity:
-          type: integer
-          default: 1
-          description: The commodity's quantity (number or item)
-        sku:
-          type:
-          - string
-          - 'null'
-          description: The commodity's sku number
-          maxLength: 100
-        hs_code:
-          type:
-          - string
-          - 'null'
-          description: The commodity's hs_code number
-          maxLength: 100
-        value_amount:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The monetary value of the commodity
-        value_currency:
+          x-spec-enum-id: 26ff4db10d761aa1
+          description: The duty payer
+        currency:
           enum:
           - EUR
           - AED
@@ -3093,358 +3427,24 @@ components:
           - WST
           - YER
           - ZAR
+          - ''
           - null
           type:
           - string
           - 'null'
           x-spec-enum-id: fd73376ae25ab80b
-          description: The currency of the commodity value amount
-        origin_country:
-          enum:
-          - AC
-          - AD
-          - AE
-          - AF
-          - AG
-          - AI
-          - AL
-          - AM
-          - AN
-          - AO
-          - AR
-          - AS
-          - AT
-          - AU
-          - AW
-          - AZ
-          - BA
-          - BB
-          - BD
-          - BE
-          - BF
-          - BG
-          - BH
-          - BI
-          - BJ
-          - BM
-          - BN
-          - BO
-          - BR
-          - BS
-          - BT
-          - BW
-          - BY
-          - BZ
-          - CA
-          - CD
-          - CF
-          - CG
-          - CH
-          - CI
-          - CK
-          - CL
-          - CM
-          - CN
-          - CO
-          - CR
-          - CU
-          - CV
-          - CY
-          - CZ
-          - DE
-          - DJ
-          - DK
-          - DM
-          - DO
-          - DZ
-          - EC
-          - EE
-          - EG
-          - ER
-          - ES
-          - ET
-          - FI
-          - FJ
-          - FK
-          - FM
-          - FO
-          - FR
-          - GA
-          - GB
-          - GD
-          - GE
-          - GF
-          - GG
-          - GH
-          - GI
-          - GL
-          - GM
-          - GN
-          - GP
-          - GQ
-          - GR
-          - GT
-          - GU
-          - GW
-          - GY
-          - HK
-          - HN
-          - HR
-          - HT
-          - HU
-          - IC
-          - ID
-          - IE
-          - IL
-          - IN
-          - IQ
-          - IR
-          - IS
-          - IT
-          - JE
-          - JM
-          - JO
-          - JP
-          - KE
-          - KG
-          - KH
-          - KI
-          - KM
-          - KN
-          - KP
-          - KR
-          - KV
-          - KW
-          - KY
-          - KZ
-          - LA
-          - LB
-          - LC
-          - LI
-          - LK
-          - LR
-          - LS
-          - LT
-          - LU
-          - LV
-          - LY
-          - MA
-          - MC
-          - MD
-          - ME
-          - MG
-          - MH
-          - MK
-          - ML
-          - MM
-          - MN
-          - MO
-          - MP
-          - MQ
-          - MR
-          - MS
-          - MT
-          - MU
-          - MV
-          - MW
-          - MX
-          - MY
-          - MZ
-          - NA
-          - NC
-          - NE
-          - NG
-          - NI
-          - NL
-          - 'NO'
-          - NP
-          - NR
-          - NU
-          - NZ
-          - OM
-          - PA
-          - PE
-          - PF
-          - PG
-          - PH
-          - PK
-          - PL
-          - PR
-          - PT
-          - PW
-          - PY
-          - QA
-          - RE
-          - RO
-          - RS
-          - RU
-          - RW
-          - SA
-          - SB
-          - SC
-          - SD
-          - SE
-          - SG
-          - SH
-          - SI
-          - SK
-          - SL
-          - SM
-          - SN
-          - SO
-          - SR
-          - SS
-          - ST
-          - SV
-          - SY
-          - SZ
-          - TC
-          - TD
-          - TG
-          - TH
-          - TJ
-          - TL
-          - TN
-          - TO
-          - TR
-          - TT
-          - TV
-          - TW
-          - TZ
-          - UA
-          - UG
-          - US
-          - UY
-          - UZ
-          - VA
-          - VC
-          - VE
-          - VG
-          - VI
-          - VN
-          - VU
-          - WS
-          - XB
-          - XC
-          - XE
-          - XM
-          - XN
-          - XS
-          - XY
-          - YE
-          - YT
-          - ZA
-          - ZM
-          - ZW
-          - EH
-          - IM
-          - BL
-          - MF
-          - SX
-          - null
+          description: The declared value currency
+        declared_value:
           type:
-          - string
+          - number
           - 'null'
-          x-spec-enum-id: b4b44aee15c8daa0
-          description: The origin or manufacture country
-        product_url:
-          type:
-          - string
-          - 'null'
-          description: The product url
-        image_url:
-          type:
-          - string
-          - 'null'
-          description: The image url
-        product_id:
-          type:
-          - string
-          - 'null'
-          description: The product id
-        variant_id:
-          type:
-          - string
-          - 'null'
-          description: The variant id
-        parent_id:
-          type:
-          - string
-          - 'null'
-          description: The id of the related order line item.
-        metadata:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "<details>\n        <summary>Commodity user references metadata.</summary>\n\n        {\n            \"part_number\": \"5218487281\",\n            \"reference1\": \"# ref 1\",\n            \"reference2\": \"# ref 2\",\n            \"reference3\": \"# ref 3\",\n            ...\n        }\n        </details>\n        "
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Widget Pro\", \"is_default\": false}\n        "
-      required:
-      - weight
-      - weight_unit
-    Rate:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A unique identifier
-        object_type:
-          type: string
-          default: rate
-          description: Specifies the object type
-        carrier_name:
-          type: string
-          description: The rate's carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier's name (unique identifier)
-        currency:
-          type: string
-          description: The rate monetary values currency code
-        service:
-          type:
-          - string
-          - 'null'
-          description: The carrier's rate (quote) service
-        total_charge:
-          type: number
           format: double
-          default: 0.0
-          description: "The rate's monetary amount of the total charge.<br/>\n        This is the gross amount of the rate after adding the additional charges\n        "
-        transit_days:
-          type:
-          - integer
-          - 'null'
-          description: The estimated delivery transit days
-        extra_charges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Charge'
-          default: []
-          description: list of the rate's additional charges
-        estimated_delivery:
+          description: The package declared value
+        account_number:
           type:
           - string
           - 'null'
-          description: The delivery estimated date
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: provider specific metadata
-        test_mode:
-          type: boolean
-          description: Specified whether it was created with a carrier in test mode
-      required:
-      - carrier_id
-      - carrier_name
-      - test_mode
+          description: The duty payment account number
   securitySchemes:
     JWT:
       in: header

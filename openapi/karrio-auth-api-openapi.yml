@@ -179,6 +179,25 @@ components:
       required:
       - email
       - password
+    ResourceTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JWT access token.
+        expires_at:
+          type: string
+          format: date-time
+          description: Token expiration timestamp.
+        resource_urls:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of resource IDs to their access URLs with token.
+      required:
+      - expires_at
+      - resource_urls
+      - token
     ResourceTokenRequest:
       type: object
       properties:
@@ -245,17 +264,6 @@ components:
       required:
       - access
       - refresh
-    TokenRefresh:
-      type: object
-      properties:
-        refresh:
-          type: string
-        access:
-          type: string
-          readOnly: true
-      required:
-      - access
-      - refresh
     VerifiedTokenObtainPair:
       type: object
       properties:
@@ -271,25 +279,17 @@ components:
       - access
       - otp_token
       - refresh
-    ResourceTokenResponse:
+    TokenRefresh:
       type: object
       properties:
-        token:
+        refresh:
           type: string
-          description: The JWT access token.
-        expires_at:
+        access:
           type: string
-          format: date-time
-          description: Token expiration timestamp.
-        resource_urls:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of resource IDs to their access URLs with token.
+          readOnly: true
       required:
-      - expires_at
-      - resource_urls
-      - token
+      - access
+      - refresh
     TokenVerify:
       type: object
       properties:

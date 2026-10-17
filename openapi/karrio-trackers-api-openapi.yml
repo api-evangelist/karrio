@@ -435,6 +435,51 @@ components:
           items:
             $ref: '#/components/schemas/APIError'
           description: The list of API errors
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
+    TrackerUpdateData:
+      type: object
+      properties:
+        info:
+          allOf:
+          - $ref: '#/components/schemas/TrackingInfo'
+          description: The package and shipment tracking details
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: User metadata for the tracker
+    Operation:
+      type: object
+      properties:
+        operation:
+          type: string
+          description: Operation performed
+        success:
+          type: boolean
+          description: Specify whether the operation was successful
+      required:
+      - operation
+      - success
     TrackerEventInjectRequest:
       type: object
       description: Request payload for injecting tracking events.
@@ -476,168 +521,6 @@ components:
           description: 'Optional: Set the estimated delivery date'
       required:
       - events
-    TrackingEvent:
-      type: object
-      properties:
-        date:
-          type: string
-          description: 'The tracking event''s date. Format: `YYYY-MM-DD`'
-        time:
-          type:
-          - string
-          - 'null'
-          description: 'The tracking event''s time. Format: `HH:MM AM/PM`'
-        timestamp:
-          type:
-          - string
-          - 'null'
-          description: 'The tracking event''s timestamp. Format: `YYYY-MM-DDTHH:MM:SS.sssZ` (ISO 8601)'
-        status:
-          enum:
-          - pending
-          - picked_up
-          - unknown
-          - on_hold
-          - cancelled
-          - delivered
-          - in_transit
-          - delivery_delayed
-          - out_for_delivery
-          - ready_for_pickup
-          - delivery_failed
-          - return_to_sender
-          - ''
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 74b67d0ba94b1fa9
-          description: The normalized status of this specific event
-        code:
-          type:
-          - string
-          - 'null'
-          description: The tracking event's code
-        reason:
-          enum:
-          - carrier_damaged_parcel
-          - carrier_sorting_error
-          - carrier_address_not_found
-          - carrier_parcel_lost
-          - carrier_not_enough_time
-          - carrier_vehicle_issue
-          - carrier_capacity_exceeded
-          - carrier_mechanical_delay
-          - retailer_cancelled
-          - retailer_incorrect_data
-          - retailer_not_ready
-          - retailer_incorrect_parcel
-          - retailer_incorrect_dimensions
-          - retailer_packaging_issue
-          - consignee_refused
-          - consignee_business_closed
-          - consignee_not_available
-          - consignee_not_home
-          - consignee_cancelled
-          - consignee_verification_failed
-          - consignee_incorrect_address
-          - consignee_access_restricted
-          - consignee_safe_place_unavailable
-          - customs_delay
-          - customs_documentation
-          - customs_duties_unpaid
-          - customs_prohibited
-          - customs_inspection
-          - weather_delay
-          - natural_disaster
-          - force_majeure
-          - parcel_being_researched
-          - security_issue
-          - regulatory_hold
-          - unknown
-          - ''
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 8b6be95e78b07e31
-          description: The normalized incident reason (for exception events only)
-        description:
-          type:
-          - string
-          - 'null'
-          description: The tracking event's description
-        location:
-          type: string
-          description: The tracking event's location
-        latitude:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The tracking event's latitude.
-        longitude:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The tracking event's longitude.
-    TrackerUpdateData:
-      type: object
-      properties:
-        info:
-          allOf:
-          - $ref: '#/components/schemas/TrackingInfo'
-          description: The package and shipment tracking details
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: User metadata for the tracker
-    Message:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-        carrier_name:
-          type: string
-          description: The targeted carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier name (unique identifier)
-    TrackerList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingStatus'
-      required:
-      - results
     TrackingData:
       type: object
       properties:
@@ -716,18 +599,53 @@ components:
       required:
       - carrier_name
       - tracking_number
-    Operation:
+    ErrorMessages:
       type: object
       properties:
-        operation:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    APIError:
+      type: object
+      properties:
+        message:
           type: string
-          description: Operation performed
-        success:
-          type: boolean
-          description: Specify whether the operation was successful
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    TrackerList:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingStatus'
       required:
-      - operation
-      - success
+      - results
     TrackingInfo:
       type: object
       properties:
@@ -826,30 +744,6 @@ components:
           - string
           - 'null'
           description: The tracker source
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
     TrackingStatus:
       type: object
       properties:
@@ -970,6 +864,112 @@ components:
       - carrier_name
       - test_mode
       - tracking_number
+    TrackingEvent:
+      type: object
+      properties:
+        date:
+          type: string
+          description: 'The tracking event''s date. Format: `YYYY-MM-DD`'
+        time:
+          type:
+          - string
+          - 'null'
+          description: 'The tracking event''s time. Format: `HH:MM AM/PM`'
+        timestamp:
+          type:
+          - string
+          - 'null'
+          description: 'The tracking event''s timestamp. Format: `YYYY-MM-DDTHH:MM:SS.sssZ` (ISO 8601)'
+        status:
+          enum:
+          - pending
+          - picked_up
+          - unknown
+          - on_hold
+          - cancelled
+          - delivered
+          - in_transit
+          - delivery_delayed
+          - out_for_delivery
+          - ready_for_pickup
+          - delivery_failed
+          - return_to_sender
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 74b67d0ba94b1fa9
+          description: The normalized status of this specific event
+        code:
+          type:
+          - string
+          - 'null'
+          description: The tracking event's code
+        reason:
+          enum:
+          - carrier_damaged_parcel
+          - carrier_sorting_error
+          - carrier_address_not_found
+          - carrier_parcel_lost
+          - carrier_not_enough_time
+          - carrier_vehicle_issue
+          - carrier_capacity_exceeded
+          - carrier_mechanical_delay
+          - retailer_cancelled
+          - retailer_incorrect_data
+          - retailer_not_ready
+          - retailer_incorrect_parcel
+          - retailer_incorrect_dimensions
+          - retailer_packaging_issue
+          - consignee_refused
+          - consignee_business_closed
+          - consignee_not_available
+          - consignee_not_home
+          - consignee_cancelled
+          - consignee_verification_failed
+          - consignee_incorrect_address
+          - consignee_access_restricted
+          - consignee_safe_place_unavailable
+          - customs_delay
+          - customs_documentation
+          - customs_duties_unpaid
+          - customs_prohibited
+          - customs_inspection
+          - weather_delay
+          - natural_disaster
+          - force_majeure
+          - parcel_being_researched
+          - security_issue
+          - regulatory_hold
+          - unknown
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          x-spec-enum-id: 8b6be95e78b07e31
+          description: The normalized incident reason (for exception events only)
+        description:
+          type:
+          - string
+          - 'null'
+          description: The tracking event's description
+        location:
+          type: string
+          description: The tracking event's location
+        latitude:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The tracking event's latitude.
+        longitude:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The tracking event's longitude.
   securitySchemes:
     JWT:
       in: header

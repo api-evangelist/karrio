@@ -188,29 +188,73 @@ components:
           items:
             $ref: '#/components/schemas/APIError'
           description: The list of API errors
-    ManifestList:
+    Manifest:
       type: object
       properties:
-        count:
+        id:
+          type: string
+          description: A unique manifest identifier
+        object_type:
+          type: string
+          default: manifest
+          description: Specifies the object type
+        carrier_name:
+          type: string
+          description: The manifest carrier
+        carrier_id:
+          type: string
+          description: The manifest carrier configured name
+        meta:
           type:
-          - integer
+          - object
           - 'null'
-        next:
+          additionalProperties: {}
+          description: provider specific metadata
+        test_mode:
+          type: boolean
+          description: Specified whether it was created with a carrier in test mode
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The address of the warehouse or location where the shipments originate.
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
+        reference:
           type:
           - string
           - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
+          description: The manifest reference
+        shipment_identifiers:
           type: array
           items:
-            $ref: '#/components/schemas/Manifest'
+            type: string
+          description: "The list of shipment identifiers you want to add to your manifest.<br/>\n        shipment_identifier is often a tracking_number or shipment_id returned when you purchase a label.\n        "
+        metadata:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: User metadata for the pickup
+        manifest_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: The Manifest file URL
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          default: []
+          description: The list of note or warning messages
       required:
-      - results
+      - address
+      - carrier_id
+      - carrier_name
+      - shipment_identifiers
+      - test_mode
     Message:
       type: object
       properties:
@@ -233,6 +277,35 @@ components:
         carrier_id:
           type: string
           description: The targeted carrier name (unique identifier)
+    ManifestData:
+      type: object
+      properties:
+        carrier_name:
+          type: string
+          description: The manifest's carrier
+        address:
+          allOf:
+          - $ref: '#/components/schemas/AddressData'
+          description: The address of the warehouse or location where the shipments originate.
+        options:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The manifest reference
+        shipment_ids:
+          type: array
+          items:
+            type: string
+          description: The list of existing shipment object ids with label purchased.
+      required:
+      - address
+      - carrier_name
+      - shipment_ids
     AddressData:
       type: object
       properties:
@@ -577,6 +650,30 @@ components:
           description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
       required:
       - country_code
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        level:
+          type: string
+          description: The message level
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
     ShippingDocument:
       type: object
       description: Serializer for shipping document download response.
@@ -605,126 +702,29 @@ components:
       required:
       - category
       - format
-    ManifestData:
+    ManifestList:
       type: object
       properties:
-        carrier_name:
-          type: string
-          description: The manifest's carrier
-        address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The address of the warehouse or location where the shipments originate.
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
-        reference:
+        count:
           type:
-          - string
+          - integer
           - 'null'
-          description: The manifest reference
-        shipment_ids:
-          type: array
-          items:
-            type: string
-          description: The list of existing shipment object ids with label purchased.
-      required:
-      - address
-      - carrier_name
-      - shipment_ids
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-    Manifest:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A unique manifest identifier
-        object_type:
-          type: string
-          default: manifest
-          description: Specifies the object type
-        carrier_name:
-          type: string
-          description: The manifest carrier
-        carrier_id:
-          type: string
-          description: The manifest carrier configured name
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: provider specific metadata
-        test_mode:
-          type: boolean
-          description: Specified whether it was created with a carrier in test mode
-        address:
-          allOf:
-          - $ref: '#/components/schemas/AddressData'
-          description: The address of the warehouse or location where the shipments originate.
-        options:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: "<details>\n        <summary>The options available for the manifest.</summary>\n\n        {\n            \"shipments\": [\n                {\n                    \"tracking_number\": \"123456789\",\n                    ...\n                    \"meta\": {...}\n                }\n            ]\n        }\n        </details>\n        "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The manifest reference
-        shipment_identifiers:
-          type: array
-          items:
-            type: string
-          description: "The list of shipment identifiers you want to add to your manifest.<br/>\n        shipment_identifier is often a tracking_number or shipment_id returned when you purchase a label.\n        "
-        metadata:
-          type: object
-          additionalProperties: {}
-          default: {}
-          description: User metadata for the pickup
-        manifest_url:
+        next:
           type:
           - string
           - 'null'
           format: uri
-          description: The Manifest file URL
-        messages:
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/Message'
-          default: []
-          description: The list of note or warning messages
+            $ref: '#/components/schemas/Manifest'
       required:
-      - address
-      - carrier_id
-      - carrier_name
-      - shipment_identifiers
-      - test_mode
+      - results
   securitySchemes:
     JWT:
       in: header

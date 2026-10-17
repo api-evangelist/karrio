@@ -422,6 +422,14 @@ paths:
       x-operationId: getServices
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
     CarrierDetails:
       type: object
       properties:
@@ -523,14 +531,6 @@ components:
       - carrier_name
       - display_name
       - integration_status
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
     APIError:
       type: object
       properties:
