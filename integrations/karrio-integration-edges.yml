@@ -288,6 +288,225 @@ edges:
     property: schemas.CarrierDetails.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-13'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/karrio
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: karrio
+      version: 2023.1.0
+      released: '2023-01-29'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/karrio
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/karrio/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: karrio
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-canadapost
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-canadapost/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-cli
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-cli/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-dhl-express
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-dhl-express/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-fedex
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-fedex/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-core
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-core/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-data
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-data/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-documents
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-documents/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-events
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-events/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-graph
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-graph/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-manager
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-manager/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-orders
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-orders/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-pricing
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-pricing/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-server-proxy
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-server-proxy/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-ups
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-ups/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    - name: karrio-usps
+      version: 2026.1.32
+      released: '2026-06-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/karrio-usps/
+      repo_leg: github-org:karrioapi
+      publisher_leg: email:karrio.io
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 generated: '2026-10-12'
 method: searched
-checked: []
+checked:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
+source:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
