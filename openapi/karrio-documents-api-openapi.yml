@@ -1,8 +1,137 @@
 openapi: 3.2.0
 info:
-  description: Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+  description: 'Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+
+
+    The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded
+
+    request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+
+    The Karrio API differs for every account as we release new versions.
+
+    These docs are customized to your version of the API.
+
+
+    ## Versioning
+
+
+    When backwards-incompatible changes are made to the API, a new, dated version is released.
+
+    The current version is `2024.12.6`.
+
+
+    Read our API changelog to learn more about backwards compatibility.
+
+
+    As a precaution, use API versioning to check a new API version before committing to an upgrade.
+
+
+    ## Environments
+
+
+    The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.
+
+    In development, it is therefore possible to add carrier connections, get live rates,
+
+    buy labels, create trackers and schedule pickups in `test_mode`.
+
+
+    ## Pagination
+
+
+    All top-level API resources have support for bulk fetches via "list" API methods. For instance, you can list addresses,
+
+    list shipments, and list trackers. These list API methods share a common structure, taking at least these
+
+    two parameters: limit, and offset.
+
+
+    Karrio utilizes offset-based pagination via the offset and limit parameters.
+
+    Both parameters take a number as value (see below) and return objects in reverse chronological order.
+
+    The offset parameter returns objects listed after an index.
+
+    The limit parameter take a limit on the number of objects to be returned from 1 to 100.
+
+
+    ```json
+
+    {
+
+    "count": 100,
+
+    "next": "/v1/shipments?limit=25&offset=50",
+
+    "previous": "/v1/shipments?limit=25&offset=25",
+
+    "results": [
+
+    { ... },
+
+    ]
+
+    }
+
+    ```
+
+
+    ## Metadata
+
+
+    Updateable Karrio objects—including Shipment and Order have a metadata parameter.
+
+    You can use this parameter to attach key-value data to these Karrio objects.
+
+
+    Metadata is useful for storing additional, structured information on an object.
+
+    As an example, you could store your user''s full name and corresponding unique identifier
+
+    from your system on a Karrio Order object.
+
+
+    Do not store any sensitive information as metadata.
+
+
+    ## Authentication
+
+
+    API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.
+
+
+    Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret
+
+    API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+
+
+    Authentication to the API is performed via HTTP Basic Auth. Provide your API token as
+
+    the basic auth username value. You do not need to provide a password.
+
+
+    ```shell
+
+    $ curl https://instance.api.com/v1/shipments \
+
+    -u key_xxxxxx:
+
+    # The colon prevents curl from asking for a password.
+
+    ```
+
+
+    If you need to authenticate via bearer auth (e.g., for a cross-origin request),
+
+    use `-H "Authorization: Token key_xxxxxx"` instead of `-u key_xxxxxx`.
+
+
+    All API requests must be made over HTTPS.
+
+    API requests without authentication will also fail.'
   title: Karrio Documents API
-  version: 2026.1.32
+  version: 2024.12.6
 tags:
 - name: Documents
   description: 'This is an object representing your Karrio document upload record.
@@ -59,7 +188,7 @@ paths:
           description: ''
   /v1/documents/templates:
     get:
-      operationId: '&&&&$$list'
+      operationId: listDocumentTemplates
       description: Retrieve all templates.
       summary: List all templates
       tags:
@@ -90,7 +219,7 @@ paths:
           description: ''
       x-operationId: listDocumentTemplates
     post:
-      operationId: '&&&&$$create'
+      operationId: createDocumentTemplate
       description: Create a new template.
       summary: Create a template
       tags:
@@ -128,7 +257,7 @@ paths:
       x-operationId: createDocumentTemplate
   /v1/documents/templates/{id}:
     get:
-      operationId: '&&&&$$retrieve'
+      operationId: retrieveDocumentTemplate
       description: Retrieve a template.
       summary: Retrieve a template
       parameters:
@@ -165,7 +294,7 @@ paths:
           description: ''
       x-operationId: retrieveDocumentTemplate
     patch:
-      operationId: '&&&&$$update'
+      operationId: updateDocumentTemplate
       description: update a template.
       summary: Update a template
       parameters:
@@ -213,7 +342,7 @@ paths:
           description: ''
       x-operationId: updateDocumentTemplate
     delete:
-      operationId: '&&&&$$discard'
+      operationId: discardDocumentTemplate
       description: Delete a template.
       summary: Delete a template
       parameters:
@@ -382,14 +511,14 @@ paths:
           description: ''
 components:
   schemas:
-    ErrorResponse:
+    ErrorMessages:
       type: object
       properties:
-        errors:
+        messages:
           type: array
           items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
     Message:
       type: object
       properties:
@@ -399,9 +528,6 @@ components:
         code:
           type: string
           description: The message code
-        level:
-          type: string
-          description: The message level
         details:
           type: object
           additionalProperties: {}
@@ -412,9 +538,12 @@ components:
         carrier_id:
           type: string
           description: The targeted carrier name (unique identifier)
-    DocumentTemplateData:
+    DocumentTemplate:
       type: object
       properties:
+        id:
+          type: string
+          description: A unique identifier
         name:
           type: string
           description: The template name
@@ -448,100 +577,25 @@ components:
           - order
           - other
           type: string
-          x-spec-enum-id: b3691dad14d14121
+          x-spec-enum-id: e453b27eb99d7157
           default: other
           description: The template related object
+        object_type:
+          type: string
+          default: document-template
+          description: Specifies the object type
       required:
       - name
       - slug
       - template
-    GeneratedDocument:
+    ErrorResponse:
       type: object
       properties:
-        template_id:
-          type: string
-          description: The template name
-        doc_format:
-          type: string
-          description: The format of the document
-        doc_name:
-          type: string
-          description: The file name
-        doc_file:
-          type: string
-          description: A base64 file content
-      required:
-      - doc_file
-    DocumentUploadRecords:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
+        errors:
           type: array
           items:
-            $ref: '#/components/schemas/DocumentUploadRecord'
-      required:
-      - results
-    DocumentFileData:
-      type: object
-      properties:
-        doc_file:
-          type: string
-          description: A base64 file to upload
-        doc_name:
-          type: string
-          description: The file name
-        doc_format:
-          type:
-          - string
-          - 'null'
-          description: The file format
-        doc_type:
-          type:
-          - string
-          - 'null'
-          default: other
-          description: "\n        Shipment document type\n\n        values: <br/>\n        `certificate_of_origin` `commercial_invoice` `pro_forma_invoice` `packing_list` `other`\n\n        For carrier specific packaging types, please consult the reference.\n        "
-          maxLength: 50
-      required:
-      - doc_file
-      - doc_name
-    DocumentTemplateList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentTemplate'
-      required:
-      - results
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
     DocumentData:
       type: object
       properties:
@@ -566,15 +620,59 @@ components:
           type: object
           additionalProperties: {}
           description: The template rendering options
-    DocumentDetails:
+    APIError:
       type: object
       properties:
-        doc_id:
+        message:
           type: string
-          description: The uploaded document id.
-        file_name:
+          description: The error or warning message
+        code:
           type: string
-          description: The uploaded document file name.
+          description: The message code
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+    DocumentUploadRecords:
+      type: object
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentUploadRecord'
+      required:
+      - results
+    GeneratedDocument:
+      type: object
+      properties:
+        template_id:
+          type: string
+          description: The template name
+        doc_format:
+          type: string
+          description: The format of the document
+        doc_name:
+          type: string
+          description: The file name
+        doc_file:
+          type: string
+          description: A base64 file content
+      required:
+      - doc_file
     DocumentUploadData:
       type: object
       properties:
@@ -595,30 +693,30 @@ components:
       required:
       - document_files
       - shipment_id
-    ErrorMessages:
+    DocumentFileData:
       type: object
       properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    APIError:
-      type: object
-      properties:
-        message:
+        doc_file:
           type: string
-          description: The error or warning message
-        code:
+          description: A base64 file to upload
+        doc_name:
           type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
+          description: The file name
+        doc_format:
+          type:
+          - string
+          - 'null'
+          description: The file format
+        doc_type:
+          type:
+          - string
+          - 'null'
+          default: other
+          description: "\n        Shipment document type\n\n        values: <br/>\n        `certificate_of_origin` `commercial_invoice` `pro_forma_invoice` `packing_list` `other`\n\n        For carrier specific packaging types, please consult the reference.\n        "
+          maxLength: 50
+      required:
+      - doc_file
+      - doc_name
     DocumentUploadRecord:
       type: object
       properties:
@@ -659,6 +757,15 @@ components:
             $ref: '#/components/schemas/Message'
           default: []
           description: The list of note or warning messages
+    DocumentDetails:
+      type: object
+      properties:
+        doc_id:
+          type: string
+          description: The uploaded document id.
+        file_name:
+          type: string
+          description: The uploaded document file name.
     PatchedDocumentTemplateData:
       type: object
       properties:
@@ -695,15 +802,35 @@ components:
           - order
           - other
           type: string
-          x-spec-enum-id: b3691dad14d14121
+          x-spec-enum-id: e453b27eb99d7157
           default: other
           description: The template related object
-    DocumentTemplate:
+    DocumentTemplateList:
       type: object
       properties:
-        id:
-          type: string
-          description: A unique identifier
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTemplate'
+      required:
+      - results
+    DocumentTemplateData:
+      type: object
+      properties:
         name:
           type: string
           description: The template name
@@ -737,17 +864,9 @@ components:
           - order
           - other
           type: string
-          x-spec-enum-id: b3691dad14d14121
+          x-spec-enum-id: e453b27eb99d7157
           default: other
           description: The template related object
-        object_type:
-          type: string
-          default: document-template
-          description: Specifies the object type
-        preview_url:
-          type: string
-          format: uri
-          description: The template preview URL
       required:
       - name
       - slug
@@ -769,8 +888,8 @@ components:
           authorizationUrl: /oauth/authorize/
           tokenUrl: /oauth/token/
           scopes:
-            read: Read access to Karrio data
-            write: Write access to Karrio data
+            read: Reading scope
+            write: Writing scope
             openid: OpenID connect
       description: 'Authorization: Bearer xxxxxxxx'
     Token:

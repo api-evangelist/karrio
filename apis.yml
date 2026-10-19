@@ -235,25 +235,6 @@ apis:
     url: https://karrio.io/docs
   - type: APIReference
     url: https://karrio.io/docs/api-reference
-- aid: karrio:karrio-products-api
-  name: Karrio Products API
-  description: >-
-    This is an object representing your Karrio product template.
-                    Product templates are reusable commodity definitions that can be used in customs declarations
-                    and shipment items for recurring shipments of the same products.
-  humanURL: https://karrio.io/docs/api-reference
-  baseURL: https://{karrio-instance-host}/
-  tags:
-  - Product
-  tags_raw:
-  - Products
-  properties:
-  - type: OpenAPI
-    url: openapi/karrio-products-api-openapi.yml
-  - type: Documentation
-    url: https://karrio.io/docs
-  - type: APIReference
-    url: https://karrio.io/docs/api-reference
 - aid: karrio:karrio-proxy-api
   name: Karrio Proxy API
   description: >-

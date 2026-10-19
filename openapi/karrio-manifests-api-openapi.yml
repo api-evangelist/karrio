@@ -1,8 +1,137 @@
 openapi: 3.2.0
 info:
-  description: Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+  description: 'Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+
+
+    The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded
+
+    request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+
+    The Karrio API differs for every account as we release new versions.
+
+    These docs are customized to your version of the API.
+
+
+    ## Versioning
+
+
+    When backwards-incompatible changes are made to the API, a new, dated version is released.
+
+    The current version is `2024.12.6`.
+
+
+    Read our API changelog to learn more about backwards compatibility.
+
+
+    As a precaution, use API versioning to check a new API version before committing to an upgrade.
+
+
+    ## Environments
+
+
+    The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.
+
+    In development, it is therefore possible to add carrier connections, get live rates,
+
+    buy labels, create trackers and schedule pickups in `test_mode`.
+
+
+    ## Pagination
+
+
+    All top-level API resources have support for bulk fetches via "list" API methods. For instance, you can list addresses,
+
+    list shipments, and list trackers. These list API methods share a common structure, taking at least these
+
+    two parameters: limit, and offset.
+
+
+    Karrio utilizes offset-based pagination via the offset and limit parameters.
+
+    Both parameters take a number as value (see below) and return objects in reverse chronological order.
+
+    The offset parameter returns objects listed after an index.
+
+    The limit parameter take a limit on the number of objects to be returned from 1 to 100.
+
+
+    ```json
+
+    {
+
+    "count": 100,
+
+    "next": "/v1/shipments?limit=25&offset=50",
+
+    "previous": "/v1/shipments?limit=25&offset=25",
+
+    "results": [
+
+    { ... },
+
+    ]
+
+    }
+
+    ```
+
+
+    ## Metadata
+
+
+    Updateable Karrio objects—including Shipment and Order have a metadata parameter.
+
+    You can use this parameter to attach key-value data to these Karrio objects.
+
+
+    Metadata is useful for storing additional, structured information on an object.
+
+    As an example, you could store your user''s full name and corresponding unique identifier
+
+    from your system on a Karrio Order object.
+
+
+    Do not store any sensitive information as metadata.
+
+
+    ## Authentication
+
+
+    API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.
+
+
+    Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret
+
+    API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+
+
+    Authentication to the API is performed via HTTP Basic Auth. Provide your API token as
+
+    the basic auth username value. You do not need to provide a password.
+
+
+    ```shell
+
+    $ curl https://instance.api.com/v1/shipments \
+
+    -u key_xxxxxx:
+
+    # The colon prevents curl from asking for a password.
+
+    ```
+
+
+    If you need to authenticate via bearer auth (e.g., for a cross-origin request),
+
+    use `-H "Authorization: Token key_xxxxxx"` instead of `-u key_xxxxxx`.
+
+
+    All API requests must be made over HTTPS.
+
+    API requests without authentication will also fail.'
   title: Karrio Manifests API
-  version: 2026.1.32
+  version: 2024.12.6
 tags:
 - name: Manifests
   description: 'This is an object representing your Karrio manifest details.
@@ -13,7 +142,7 @@ tags:
 paths:
   /v1/manifests:
     get:
-      operationId: $$$$&&list
+      operationId: listManifests
       description: Retrieve all manifests.
       summary: List manifests
       parameters:
@@ -21,7 +150,7 @@ paths:
         name: carrier_name
         schema:
           type: string
-        description: 'The unique carrier slug. <br/>Values: `aramex`, `asendia`, `asendia_us`, `australiapost`, `boxknight`, `bpost`, `canadapost`, `canpar`, `chronopost`, `colissimo`, `dhl_express`, `dhl_parcel_de`, `dhl_poland`, `dhl_universal`, `dicom`, `dpd`, `dpd_meta`, `dtdc`, `easypost`, `easyship`, `eshipper`, `fedex`, `freightcom`, `generic`, `geodis`, `gls`, `hay_post`, `hermes`, `landmark`, `laposte`, `locate2u`, `mydhl`, `nationex`, `parcelone`, `postat`, `purolator`, `roadie`, `royalmail`, `sapient`, `seko`, `sendle`, `shipengine`, `smartkargo`, `spring`, `teleship`, `tge`, `tnt`, `ups`, `usps`, `usps_international`, `veho`, `zoom2u`'
+        description: 'The unique carrier slug. <br/>Values: `allied_express`, `allied_express_local`, `amazon_shipping`, `aramex`, `asendia_us`, `australiapost`, `boxknight`, `bpost`, `canadapost`, `canpar`, `chronopost`, `colissimo`, `dhl_express`, `dhl_parcel_de`, `dhl_poland`, `dhl_universal`, `dicom`, `dpd`, `dpdhl`, `easypost`, `easyship`, `eshipper`, `fedex`, `fedex_ws`, `freightcom`, `generic`, `geodis`, `hay_post`, `laposte`, `locate2u`, `nationex`, `purolator`, `roadie`, `royalmail`, `sapient`, `seko`, `sendle`, `tge`, `tnt`, `ups`, `usps`, `usps_international`, `usps_wt`, `usps_wt_international`, `zoom2u`'
       - in: query
         name: created_after
         schema:
@@ -60,7 +189,7 @@ paths:
           description: ''
       x-operationId: listManifests
     post:
-      operationId: $$$$&&create
+      operationId: createManifest
       description: Create a manifest for one or many shipments with labels already purchased.
       summary: Create a manifest
       tags:
@@ -104,7 +233,7 @@ paths:
       x-operationId: createManifest
   /v1/manifests/{id}:
     get:
-      operationId: $$$$&&retrieve
+      operationId: retrieveManifest
       description: Retrieve a shipping manifest.
       summary: Retrieve a manifest
       parameters:
@@ -140,54 +269,58 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
           description: ''
       x-operationId: retrieveManifest
-  /v1/manifests/{id}/document:
-    post:
-      operationId: $$$$&&document
-      description: Retrieve a manifest document as base64 encoded content.
-      summary: Retrieve a manifest document
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - Manifests
-      security:
-      - TokenBasic: []
-      - Token: []
-      - OAuth2: []
-      - JWT: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ShippingDocument'
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-          description: ''
-        '500':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-          description: ''
-      x-operationId: retrieveManifestDocument
 components:
   schemas:
-    ErrorResponse:
+    ManifestList:
       type: object
       properties:
-        errors:
+        count:
+          type:
+          - integer
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/APIError'
-          description: The list of API errors
+            $ref: '#/components/schemas/Manifest'
+      required:
+      - results
+    ErrorMessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The list of error messages
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error or warning message
+        code:
+          type: string
+          description: The message code
+        details:
+          type: object
+          additionalProperties: {}
+          description: any additional details
+        carrier_name:
+          type: string
+          description: The targeted carrier
+        carrier_id:
+          type: string
+          description: The targeted carrier name (unique identifier)
     Manifest:
       type: object
       properties:
@@ -255,7 +388,15 @@ components:
       - carrier_name
       - shipment_identifiers
       - test_mode
-    Message:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIError'
+          description: The list of API errors
+    APIError:
       type: object
       properties:
         message:
@@ -264,19 +405,10 @@ components:
         code:
           type: string
           description: The message code
-        level:
-          type: string
-          description: The message level
         details:
           type: object
           additionalProperties: {}
           description: any additional details
-        carrier_name:
-          type: string
-          description: The targeted carrier
-        carrier_id:
-          type: string
-          description: The targeted carrier name (unique identifier)
     ManifestData:
       type: object
       properties:
@@ -309,47 +441,42 @@ components:
     AddressData:
       type: object
       properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for the address (used in JSON embedded data)
         postal_code:
           type:
           - string
           - 'null'
           description: "The address postal code\n        **(required for shipment purchase)**\n        "
-          maxLength: 20
+          maxLength: 10
         city:
           type:
           - string
           - 'null'
           description: "The address city.\n        **(required for shipment purchase)**\n        "
-          maxLength: 50
+          maxLength: 30
         federal_tax_id:
           type:
           - string
           - 'null'
           description: The party frederal tax id
-          maxLength: 50
+          maxLength: 20
         state_tax_id:
           type:
           - string
           - 'null'
           description: The party state id
-          maxLength: 50
+          maxLength: 20
         person_name:
           type:
           - string
           - 'null'
           description: "Attention to\n        **(required for shipment purchase)**\n        "
-          maxLength: 100
+          maxLength: 50
         company_name:
           type:
           - string
           - 'null'
           description: The company name if the party is a company
-          maxLength: 100
+          maxLength: 50
         country_code:
           enum:
           - AC
@@ -593,7 +720,7 @@ components:
           - MF
           - SX
           type: string
-          x-spec-enum-id: b4b44aee15c8daa0
+          x-spec-enum-id: 05a7b91de773db3e
           description: The address country code
         email:
           type:
@@ -605,13 +732,13 @@ components:
           - string
           - 'null'
           description: The party phone number.
-          maxLength: 50
+          maxLength: 20
         state_code:
           type:
           - string
           - 'null'
           description: The address state code
-          maxLength: 50
+          maxLength: 20
         residential:
           type:
           - boolean
@@ -623,108 +750,27 @@ components:
           - string
           - 'null'
           description: The address street number
-          maxLength: 100
+          maxLength: 20
         address_line1:
           type:
           - string
           - 'null'
           description: "The address line with street number <br/>\n        **(required for shipment purchase)**\n        "
-          maxLength: 100
+          maxLength: 50
         address_line2:
           type:
           - string
           - 'null'
           description: The address line with suite number
-          maxLength: 100
+          maxLength: 50
         validate_location:
           type:
           - boolean
           - 'null'
           default: false
           description: Indicate if the address should be validated
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: "Template metadata for template identification.\n        Structure: {\"label\": \"Warehouse A\", \"is_default\": true, \"usage\": [\"sender\", \"return\"]}\n        "
       required:
       - country_code
-    ErrorMessages:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-          description: The list of error messages
-    APIError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error or warning message
-        code:
-          type: string
-          description: The message code
-        level:
-          type: string
-          description: The message level
-        details:
-          type: object
-          additionalProperties: {}
-          description: any additional details
-    ShippingDocument:
-      type: object
-      description: Serializer for shipping document download response.
-      properties:
-        category:
-          type: string
-          description: The document category (e.g., 'label', 'invoice', 'manifest')
-        format:
-          type: string
-          description: The document format (e.g., 'PDF', 'ZPL')
-        print_format:
-          type:
-          - string
-          - 'null'
-          description: The document print format (e.g., 'A4', '6x4', '8.5x11')
-        url:
-          type:
-          - string
-          - 'null'
-          description: The document URL
-        base64:
-          type:
-          - string
-          - 'null'
-          description: The document content encoded in base64
-      required:
-      - category
-      - format
-    ManifestList:
-      type: object
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Manifest'
-      required:
-      - results
   securitySchemes:
     JWT:
       in: header
@@ -742,8 +788,8 @@ components:
           authorizationUrl: /oauth/authorize/
           tokenUrl: /oauth/token/
           scopes:
-            read: Read access to Karrio data
-            write: Write access to Karrio data
+            read: Reading scope
+            write: Writing scope
             openid: OpenID connect
       description: 'Authorization: Bearer xxxxxxxx'
     Token:

@@ -1,37 +1,145 @@
 openapi: 3.2.0
 info:
-  description: Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+  description: 'Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+
+
+    The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded
+
+    request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+
+    The Karrio API differs for every account as we release new versions.
+
+    These docs are customized to your version of the API.
+
+
+    ## Versioning
+
+
+    When backwards-incompatible changes are made to the API, a new, dated version is released.
+
+    The current version is `2024.12.6`.
+
+
+    Read our API changelog to learn more about backwards compatibility.
+
+
+    As a precaution, use API versioning to check a new API version before committing to an upgrade.
+
+
+    ## Environments
+
+
+    The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.
+
+    In development, it is therefore possible to add carrier connections, get live rates,
+
+    buy labels, create trackers and schedule pickups in `test_mode`.
+
+
+    ## Pagination
+
+
+    All top-level API resources have support for bulk fetches via "list" API methods. For instance, you can list addresses,
+
+    list shipments, and list trackers. These list API methods share a common structure, taking at least these
+
+    two parameters: limit, and offset.
+
+
+    Karrio utilizes offset-based pagination via the offset and limit parameters.
+
+    Both parameters take a number as value (see below) and return objects in reverse chronological order.
+
+    The offset parameter returns objects listed after an index.
+
+    The limit parameter take a limit on the number of objects to be returned from 1 to 100.
+
+
+    ```json
+
+    {
+
+    "count": 100,
+
+    "next": "/v1/shipments?limit=25&offset=50",
+
+    "previous": "/v1/shipments?limit=25&offset=25",
+
+    "results": [
+
+    { ... },
+
+    ]
+
+    }
+
+    ```
+
+
+    ## Metadata
+
+
+    Updateable Karrio objects—including Shipment and Order have a metadata parameter.
+
+    You can use this parameter to attach key-value data to these Karrio objects.
+
+
+    Metadata is useful for storing additional, structured information on an object.
+
+    As an example, you could store your user''s full name and corresponding unique identifier
+
+    from your system on a Karrio Order object.
+
+
+    Do not store any sensitive information as metadata.
+
+
+    ## Authentication
+
+
+    API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.
+
+
+    Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret
+
+    API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+
+
+    Authentication to the API is performed via HTTP Basic Auth. Provide your API token as
+
+    the basic auth username value. You do not need to provide a password.
+
+
+    ```shell
+
+    $ curl https://instance.api.com/v1/shipments \
+
+    -u key_xxxxxx:
+
+    # The colon prevents curl from asking for a password.
+
+    ```
+
+
+    If you need to authenticate via bearer auth (e.g., for a cross-origin request),
+
+    use `-H "Authorization: Token key_xxxxxx"` instead of `-u key_xxxxxx`.
+
+
+    All API requests must be made over HTTPS.
+
+    API requests without authentication will also fail.'
   title: Karrio Auth API
-  version: 2026.1.32
+  version: 2024.12.6
 tags:
 - name: Auth
   description: API authentication resources.
 paths:
-  /api/logout:
-    post:
-      operationId: '&&logout'
-      description: Clear authentication cookies and logout the user. Accessible without authentication.
-      summary: Logout
-      tags:
-      - Auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenVerify'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-          description: ''
   /api/token:
     post:
       operationId: '&&authenticate'
-      description: Authenticate the user and return a token pair. Tokens are stored in HTTP-only cookies.
+      description: Authenticate the user and return a token pair
       summary: Obtain auth token pair
       tags:
       - Auth
@@ -51,7 +159,7 @@ paths:
   /api/token/refresh:
     post:
       operationId: '&&refresh_token'
-      description: Refresh the authentication token. Tokens are stored in HTTP-only cookies.
+      description: Authenticate the user and return a token pair
       summary: Refresh auth token
       tags:
       - Auth
@@ -71,7 +179,7 @@ paths:
   /api/token/verified:
     post:
       operationId: '&&get_verified_token'
-      description: Get a verified JWT token pair by submitting a Two-Factor authentication code. Tokens are stored in HTTP-only cookies.
+      description: Get a verified JWT token pair by submitting a Two-Factor authentication code.
       summary: Get verified JWT token
       tags:
       - Auth
@@ -109,62 +217,6 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
-  /api/tokens:
-    post:
-      operationId: '&&generate_resource_token'
-      description: 'Generate a short-lived JWT token for accessing specific resources.
-
-
-        This endpoint is used to create secure, time-limited access tokens for
-
-        resources like shipment labels, manifests, and document templates.
-
-
-        **Use cases:**
-
-        - Generate a token to allow document preview in a new browser window
-
-        - Create shareable links for documents with automatic expiration
-
-        - Enable secure document downloads without exposing API keys
-
-
-        **Token lifetime:** Default 5 minutes, configurable up to 1 hour.'
-      summary: Generate resource access token
-      tags:
-      - Auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceTokenRequest'
-        required: true
-      security:
-      - TokenBasic: []
-      - Token: []
-      - OAuth2: []
-      - JWT: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceTokenResponse'
-          description: ''
-        '400':
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-          description: ''
-        '401':
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-          description: ''
 components:
   schemas:
     TokenObtainPair:
@@ -179,81 +231,17 @@ components:
       required:
       - email
       - password
-    ResourceTokenResponse:
+    TokenRefresh:
       type: object
       properties:
-        token:
+        refresh:
           type: string
-          description: The JWT access token.
-        expires_at:
-          type: string
-          format: date-time
-          description: Token expiration timestamp.
-        resource_urls:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of resource IDs to their access URLs with token.
-      required:
-      - expires_at
-      - resource_urls
-      - token
-    ResourceTokenRequest:
-      type: object
-      properties:
-        resource_type:
-          enum:
-          - shipment
-          - manifest
-          - order
-          - template
-          - document
-          type: string
-          x-spec-enum-id: 5fdf96337fe1e4d4
-          description: The type of resource to grant access to.
-        resource_ids:
-          type: array
-          items:
-            type: string
-          description: List of resource IDs to grant access to.
-          minItems: 1
         access:
-          type: array
-          items:
-            enum:
-            - label
-            - invoice
-            - manifest
-            - render
-            - batch_labels
-            - batch_invoices
-            - batch_manifests
-            type: string
-            x-spec-enum-id: a1a77b3fd6daff18
-          description: List of access permissions to grant.
-          minItems: 1
-        format:
-          enum:
-          - pdf
-          - png
-          - zpl
-          - gif
-          - null
-          type:
-          - string
-          - 'null'
-          x-spec-enum-id: 198a9c60a4805fd0
-          description: Document format (optional).
-        expires_in:
-          type: integer
-          maximum: 3600
-          minimum: 60
-          default: 300
-          description: 'Token expiration time in seconds (60-3600, default: 300).'
+          type: string
+          readOnly: true
       required:
       - access
-      - resource_ids
-      - resource_type
+      - refresh
     TokenPair:
       type: object
       properties:
@@ -264,6 +252,14 @@ components:
       required:
       - access
       - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
     VerifiedTokenObtainPair:
       type: object
       properties:
@@ -279,25 +275,6 @@ components:
       - access
       - otp_token
       - refresh
-    TokenRefresh:
-      type: object
-      properties:
-        refresh:
-          type: string
-        access:
-          type: string
-          readOnly: true
-      required:
-      - access
-      - refresh
-    TokenVerify:
-      type: object
-      properties:
-        token:
-          type: string
-          writeOnly: true
-      required:
-      - token
   securitySchemes:
     JWT:
       in: header
@@ -315,8 +292,8 @@ components:
           authorizationUrl: /oauth/authorize/
           tokenUrl: /oauth/token/
           scopes:
-            read: Read access to Karrio data
-            write: Write access to Karrio data
+            read: Reading scope
+            write: Writing scope
             openid: OpenID connect
       description: 'Authorization: Bearer xxxxxxxx'
     Token:

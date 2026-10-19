@@ -1,8 +1,137 @@
 openapi: 3.2.0
 info:
-  description: Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+  description: 'Karrio is a multi-carrier shipping API that simplifies the integration of logistics carrier services.
+
+
+    The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded
+
+    request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+
+    The Karrio API differs for every account as we release new versions.
+
+    These docs are customized to your version of the API.
+
+
+    ## Versioning
+
+
+    When backwards-incompatible changes are made to the API, a new, dated version is released.
+
+    The current version is `2024.12.6`.
+
+
+    Read our API changelog to learn more about backwards compatibility.
+
+
+    As a precaution, use API versioning to check a new API version before committing to an upgrade.
+
+
+    ## Environments
+
+
+    The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`.
+
+    In development, it is therefore possible to add carrier connections, get live rates,
+
+    buy labels, create trackers and schedule pickups in `test_mode`.
+
+
+    ## Pagination
+
+
+    All top-level API resources have support for bulk fetches via "list" API methods. For instance, you can list addresses,
+
+    list shipments, and list trackers. These list API methods share a common structure, taking at least these
+
+    two parameters: limit, and offset.
+
+
+    Karrio utilizes offset-based pagination via the offset and limit parameters.
+
+    Both parameters take a number as value (see below) and return objects in reverse chronological order.
+
+    The offset parameter returns objects listed after an index.
+
+    The limit parameter take a limit on the number of objects to be returned from 1 to 100.
+
+
+    ```json
+
+    {
+
+    "count": 100,
+
+    "next": "/v1/shipments?limit=25&offset=50",
+
+    "previous": "/v1/shipments?limit=25&offset=25",
+
+    "results": [
+
+    { ... },
+
+    ]
+
+    }
+
+    ```
+
+
+    ## Metadata
+
+
+    Updateable Karrio objects—including Shipment and Order have a metadata parameter.
+
+    You can use this parameter to attach key-value data to these Karrio objects.
+
+
+    Metadata is useful for storing additional, structured information on an object.
+
+    As an example, you could store your user''s full name and corresponding unique identifier
+
+    from your system on a Karrio Order object.
+
+
+    Do not store any sensitive information as metadata.
+
+
+    ## Authentication
+
+
+    API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.
+
+
+    Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret
+
+    API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+
+
+    Authentication to the API is performed via HTTP Basic Auth. Provide your API token as
+
+    the basic auth username value. You do not need to provide a password.
+
+
+    ```shell
+
+    $ curl https://instance.api.com/v1/shipments \
+
+    -u key_xxxxxx:
+
+    # The colon prevents curl from asking for a password.
+
+    ```
+
+
+    If you need to authenticate via bearer auth (e.g., for a cross-origin request),
+
+    use `-H "Authorization: Token key_xxxxxx"` instead of `-u key_xxxxxx`.
+
+
+    All API requests must be made over HTTPS.
+
+    API requests without authentication will also fail.'
   title: Karrio Webhooks API
-  version: 2026.1.32
+  version: 2024.12.6
 tags:
 - name: Webhooks
   description: 'This is an object representing your Karrio webhook.
@@ -13,7 +142,7 @@ tags:
 paths:
   /v1/webhooks:
     get:
-      operationId: $$$$$$$list
+      operationId: listWebhooks
       description: Retrieve all webhooks.
       summary: List all webhooks
       tags:
@@ -44,7 +173,7 @@ paths:
           description: ''
       x-operationId: listWebhooks
     post:
-      operationId: $$$$$$$create
+      operationId: createWebhook
       description: Create a new webhook.
       summary: Create a webhook
       tags:
@@ -82,7 +211,7 @@ paths:
       x-operationId: createWebhook
   /v1/webhooks/{id}:
     get:
-      operationId: $$$$$$$retrieve
+      operationId: retrieveWebhook
       description: Retrieve a webhook.
       summary: Retrieve a webhook
       parameters:
@@ -119,7 +248,7 @@ paths:
           description: ''
       x-operationId: retrieveWebhook
     patch:
-      operationId: $$$$$$$update
+      operationId: updateWebhook
       description: update a webhook.
       summary: Update a webhook
       parameters:
@@ -167,7 +296,7 @@ paths:
           description: ''
       x-operationId: updateWebhook
     delete:
-      operationId: $$$$$$$remove
+      operationId: removeWebhook
       description: Remove a webhook.
       summary: Remove a webhook
       parameters:
@@ -205,7 +334,7 @@ paths:
       x-operationId: removeWebhook
   /v1/webhooks/{id}/test:
     post:
-      operationId: $$$$$$$test
+      operationId: testWebhook
       description: test a webhook.
       summary: Test a webhook
       parameters:
@@ -221,6 +350,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WebhookTestRequest'
+        required: true
       security:
       - TokenBasic: []
       - Token: []
@@ -248,6 +378,14 @@ paths:
       x-operationId: testWebhook
 components:
   schemas:
+    WebhookTestRequest:
+      type: object
+      properties:
+        payload:
+          type: object
+          additionalProperties: {}
+      required:
+      - payload
     ErrorResponse:
       type: object
       properties:
@@ -256,18 +394,6 @@ components:
           items:
             $ref: '#/components/schemas/APIError'
           description: The list of API errors
-    Operation:
-      type: object
-      properties:
-        operation:
-          type: string
-          description: Operation performed
-        success:
-          type: boolean
-          description: Specify whether the operation was successful
-      required:
-      - operation
-      - success
     WebhookList:
       type: object
       properties:
@@ -291,14 +417,6 @@ components:
             $ref: '#/components/schemas/Webhook'
       required:
       - results
-    WebhookTestRequest:
-      type: object
-      properties:
-        payload:
-          type: object
-          additionalProperties: {}
-        event_id:
-          type: string
     APIError:
       type: object
       properties:
@@ -308,9 +426,6 @@ components:
         code:
           type: string
           description: The message code
-        level:
-          type: string
-          description: The message level
         details:
           type: object
           additionalProperties: {}
@@ -343,9 +458,6 @@ components:
             - shipment_delivery_failed
             - tracker_created
             - tracker_updated
-            - pickup_scheduled
-            - pickup_cancelled
-            - pickup_closed
             - order_created
             - order_updated
             - order_fulfilled
@@ -356,7 +468,7 @@ components:
             - batch_running
             - batch_completed
             type: string
-            x-spec-enum-id: 7310794d8b16bdaf
+            x-spec-enum-id: 516a21d18ffb1926
           description: The list of events to enable for this endpoint.
         disabled:
           type:
@@ -384,51 +496,18 @@ components:
       - secret
       - test_mode
       - url
-    PatchedWebhookData:
+    Operation:
       type: object
       properties:
-        url:
+        operation:
           type: string
-          format: uri
-          description: The URL of the webhook endpoint.
-        description:
-          type:
-          - string
-          - 'null'
-          description: An optional description of what the webhook is used for.
-        enabled_events:
-          type: array
-          items:
-            enum:
-            - all
-            - shipment_purchased
-            - shipment_cancelled
-            - shipment_fulfilled
-            - shipment_out_for_delivery
-            - shipment_needs_attention
-            - shipment_delivery_failed
-            - tracker_created
-            - tracker_updated
-            - pickup_scheduled
-            - pickup_cancelled
-            - pickup_closed
-            - order_created
-            - order_updated
-            - order_fulfilled
-            - order_cancelled
-            - order_delivered
-            - batch_queued
-            - batch_failed
-            - batch_running
-            - batch_completed
-            type: string
-            x-spec-enum-id: 7310794d8b16bdaf
-          description: The list of events to enable for this endpoint.
-        disabled:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates that the webhook is disabled
+          description: Operation performed
+        success:
+          type: boolean
+          description: Specify whether the operation was successful
+      required:
+      - operation
+      - success
     WebhookData:
       type: object
       properties:
@@ -454,9 +533,6 @@ components:
             - shipment_delivery_failed
             - tracker_created
             - tracker_updated
-            - pickup_scheduled
-            - pickup_cancelled
-            - pickup_closed
             - order_created
             - order_updated
             - order_fulfilled
@@ -467,7 +543,7 @@ components:
             - batch_running
             - batch_completed
             type: string
-            x-spec-enum-id: 7310794d8b16bdaf
+            x-spec-enum-id: 516a21d18ffb1926
           description: The list of events to enable for this endpoint.
         disabled:
           type:
@@ -477,6 +553,48 @@ components:
       required:
       - enabled_events
       - url
+    PatchedWebhookData:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL of the webhook endpoint.
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of what the webhook is used for.
+        enabled_events:
+          type: array
+          items:
+            enum:
+            - all
+            - shipment_purchased
+            - shipment_cancelled
+            - shipment_fulfilled
+            - shipment_out_for_delivery
+            - shipment_needs_attention
+            - shipment_delivery_failed
+            - tracker_created
+            - tracker_updated
+            - order_created
+            - order_updated
+            - order_fulfilled
+            - order_cancelled
+            - order_delivered
+            - batch_queued
+            - batch_failed
+            - batch_running
+            - batch_completed
+            type: string
+            x-spec-enum-id: 516a21d18ffb1926
+          description: The list of events to enable for this endpoint.
+        disabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates that the webhook is disabled
   securitySchemes:
     JWT:
       in: header
@@ -494,8 +612,8 @@ components:
           authorizationUrl: /oauth/authorize/
           tokenUrl: /oauth/token/
           scopes:
-            read: Read access to Karrio data
-            write: Write access to Karrio data
+            read: Reading scope
+            write: Writing scope
             openid: OpenID connect
       description: 'Authorization: Bearer xxxxxxxx'
     Token:

@@ -1,0 +1,12 @@
+{
+ "url": "https://www.karrio.io/openapi.yml",
+ "final": "https://www.karrio.io/openapi.yml",
+ "status": 200,
+ "content_type": "text/yaml; charset=utf-8",
+ "bytes": 422237,
+ "sha256": "76ab3b7c3a61dbe35420aadb9cf3c2be748464198f93e76c4a55065689b8dcf1",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}
