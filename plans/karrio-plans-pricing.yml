@@ -1,0 +1,73 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.karrio.io/platform
+sources:
+- https://www.karrio.io/platform
+- https://karrio.io/platform
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T161713
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: tiered-subscription
+delivery:
+  delivery: open-core
+  method: page
+  read: '2026-10-28'
+  evidence: Karrio is free to use if you self-host our open-source version. Our managed Scale platform
+    starts at $499/month with pay-as-you-go pricing.
+  free_edition: Karrio Open Source
+  managed_tier: Scale
+published: true
+note: Prices appear only in the FAQ section of this platform overview page; plan cards themselves show
+  'Deploy Open Source' and 'Book a demo' CTAs.
+plan_count: 3
+currency: USD
+plans:
+- name: Karrio Open Source (self-hosted)
+  price_text: Karrio is free to use if you self-host our open-source version.
+  period: none
+  included_quota: self-hosted open-source version
+- name: Managed Scale platform
+  price_text: starts at $499/month with pay-as-you-go pricing
+  price: 499
+  currency: USD
+  period: month
+  included_quota: email and Slack support
+  overage: pay-as-you-go pricing
+- name: Commercial license (embed/white-label)
+  price_text: starts at $50,000/year
+  price: 50000
+  currency: USD
+  period: year
+  included_quota: custom branding, domain support, and unlimited usage
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - subscription
+  units: []
+  plans:
+  - name: Karrio Open Source (self-hosted)
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Managed Scale platform
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Commercial license (embed/white-label)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - year
